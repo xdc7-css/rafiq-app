@@ -75,7 +75,7 @@ dependencies:
 
   # HTTP
   http: ^1.2.2
-  dio: ^5.9.2
+  dio: ^5.10.0
 
   # UUID
   uuid: ^4.5.1
