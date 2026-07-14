@@ -13,14 +13,9 @@ void main() {
             'assets/quran/svg/001.svg',
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
-              print('=== CAUGHT ERROR ===');
-              print('Type: ${error.runtimeType}');
-              print('Message: ${error.toString()}');
-              print('Stack:\n$stackTrace');
               return Text('ERROR: ${error.runtimeType}: $error');
             },
             placeholderBuilder: (context) {
-              print('=== PLACEHOLDER SHOWN ===');
               return const Text('LOADING...');
             },
           ),
@@ -28,20 +23,9 @@ void main() {
       ),
     );
 
-    await tester.runAsync(() async {
-      await Future.delayed(Duration(seconds: 15));
-    });
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    if (find.textContaining('ERROR:').evaluate().isNotEmpty) {
-      print('=== RESULT: Error widget rendered ===');
-      print(
-        (find.textContaining('ERROR:').evaluate().first.widget as Text).data,
-      );
-    } else if (find.text('LOADING...').evaluate().isNotEmpty) {
-      print('=== RESULT: Still loading (timed out) ===');
-    } else {
-      print('=== RESULT: SVG rendered successfully ===');
-    }
+    expect(find.textContaining('ERROR:'), findsOneWidget);
+    expect(find.text('LOADING...'), findsNothing);
   });
 }

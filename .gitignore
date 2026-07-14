@@ -6,7 +6,10 @@
 *.tmp
 *.temp
 *.orig
+*.rej
 .DS_Store
+.AppleDouble
+.LSOverride
 .atom/
 .build/
 .buildlog/
@@ -18,6 +21,7 @@ migrate_working_dir/
 # IDE and editor settings
 .idea/
 .vscode/
+*.code-workspace
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -29,38 +33,45 @@ migrate_working_dir/
 .pub/
 build/
 coverage/
+*.symbols
 
-# Symbolication related
+# Generated app artifacts
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
+*.dart.js
+*.info.json
 
 # Android build artifacts
 android/.gradle/
 android/app/build/
 android/build/
+android/.idea/
 
 # iOS/macOS build artifacts
 ios/Pods/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
 macos/Pods/
 macos/Build/
+macos/Flutter/ephemeral/
 
 # Linux/Windows build artifacts
 linux/build/
+linux/flutter/ephemeral/
 windows/build/
+windows/flutter/ephemeral/
 
 # Firebase and local generated output
 .firebase/
+.firebaserc.local
 
 # Node and package manager artifacts
 node_modules/
+.npm/
 
-# Generated temporary files
-flutter_error.txt
-flutter_output.txt
-
-# Secrets and private keys
+# Local environment and secrets
+.env
+.env.*
 *.jks
 *.keystore
 *.p12
@@ -70,9 +81,31 @@ flutter_output.txt
 *.key
 *.crt
 *.csr
-.env
 
-# Android Studio debug/profile/release outputs
+# Android Studio outputs
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local toolchain and SDK
+.fvm/
+
+# Temporary and backup files
+*.bak
+*.backup
+*.tmp
+
+# Keep source assets and platform folders tracked
+!android/
+!ios/
+!lib/
+!assets/
+!web/
+!linux/
+!macos/
+!windows/
+!test/
+!pubspec.yaml
+!pubspec.lock
+!firebase.json
+!shorebird.yaml

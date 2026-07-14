@@ -16,7 +16,6 @@ class BackgroundSyncService {
   bool _syncing = false;
 
   static const Duration _syncInterval = Duration(hours: 1);
-  static const Duration _prayerCacheTTL = Duration(hours: 6);
   static const Duration _hadithCacheTTL = Duration(hours: 12);
 
   Future<void> init() async {
