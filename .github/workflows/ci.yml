@@ -75,7 +75,7 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter build web --release --web-renderer canvaskit
+      - run: flutter build web --release
       - name: Generate release metadata
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
