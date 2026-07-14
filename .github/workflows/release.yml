@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,63 +23,57 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'
+          flutter-version: '3.44.1'
           channel: stable
           cache: true
 
       - name: Extract version from tag
         id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${GITHUB_REF#refs/tags/}" != "${GITHUB_REF}" ]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "VERSION=manual" >> "$GITHUB_OUTPUT"
+          fi
 
       - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - run: flutter build apk --release
+      - run: flutter build appbundle --release
+      - run: flutter build web --release
 
-      - name: Build APK (Split)
-        run: flutter build apk --release --split-per-abi
-
-      - name: Build App Bundle
-        run: flutter build appbundle --release
-
-      - name: Build Web
-        run: flutter build web --release --web-renderer canvaskit
-
-      - name: Rename APKs
-        run: |
-          mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk rafeeq-armeabi-v7a-v${{ steps.version.outputs.VERSION }}.apk
-          mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk rafeeq-arm64-v8a-v${{ steps.version.outputs.VERSION }}.apk
-          mv build/app/outputs/flutter-apk/app-x86_64-release.apk rafeeq-x86_64-v${{ steps.version.outputs.VERSION }}.apk
-          mv build/app/outputs/flutter-apk/app-release.apk rafeeq-universal-v${{ steps.version.outputs.VERSION }}.apk
+      - name: Generate release metadata
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          OUTPUT_FILE: build/web/release-info.json
+        run: node scripts/sync_release_info.js
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: "رَفيِقْ v${{ steps.version.outputs.VERSION }}"
           body: |
-            ## ✨ What's New in v${{ steps.version.outputs.VERSION }}
-            
+            ## ✨ Release v${{ steps.version.outputs.VERSION }}
+
             ### 📱 Downloads
-            - **Universal APK** - Works on all Android devices
-            - **armeabi-v7a** - For older 32-bit devices
-            - **arm64-v8a** - For modern 64-bit devices (recommended)
-            - **x86_64** - For emulators and Chromebooks
-            
-            ### 🌐 Web Version
-            - Access directly in your browser
-            
-            ---
-            جزاكم الله خيراً
+            - Android APK
+            - Android App Bundle
+
+            ### 🌐 Web
+            - Published to Firebase Hosting
           files: |
-            rafeeq-armeabi-v7a-v${{ steps.version.outputs.VERSION }}.apk
-            rafeeq-arm64-v8a-v${{ steps.version.outputs.VERSION }}.apk
-            rafeeq-x86_64-v${{ steps.version.outputs.VERSION }}.apk
-            rafeeq-universal-v${{ steps.version.outputs.VERSION }}.apk
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy Web to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-          destination_dir: web
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: live

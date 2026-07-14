@@ -1,0 +1,25 @@
+name: Shorebird
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.1'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Publish Shorebird Android release
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+        run: |
+          if [ -n "$SHOREBIRD_TOKEN" ]; then
+            shorebird release android --target main --track production
+          else
+            echo 'SHOREBIRD_TOKEN not configured; skipping release.'
+          fi
