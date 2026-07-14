@@ -18,14 +18,28 @@ jobs:
       security-events: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: github/codeql-action/init@v3
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.1'
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - uses: github/codeql-action/init@v4
         with:
           languages: java-kotlin
 
-      - uses: github/codeql-action/autobuild@v3
+      - name: Build Android for CodeQL
+        run: flutter build apk --debug
 
-      - uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@v4
         with:
           category: "/language:java-kotlin"

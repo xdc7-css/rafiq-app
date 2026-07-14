@@ -14,9 +14,9 @@ jobs:
     name: 🚀 Build Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '21'
@@ -53,7 +53,7 @@ jobs:
       - run: flutter build web --release
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: "رَفيِقْ v${{ steps.version.outputs.VERSION }}"
           body: |
