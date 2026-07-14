@@ -14,6 +14,10 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - name: 🐦 Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
       - name: Publish Shorebird Android release
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}

@@ -33,7 +33,16 @@ jobs:
           if [ "${GITHUB_REF#refs/tags/}" != "${GITHUB_REF}" ]; then
             echo "VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
           else
-            echo "VERSION=manual" >> "$GITHUB_OUTPUT"
+            echo "::error::Manual trigger is not supported. Create a tag (e.g., v1.0.0) to create a release."
+            exit 1
+          fi
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$'; then
+            echo "::error::Invalid version format: '$VERSION'. Expected semver (e.g., 1.0.0, 1.0.0-beta.1)."
+            exit 1
           fi
 
       - run: flutter pub get
@@ -42,12 +51,6 @@ jobs:
       - run: flutter build apk --release
       - run: flutter build appbundle --release
       - run: flutter build web --release
-
-      - name: Generate release metadata
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          OUTPUT_FILE: build/web/release-info.json
-        run: node scripts/sync_release_info.js
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -69,6 +72,12 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate release metadata
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          OUTPUT_FILE: build/web/release-info.json
+        run: node scripts/sync_release_info.js
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
