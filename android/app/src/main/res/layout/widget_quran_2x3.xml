@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg_dark_small"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <!-- Bismillah -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="بِسْمِ ٱللَّهِ"
+        android:textColor="@color/widget_gold"
+        android:textSize="12sp" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/widget_divider_h" />
+
+    <!-- Surah Name -->
+    <TextView
+        android:id="@+id/widget_quran_surah_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="سورة البقرة"
+        android:textColor="@color/widget_text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Ayah -->
+    <TextView
+        android:id="@+id/widget_quran_ayah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="الآية ٢٥٥"
+        android:textColor="@color/widget_text_secondary"
+        android:textSize="11sp" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/widget_quran_progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:max="100"
+        android:progress="42"
+        android:progressDrawable="@drawable/widget_progress_track" />
+
+    <!-- Page -->
+    <TextView
+        android:id="@+id/widget_quran_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="الصفحة ٤٢ / ٦٠٤"
+        android:textColor="@color/widget_text_muted"
+        android:textSize="10sp" />
+</LinearLayout>

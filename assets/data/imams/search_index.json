@@ -1,0 +1,9944 @@
+{
+  "قيمه": [
+    {
+      "globalId": 1,
+      "imamId": 1,
+      "localId": 1
+    }
+  ],
+  "كل": [
+    {
+      "globalId": 1,
+      "imamId": 1,
+      "localId": 1
+    },
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    },
+    {
+      "globalId": 98,
+      "imamId": 5,
+      "localId": 1
+    },
+    {
+      "globalId": 160,
+      "imamId": 8,
+      "localId": 11
+    },
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    },
+    {
+      "globalId": 179,
+      "imamId": 10,
+      "localId": 3
+    }
+  ],
+  "امرء": [
+    {
+      "globalId": 1,
+      "imamId": 1,
+      "localId": 1
+    }
+  ],
+  "ما": [
+    {
+      "globalId": 1,
+      "imamId": 1,
+      "localId": 1
+    },
+    {
+      "globalId": 5,
+      "imamId": 1,
+      "localId": 5
+    },
+    {
+      "globalId": 6,
+      "imamId": 1,
+      "localId": 6
+    },
+    {
+      "globalId": 9,
+      "imamId": 1,
+      "localId": 9
+    },
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 15,
+      "imamId": 1,
+      "localId": 15
+    },
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    },
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    },
+    {
+      "globalId": 56,
+      "imamId": 2,
+      "localId": 6
+    },
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    },
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    },
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 121,
+      "imamId": 6,
+      "localId": 9
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    },
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    },
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    },
+    {
+      "globalId": 204,
+      "imamId": 12,
+      "localId": 4
+    }
+  ],
+  "يحسنه": [
+    {
+      "globalId": 1,
+      "imamId": 1,
+      "localId": 1
+    }
+  ],
+  "الصبر": [
+    {
+      "globalId": 2,
+      "imamId": 1,
+      "localId": 2
+    },
+    {
+      "globalId": 57,
+      "imamId": 2,
+      "localId": 7
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    },
+    {
+      "globalId": 154,
+      "imamId": 8,
+      "localId": 5
+    },
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    },
+    {
+      "globalId": 191,
+      "imamId": 11,
+      "localId": 3
+    }
+  ],
+  "من": [
+    {
+      "globalId": 2,
+      "imamId": 1,
+      "localId": 2
+    },
+    {
+      "globalId": 3,
+      "imamId": 1,
+      "localId": 3
+    },
+    {
+      "globalId": 4,
+      "imamId": 1,
+      "localId": 4
+    },
+    {
+      "globalId": 7,
+      "imamId": 1,
+      "localId": 7
+    },
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    },
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    },
+    {
+      "globalId": 23,
+      "imamId": 1,
+      "localId": 23
+    },
+    {
+      "globalId": 26,
+      "imamId": 1,
+      "localId": 26
+    },
+    {
+      "globalId": 27,
+      "imamId": 1,
+      "localId": 27
+    },
+    {
+      "globalId": 29,
+      "imamId": 1,
+      "localId": 29
+    },
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    },
+    {
+      "globalId": 32,
+      "imamId": 1,
+      "localId": 32
+    },
+    {
+      "globalId": 34,
+      "imamId": 1,
+      "localId": 34
+    },
+    {
+      "globalId": 35,
+      "imamId": 1,
+      "localId": 35
+    },
+    {
+      "globalId": 36,
+      "imamId": 1,
+      "localId": 36
+    },
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    },
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    },
+    {
+      "globalId": 49,
+      "imamId": 1,
+      "localId": 49
+    },
+    {
+      "globalId": 52,
+      "imamId": 2,
+      "localId": 2
+    },
+    {
+      "globalId": 55,
+      "imamId": 2,
+      "localId": 5
+    },
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    },
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    },
+    {
+      "globalId": 65,
+      "imamId": 2,
+      "localId": 15
+    },
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 69,
+      "imamId": 3,
+      "localId": 3
+    },
+    {
+      "globalId": 75,
+      "imamId": 3,
+      "localId": 9
+    },
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    },
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    },
+    {
+      "globalId": 96,
+      "imamId": 4,
+      "localId": 15
+    },
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    },
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 112,
+      "imamId": 5,
+      "localId": 15
+    },
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    },
+    {
+      "globalId": 118,
+      "imamId": 6,
+      "localId": 6
+    },
+    {
+      "globalId": 121,
+      "imamId": 6,
+      "localId": 9
+    },
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    },
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    },
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    },
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    },
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    },
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    },
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    },
+    {
+      "globalId": 154,
+      "imamId": 8,
+      "localId": 5
+    },
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    },
+    {
+      "globalId": 168,
+      "imamId": 9,
+      "localId": 4
+    },
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    },
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    },
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    },
+    {
+      "globalId": 174,
+      "imamId": 9,
+      "localId": 10
+    },
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    },
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    },
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    },
+    {
+      "globalId": 183,
+      "imamId": 10,
+      "localId": 7
+    },
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    },
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    },
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    },
+    {
+      "globalId": 191,
+      "imamId": 11,
+      "localId": 3
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    },
+    {
+      "globalId": 195,
+      "imamId": 11,
+      "localId": 7
+    },
+    {
+      "globalId": 196,
+      "imamId": 11,
+      "localId": 8
+    },
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    },
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    },
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    },
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    },
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    },
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "الايمان": [
+    {
+      "globalId": 2,
+      "imamId": 1,
+      "localId": 2
+    },
+    {
+      "globalId": 37,
+      "imamId": 1,
+      "localId": 37
+    },
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    },
+    {
+      "globalId": 52,
+      "imamId": 2,
+      "localId": 2
+    },
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    },
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    },
+    {
+      "globalId": 144,
+      "imamId": 7,
+      "localId": 10
+    },
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    }
+  ],
+  "بمنزله": [
+    {
+      "globalId": 2,
+      "imamId": 1,
+      "localId": 2
+    }
+  ],
+  "الراس": [
+    {
+      "globalId": 2,
+      "imamId": 1,
+      "localId": 2
+    }
+  ],
+  "الجسد": [
+    {
+      "globalId": 2,
+      "imamId": 1,
+      "localId": 2
+    }
+  ],
+  "العلم": [
+    {
+      "globalId": 3,
+      "imamId": 1,
+      "localId": 3
+    },
+    {
+      "globalId": 18,
+      "imamId": 1,
+      "localId": 18
+    },
+    {
+      "globalId": 22,
+      "imamId": 1,
+      "localId": 22
+    },
+    {
+      "globalId": 30,
+      "imamId": 1,
+      "localId": 30
+    },
+    {
+      "globalId": 48,
+      "imamId": 1,
+      "localId": 48
+    },
+    {
+      "globalId": 54,
+      "imamId": 2,
+      "localId": 4
+    },
+    {
+      "globalId": 98,
+      "imamId": 5,
+      "localId": 1
+    },
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 112,
+      "imamId": 5,
+      "localId": 15
+    },
+    {
+      "globalId": 121,
+      "imamId": 6,
+      "localId": 9
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    },
+    {
+      "globalId": 159,
+      "imamId": 8,
+      "localId": 10
+    },
+    {
+      "globalId": 165,
+      "imamId": 9,
+      "localId": 1
+    },
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "خير": [
+    {
+      "globalId": 3,
+      "imamId": 1,
+      "localId": 3
+    },
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    },
+    {
+      "globalId": 56,
+      "imamId": 2,
+      "localId": 6
+    },
+    {
+      "globalId": 98,
+      "imamId": 5,
+      "localId": 1
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    },
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    }
+  ],
+  "المال": [
+    {
+      "globalId": 3,
+      "imamId": 1,
+      "localId": 3
+    },
+    {
+      "globalId": 56,
+      "imamId": 2,
+      "localId": 6
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "كثر": [
+    {
+      "globalId": 4,
+      "imamId": 1,
+      "localId": 4
+    }
+  ],
+  "كلامه": [
+    {
+      "globalId": 4,
+      "imamId": 1,
+      "localId": 4
+    },
+    {
+      "globalId": 173,
+      "imamId": 9,
+      "localId": 9
+    }
+  ],
+  "خطوه": [
+    {
+      "globalId": 4,
+      "imamId": 1,
+      "localId": 4
+    }
+  ],
+  "اشد": [
+    {
+      "globalId": 5,
+      "imamId": 1,
+      "localId": 5
+    }
+  ],
+  "الذنوب": [
+    {
+      "globalId": 5,
+      "imamId": 1,
+      "localId": 5
+    }
+  ],
+  "استخف": [
+    {
+      "globalId": 5,
+      "imamId": 1,
+      "localId": 5
+    }
+  ],
+  "به": [
+    {
+      "globalId": 5,
+      "imamId": 1,
+      "localId": 5
+    },
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    },
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    },
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    },
+    {
+      "globalId": 56,
+      "imamId": 2,
+      "localId": 6
+    },
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    },
+    {
+      "globalId": 152,
+      "imamId": 8,
+      "localId": 3
+    },
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    },
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "صاحبه": [
+    {
+      "globalId": 5,
+      "imamId": 1,
+      "localId": 5
+    },
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "الناس": [
+    {
+      "globalId": 6,
+      "imamId": 1,
+      "localId": 6
+    },
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    },
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    },
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    },
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    },
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    },
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    },
+    {
+      "globalId": 104,
+      "imamId": 5,
+      "localId": 7
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 140,
+      "imamId": 7,
+      "localId": 6
+    },
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    },
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    },
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    },
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    },
+    {
+      "globalId": 195,
+      "imamId": 11,
+      "localId": 7
+    }
+  ],
+  "اعداء": [
+    {
+      "globalId": 6,
+      "imamId": 1,
+      "localId": 6
+    }
+  ],
+  "جهلوا": [
+    {
+      "globalId": 6,
+      "imamId": 1,
+      "localId": 6
+    }
+  ],
+  "اطال": [
+    {
+      "globalId": 7,
+      "imamId": 1,
+      "localId": 7
+    }
+  ],
+  "الامل": [
+    {
+      "globalId": 7,
+      "imamId": 1,
+      "localId": 7
+    }
+  ],
+  "اساء": [
+    {
+      "globalId": 7,
+      "imamId": 1,
+      "localId": 7
+    },
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    }
+  ],
+  "العمل": [
+    {
+      "globalId": 7,
+      "imamId": 1,
+      "localId": 7
+    },
+    {
+      "globalId": 23,
+      "imamId": 1,
+      "localId": 23
+    }
+  ],
+  "الدنيا": [
+    {
+      "globalId": 8,
+      "imamId": 1,
+      "localId": 8
+    },
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    },
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    },
+    {
+      "globalId": 34,
+      "imamId": 1,
+      "localId": 34
+    },
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 63,
+      "imamId": 2,
+      "localId": 13
+    },
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    },
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    },
+    {
+      "globalId": 75,
+      "imamId": 3,
+      "localId": 9
+    },
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    },
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    },
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    }
+  ],
+  "دار": [
+    {
+      "globalId": 8,
+      "imamId": 1,
+      "localId": 8
+    }
+  ],
+  "ممر": [
+    {
+      "globalId": 8,
+      "imamId": 1,
+      "localId": 8
+    }
+  ],
+  "لا": [
+    {
+      "globalId": 8,
+      "imamId": 1,
+      "localId": 8
+    },
+    {
+      "globalId": 9,
+      "imamId": 1,
+      "localId": 9
+    },
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    },
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    },
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    },
+    {
+      "globalId": 24,
+      "imamId": 1,
+      "localId": 24
+    },
+    {
+      "globalId": 29,
+      "imamId": 1,
+      "localId": 29
+    },
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    },
+    {
+      "globalId": 46,
+      "imamId": 1,
+      "localId": 46
+    },
+    {
+      "globalId": 53,
+      "imamId": 2,
+      "localId": 3
+    },
+    {
+      "globalId": 59,
+      "imamId": 2,
+      "localId": 9
+    },
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    },
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    },
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    },
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    },
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    },
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    },
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 129,
+      "imamId": 6,
+      "localId": 17
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    },
+    {
+      "globalId": 140,
+      "imamId": 7,
+      "localId": 6
+    },
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    },
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    },
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    },
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    },
+    {
+      "globalId": 174,
+      "imamId": 9,
+      "localId": 10
+    },
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "مستقر": [
+    {
+      "globalId": 8,
+      "imamId": 1,
+      "localId": 8
+    }
+  ],
+  "تظلمن": [
+    {
+      "globalId": 9,
+      "imamId": 1,
+      "localId": 9
+    }
+  ],
+  "اذا": [
+    {
+      "globalId": 9,
+      "imamId": 1,
+      "localId": 9
+    },
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    },
+    {
+      "globalId": 60,
+      "imamId": 2,
+      "localId": 10
+    }
+  ],
+  "كنت": [
+    {
+      "globalId": 9,
+      "imamId": 1,
+      "localId": 9
+    }
+  ],
+  "مقتدرا": [
+    {
+      "globalId": 9,
+      "imamId": 1,
+      "localId": 9
+    }
+  ],
+  "عجبت": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    }
+  ],
+  "لمن": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    },
+    {
+      "globalId": 53,
+      "imamId": 2,
+      "localId": 3
+    }
+  ],
+  "يشك": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    }
+  ],
+  "في": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    },
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    },
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    },
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    },
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    },
+    {
+      "globalId": 23,
+      "imamId": 1,
+      "localId": 23
+    },
+    {
+      "globalId": 25,
+      "imamId": 1,
+      "localId": 25
+    },
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    },
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    },
+    {
+      "globalId": 52,
+      "imamId": 2,
+      "localId": 2
+    },
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    },
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    },
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    },
+    {
+      "globalId": 110,
+      "imamId": 5,
+      "localId": 13
+    },
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    },
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    },
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    },
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    },
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    },
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    },
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    },
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "الله": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    },
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    },
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    },
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    },
+    {
+      "globalId": 29,
+      "imamId": 1,
+      "localId": 29
+    },
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    },
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    },
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    },
+    {
+      "globalId": 42,
+      "imamId": 1,
+      "localId": 42
+    },
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    },
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    },
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    },
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    },
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    },
+    {
+      "globalId": 122,
+      "imamId": 6,
+      "localId": 10
+    },
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    },
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    },
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    },
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    },
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    },
+    {
+      "globalId": 152,
+      "imamId": 8,
+      "localId": 3
+    },
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    },
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    },
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    },
+    {
+      "globalId": 163,
+      "imamId": 8,
+      "localId": 14
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    },
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    },
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    },
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    },
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    },
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    },
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    },
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    },
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "وهو": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    }
+  ],
+  "يري": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    }
+  ],
+  "خلقه": [
+    {
+      "globalId": 10,
+      "imamId": 1,
+      "localId": 10
+    },
+    {
+      "globalId": 49,
+      "imamId": 1,
+      "localId": 49
+    }
+  ],
+  "رحم": [
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    }
+  ],
+  "امرا": [
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    }
+  ],
+  "عمل": [
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    }
+  ],
+  "هذه": [
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    },
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "خيرا": [
+    {
+      "globalId": 11,
+      "imamId": 1,
+      "localId": 11
+    }
+  ],
+  "اعقلوا": [
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    }
+  ],
+  "الخبر": [
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    }
+  ],
+  "سمعتموه": [
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    }
+  ],
+  "عقل": [
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    },
+    {
+      "globalId": 53,
+      "imamId": 2,
+      "localId": 3
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "رعايه": [
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    }
+  ],
+  "روايه": [
+    {
+      "globalId": 12,
+      "imamId": 1,
+      "localId": 12
+    }
+  ],
+  "يكون": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    },
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    },
+    {
+      "globalId": 204,
+      "imamId": 12,
+      "localId": 4
+    }
+  ],
+  "الصديق": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    }
+  ],
+  "صديقا": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    }
+  ],
+  "حتي": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    },
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    },
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    },
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "يحفظ": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    }
+  ],
+  "اخاه": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    }
+  ],
+  "غيبته": [
+    {
+      "globalId": 13,
+      "imamId": 1,
+      "localId": 13
+    }
+  ],
+  "اسرع": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    },
+    {
+      "globalId": 204,
+      "imamId": 12,
+      "localId": 4
+    }
+  ],
+  "الي": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    },
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    },
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    },
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    },
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    },
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    },
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    },
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    },
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "بما": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    }
+  ],
+  "يكرهون": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    }
+  ],
+  "قالوا": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    }
+  ],
+  "فيه": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    },
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    }
+  ],
+  "يعلمون": [
+    {
+      "globalId": 14,
+      "imamId": 1,
+      "localId": 14
+    }
+  ],
+  "افضل": [
+    {
+      "globalId": 15,
+      "imamId": 1,
+      "localId": 15
+    },
+    {
+      "globalId": 38,
+      "imamId": 1,
+      "localId": 38
+    },
+    {
+      "globalId": 48,
+      "imamId": 1,
+      "localId": 48
+    },
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 121,
+      "imamId": 6,
+      "localId": 9
+    },
+    {
+      "globalId": 141,
+      "imamId": 7,
+      "localId": 7
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    }
+  ],
+  "الاعمال": [
+    {
+      "globalId": 15,
+      "imamId": 1,
+      "localId": 15
+    },
+    {
+      "globalId": 109,
+      "imamId": 5,
+      "localId": 12
+    }
+  ],
+  "اكرهت": [
+    {
+      "globalId": 15,
+      "imamId": 1,
+      "localId": 15
+    }
+  ],
+  "نفسك": [
+    {
+      "globalId": 15,
+      "imamId": 1,
+      "localId": 15
+    }
+  ],
+  "عليه": [
+    {
+      "globalId": 15,
+      "imamId": 1,
+      "localId": 15
+    },
+    {
+      "globalId": 27,
+      "imamId": 1,
+      "localId": 27
+    },
+    {
+      "globalId": 34,
+      "imamId": 1,
+      "localId": 34
+    },
+    {
+      "globalId": 75,
+      "imamId": 3,
+      "localId": 9
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "وضع": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    }
+  ],
+  "نفسه": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    },
+    {
+      "globalId": 34,
+      "imamId": 1,
+      "localId": 34
+    },
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    },
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    },
+    {
+      "globalId": 65,
+      "imamId": 2,
+      "localId": 15
+    },
+    {
+      "globalId": 75,
+      "imamId": 3,
+      "localId": 9
+    },
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    },
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "مواضع": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    }
+  ],
+  "التهمه": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    }
+  ],
+  "فلا": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    }
+  ],
+  "يلومن": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    }
+  ],
+  "الظن": [
+    {
+      "globalId": 16,
+      "imamId": 1,
+      "localId": 16
+    },
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    }
+  ],
+  "الصمت": [
+    {
+      "globalId": 17,
+      "imamId": 1,
+      "localId": 17
+    }
+  ],
+  "سيد": [
+    {
+      "globalId": 17,
+      "imamId": 1,
+      "localId": 17
+    }
+  ],
+  "الاخلاق": [
+    {
+      "globalId": 17,
+      "imamId": 1,
+      "localId": 17
+    },
+    {
+      "globalId": 147,
+      "imamId": 7,
+      "localId": 13
+    }
+  ],
+  "وراثه": [
+    {
+      "globalId": 18,
+      "imamId": 1,
+      "localId": 18
+    }
+  ],
+  "كريمه": [
+    {
+      "globalId": 18,
+      "imamId": 1,
+      "localId": 18
+    },
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "افه": [
+    {
+      "globalId": 19,
+      "imamId": 1,
+      "localId": 19
+    },
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "الحديث": [
+    {
+      "globalId": 19,
+      "imamId": 1,
+      "localId": 19
+    }
+  ],
+  "الكذب": [
+    {
+      "globalId": 19,
+      "imamId": 1,
+      "localId": 19
+    }
+  ],
+  "الفقيه": [
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    }
+  ],
+  "لم": [
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    },
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    },
+    {
+      "globalId": 60,
+      "imamId": 2,
+      "localId": 10
+    },
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    },
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    },
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    },
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    },
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    }
+  ],
+  "يقنط": [
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    }
+  ],
+  "رحمه": [
+    {
+      "globalId": 20,
+      "imamId": 1,
+      "localId": 20
+    },
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "قول": [
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    }
+  ],
+  "يراد": [
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    }
+  ],
+  "وجه": [
+    {
+      "globalId": 21,
+      "imamId": 1,
+      "localId": 21
+    }
+  ],
+  "تعلموا": [
+    {
+      "globalId": 22,
+      "imamId": 1,
+      "localId": 22
+    }
+  ],
+  "فان": [
+    {
+      "globalId": 22,
+      "imamId": 1,
+      "localId": 22
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    },
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "تعلمه": [
+    {
+      "globalId": 22,
+      "imamId": 1,
+      "localId": 22
+    }
+  ],
+  "حسنه": [
+    {
+      "globalId": 22,
+      "imamId": 1,
+      "localId": 22
+    }
+  ],
+  "قصر": [
+    {
+      "globalId": 23,
+      "imamId": 1,
+      "localId": 23
+    }
+  ],
+  "عذب": [
+    {
+      "globalId": 23,
+      "imamId": 1,
+      "localId": 23
+    }
+  ],
+  "بالندم": [
+    {
+      "globalId": 23,
+      "imamId": 1,
+      "localId": 23
+    }
+  ],
+  "القناعه": [
+    {
+      "globalId": 24,
+      "imamId": 1,
+      "localId": 24
+    },
+    {
+      "globalId": 25,
+      "imamId": 1,
+      "localId": 25
+    }
+  ],
+  "مال": [
+    {
+      "globalId": 24,
+      "imamId": 1,
+      "localId": 24
+    }
+  ],
+  "ينفد": [
+    {
+      "globalId": 24,
+      "imamId": 1,
+      "localId": 24
+    }
+  ],
+  "الغني": [
+    {
+      "globalId": 25,
+      "imamId": 1,
+      "localId": 25
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "الا": [
+    {
+      "globalId": 26,
+      "imamId": 1,
+      "localId": 26
+    },
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    },
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    },
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    },
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    },
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    },
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    },
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "وان": [
+    {
+      "globalId": 26,
+      "imamId": 1,
+      "localId": 26
+    },
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "البلاء": [
+    {
+      "globalId": 26,
+      "imamId": 1,
+      "localId": 26
+    },
+    {
+      "globalId": 154,
+      "imamId": 8,
+      "localId": 5
+    },
+    {
+      "globalId": 163,
+      "imamId": 8,
+      "localId": 14
+    }
+  ],
+  "الفاقه": [
+    {
+      "globalId": 26,
+      "imamId": 1,
+      "localId": 26
+    }
+  ],
+  "شب": [
+    {
+      "globalId": 27,
+      "imamId": 1,
+      "localId": 27
+    }
+  ],
+  "علي": [
+    {
+      "globalId": 27,
+      "imamId": 1,
+      "localId": 27
+    },
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    },
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    },
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    },
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    },
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    },
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    },
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    },
+    {
+      "globalId": 154,
+      "imamId": 8,
+      "localId": 5
+    },
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    },
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    },
+    {
+      "globalId": 191,
+      "imamId": 11,
+      "localId": 3
+    }
+  ],
+  "شيء": [
+    {
+      "globalId": 27,
+      "imamId": 1,
+      "localId": 27
+    },
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 121,
+      "imamId": 6,
+      "localId": 9
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    }
+  ],
+  "شاب": [
+    {
+      "globalId": 27,
+      "imamId": 1,
+      "localId": 27
+    }
+  ],
+  "عاملان": [
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    }
+  ],
+  "عامل": [
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    }
+  ],
+  "يعمل": [
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    }
+  ],
+  "للاخره": [
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    }
+  ],
+  "وعامل": [
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    }
+  ],
+  "للدنيا": [
+    {
+      "globalId": 28,
+      "imamId": 1,
+      "localId": 28
+    }
+  ],
+  "تياسن": [
+    {
+      "globalId": 29,
+      "imamId": 1,
+      "localId": 29
+    }
+  ],
+  "روح": [
+    {
+      "globalId": 29,
+      "imamId": 1,
+      "localId": 29
+    }
+  ],
+  "عليكم": [
+    {
+      "globalId": 30,
+      "imamId": 1,
+      "localId": 30
+    },
+    {
+      "globalId": 127,
+      "imamId": 6,
+      "localId": 15
+    },
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "بطلب": [
+    {
+      "globalId": 30,
+      "imamId": 1,
+      "localId": 30
+    }
+  ],
+  "كتم": [
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    }
+  ],
+  "علما": [
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    }
+  ],
+  "الجمه": [
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    }
+  ],
+  "بلجام": [
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    }
+  ],
+  "نار": [
+    {
+      "globalId": 31,
+      "imamId": 1,
+      "localId": 31
+    }
+  ],
+  "الرفق": [
+    {
+      "globalId": 32,
+      "imamId": 1,
+      "localId": 32
+    }
+  ],
+  "الكرم": [
+    {
+      "globalId": 32,
+      "imamId": 1,
+      "localId": 32
+    }
+  ],
+  "والخرق": [
+    {
+      "globalId": 32,
+      "imamId": 1,
+      "localId": 32
+    }
+  ],
+  "اللوم": [
+    {
+      "globalId": 32,
+      "imamId": 1,
+      "localId": 32
+    }
+  ],
+  "الحلم": [
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    },
+    {
+      "globalId": 136,
+      "imamId": 7,
+      "localId": 2
+    }
+  ],
+  "سحاب": [
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    }
+  ],
+  "يمر": [
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    }
+  ],
+  "ورعد": [
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    }
+  ],
+  "مطر": [
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    }
+  ],
+  "له": [
+    {
+      "globalId": 33,
+      "imamId": 1,
+      "localId": 33
+    },
+    {
+      "globalId": 53,
+      "imamId": 2,
+      "localId": 3
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    },
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "كرمت": [
+    {
+      "globalId": 34,
+      "imamId": 1,
+      "localId": 34
+    },
+    {
+      "globalId": 65,
+      "imamId": 2,
+      "localId": 15
+    },
+    {
+      "globalId": 75,
+      "imamId": 3,
+      "localId": 9
+    }
+  ],
+  "هانت": [
+    {
+      "globalId": 34,
+      "imamId": 1,
+      "localId": 34
+    },
+    {
+      "globalId": 75,
+      "imamId": 3,
+      "localId": 9
+    }
+  ],
+  "طلب": [
+    {
+      "globalId": 35,
+      "imamId": 1,
+      "localId": 35
+    },
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    }
+  ],
+  "العلي": [
+    {
+      "globalId": 35,
+      "imamId": 1,
+      "localId": 35
+    }
+  ],
+  "سهر": [
+    {
+      "globalId": 35,
+      "imamId": 1,
+      "localId": 35
+    }
+  ],
+  "الليالي": [
+    {
+      "globalId": 35,
+      "imamId": 1,
+      "localId": 35
+    }
+  ],
+  "اخوك": [
+    {
+      "globalId": 36,
+      "imamId": 1,
+      "localId": 36
+    }
+  ],
+  "اساك": [
+    {
+      "globalId": 36,
+      "imamId": 1,
+      "localId": 36
+    }
+  ],
+  "الصدق": [
+    {
+      "globalId": 37,
+      "imamId": 1,
+      "localId": 37
+    },
+    {
+      "globalId": 47,
+      "imamId": 1,
+      "localId": 47
+    }
+  ],
+  "دعامه": [
+    {
+      "globalId": 37,
+      "imamId": 1,
+      "localId": 37
+    }
+  ],
+  "الاسلام": [
+    {
+      "globalId": 37,
+      "imamId": 1,
+      "localId": 37
+    },
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    }
+  ],
+  "وركن": [
+    {
+      "globalId": 37,
+      "imamId": 1,
+      "localId": 37
+    }
+  ],
+  "الزهد": [
+    {
+      "globalId": 38,
+      "imamId": 1,
+      "localId": 38
+    }
+  ],
+  "اخفاء": [
+    {
+      "globalId": 38,
+      "imamId": 1,
+      "localId": 38
+    }
+  ],
+  "اصلح": [
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    }
+  ],
+  "بينه": [
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    }
+  ],
+  "وبين": [
+    {
+      "globalId": 39,
+      "imamId": 1,
+      "localId": 39
+    }
+  ],
+  "بالصبر": [
+    {
+      "globalId": 40,
+      "imamId": 1,
+      "localId": 40
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "تدرك": [
+    {
+      "globalId": 40,
+      "imamId": 1,
+      "localId": 40
+    }
+  ],
+  "المكارم": [
+    {
+      "globalId": 40,
+      "imamId": 1,
+      "localId": 40
+    },
+    {
+      "globalId": 180,
+      "imamId": 10,
+      "localId": 4
+    }
+  ],
+  "اوثق": [
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    }
+  ],
+  "عري": [
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    }
+  ],
+  "الحب": [
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    }
+  ],
+  "والبغض": [
+    {
+      "globalId": 41,
+      "imamId": 1,
+      "localId": 41
+    }
+  ],
+  "احفظ": [
+    {
+      "globalId": 42,
+      "imamId": 1,
+      "localId": 42
+    }
+  ],
+  "يحفظك": [
+    {
+      "globalId": 42,
+      "imamId": 1,
+      "localId": 42
+    }
+  ],
+  "سوق": [
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    }
+  ],
+  "ربح": [
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    }
+  ],
+  "فيها": [
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    },
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "قوم": [
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    }
+  ],
+  "وخسر": [
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    }
+  ],
+  "اخرون": [
+    {
+      "globalId": 43,
+      "imamId": 1,
+      "localId": 43
+    },
+    {
+      "globalId": 177,
+      "imamId": 10,
+      "localId": 1
+    }
+  ],
+  "لسان": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    }
+  ],
+  "العاقل": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    },
+    {
+      "globalId": 186,
+      "imamId": 10,
+      "localId": 10
+    }
+  ],
+  "وراء": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    }
+  ],
+  "قلبه": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    },
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    },
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "وقلب": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    }
+  ],
+  "الاحمق": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    }
+  ],
+  "لسانه": [
+    {
+      "globalId": 44,
+      "imamId": 1,
+      "localId": 44
+    }
+  ],
+  "ابطا": [
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    }
+  ],
+  "عمله": [
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    },
+    {
+      "globalId": 110,
+      "imamId": 5,
+      "localId": 13
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    }
+  ],
+  "يسرع": [
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    }
+  ],
+  "نسبه": [
+    {
+      "globalId": 45,
+      "imamId": 1,
+      "localId": 45
+    }
+  ],
+  "ملك": [
+    {
+      "globalId": 46,
+      "imamId": 1,
+      "localId": 46
+    }
+  ],
+  "مع": [
+    {
+      "globalId": 46,
+      "imamId": 1,
+      "localId": 46
+    },
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    }
+  ],
+  "الكبر": [
+    {
+      "globalId": 46,
+      "imamId": 1,
+      "localId": 46
+    }
+  ],
+  "امانه": [
+    {
+      "globalId": 47,
+      "imamId": 1,
+      "localId": 47
+    }
+  ],
+  "والكذب": [
+    {
+      "globalId": 47,
+      "imamId": 1,
+      "localId": 47
+    }
+  ],
+  "خيانه": [
+    {
+      "globalId": 47,
+      "imamId": 1,
+      "localId": 47
+    }
+  ],
+  "شرف": [
+    {
+      "globalId": 48,
+      "imamId": 1,
+      "localId": 48
+    }
+  ],
+  "والنعم": [
+    {
+      "globalId": 48,
+      "imamId": 1,
+      "localId": 48
+    }
+  ],
+  "اوفر": [
+    {
+      "globalId": 48,
+      "imamId": 1,
+      "localId": 48
+    }
+  ],
+  "ذخر": [
+    {
+      "globalId": 48,
+      "imamId": 1,
+      "localId": 48
+    }
+  ],
+  "ساء": [
+    {
+      "globalId": 49,
+      "imamId": 1,
+      "localId": 49
+    }
+  ],
+  "ضاق": [
+    {
+      "globalId": 49,
+      "imamId": 1,
+      "localId": 49
+    }
+  ],
+  "رزقه": [
+    {
+      "globalId": 49,
+      "imamId": 1,
+      "localId": 49
+    }
+  ],
+  "حسن": [
+    {
+      "globalId": 50,
+      "imamId": 1,
+      "localId": 50
+    },
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    },
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    },
+    {
+      "globalId": 191,
+      "imamId": 11,
+      "localId": 3
+    },
+    {
+      "globalId": 196,
+      "imamId": 11,
+      "localId": 8
+    }
+  ],
+  "الخلق": [
+    {
+      "globalId": 50,
+      "imamId": 1,
+      "localId": 50
+    },
+    {
+      "globalId": 191,
+      "imamId": 11,
+      "localId": 3
+    },
+    {
+      "globalId": 196,
+      "imamId": 11,
+      "localId": 8
+    }
+  ],
+  "اول": [
+    {
+      "globalId": 50,
+      "imamId": 1,
+      "localId": 50
+    }
+  ],
+  "الصداقه": [
+    {
+      "globalId": 50,
+      "imamId": 1,
+      "localId": 50
+    }
+  ],
+  "تشاور": [
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    }
+  ],
+  "هدوا": [
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    }
+  ],
+  "رشدهم": [
+    {
+      "globalId": 51,
+      "imamId": 2,
+      "localId": 1
+    }
+  ],
+  "الحياء": [
+    {
+      "globalId": 52,
+      "imamId": 2,
+      "localId": 2
+    },
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "والايمان": [
+    {
+      "globalId": 52,
+      "imamId": 2,
+      "localId": 2
+    }
+  ],
+  "الجنه": [
+    {
+      "globalId": 52,
+      "imamId": 2,
+      "localId": 2
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    },
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    }
+  ],
+  "ادب": [
+    {
+      "globalId": 53,
+      "imamId": 2,
+      "localId": 3
+    }
+  ],
+  "التواضع": [
+    {
+      "globalId": 54,
+      "imamId": 2,
+      "localId": 4
+    },
+    {
+      "globalId": 194,
+      "imamId": 11,
+      "localId": 6
+    }
+  ],
+  "ثمره": [
+    {
+      "globalId": 54,
+      "imamId": 2,
+      "localId": 4
+    }
+  ],
+  "السخاء": [
+    {
+      "globalId": 55,
+      "imamId": 2,
+      "localId": 5
+    }
+  ],
+  "شيم": [
+    {
+      "globalId": 55,
+      "imamId": 2,
+      "localId": 5
+    }
+  ],
+  "الابرار": [
+    {
+      "globalId": 55,
+      "imamId": 2,
+      "localId": 5
+    }
+  ],
+  "وقي": [
+    {
+      "globalId": 56,
+      "imamId": 2,
+      "localId": 6
+    }
+  ],
+  "العرض": [
+    {
+      "globalId": 56,
+      "imamId": 2,
+      "localId": 6
+    }
+  ],
+  "مفتاح": [
+    {
+      "globalId": 57,
+      "imamId": 2,
+      "localId": 7
+    },
+    {
+      "globalId": 98,
+      "imamId": 5,
+      "localId": 1
+    },
+    {
+      "globalId": 179,
+      "imamId": 10,
+      "localId": 3
+    }
+  ],
+  "الفرج": [
+    {
+      "globalId": 57,
+      "imamId": 2,
+      "localId": 7
+    },
+    {
+      "globalId": 204,
+      "imamId": 12,
+      "localId": 4
+    },
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "حاسب": [
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    }
+  ],
+  "ومن": [
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    },
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    },
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "غفل": [
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    }
+  ],
+  "عنها": [
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    }
+  ],
+  "خسر": [
+    {
+      "globalId": 58,
+      "imamId": 2,
+      "localId": 8
+    }
+  ],
+  "علم": [
+    {
+      "globalId": 59,
+      "imamId": 2,
+      "localId": 9
+    },
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    },
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    }
+  ],
+  "ينفع": [
+    {
+      "globalId": 59,
+      "imamId": 2,
+      "localId": 9
+    }
+  ],
+  "ككنز": [
+    {
+      "globalId": 59,
+      "imamId": 2,
+      "localId": 9
+    }
+  ],
+  "ينفق": [
+    {
+      "globalId": 59,
+      "imamId": 2,
+      "localId": 9
+    }
+  ],
+  "منه": [
+    {
+      "globalId": 59,
+      "imamId": 2,
+      "localId": 9
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "تكن": [
+    {
+      "globalId": 60,
+      "imamId": 2,
+      "localId": 10
+    }
+  ],
+  "عالما": [
+    {
+      "globalId": 60,
+      "imamId": 2,
+      "localId": 10
+    }
+  ],
+  "فكن": [
+    {
+      "globalId": 60,
+      "imamId": 2,
+      "localId": 10
+    }
+  ],
+  "متعلما": [
+    {
+      "globalId": 60,
+      "imamId": 2,
+      "localId": 10
+    }
+  ],
+  "الخير": [
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    }
+  ],
+  "كله": [
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    }
+  ],
+  "صون": [
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    }
+  ],
+  "الرجل": [
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "وعرضه": [
+    {
+      "globalId": 61,
+      "imamId": 2,
+      "localId": 11
+    }
+  ],
+  "للمومن": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "اربع": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "علامات": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "التوكل": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    },
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    }
+  ],
+  "والتفويض": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "والرضا": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "بقضاء": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    },
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    }
+  ],
+  "والتسليم": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "لامر": [
+    {
+      "globalId": 62,
+      "imamId": 2,
+      "localId": 12
+    }
+  ],
+  "ظل": [
+    {
+      "globalId": 63,
+      "imamId": 2,
+      "localId": 13
+    }
+  ],
+  "زايل": [
+    {
+      "globalId": 63,
+      "imamId": 2,
+      "localId": 13
+    }
+  ],
+  "عرف": [
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    },
+    {
+      "globalId": 183,
+      "imamId": 10,
+      "localId": 7
+    }
+  ],
+  "احبه": [
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    }
+  ],
+  "زهد": [
+    {
+      "globalId": 64,
+      "imamId": 2,
+      "localId": 14
+    }
+  ],
+  "دنياه": [
+    {
+      "globalId": 65,
+      "imamId": 2,
+      "localId": 15
+    }
+  ],
+  "عبد": [
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "العقل": [
+    {
+      "globalId": 66,
+      "imamId": 2,
+      "localId": 16
+    },
+    {
+      "globalId": 144,
+      "imamId": 7,
+      "localId": 10
+    },
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    },
+    {
+      "globalId": 196,
+      "imamId": 11,
+      "localId": 8
+    }
+  ],
+  "انما": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    }
+  ],
+  "خرجت": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "لطلب": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "الاصلاح": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "امه": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "جدي": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "اريد": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "ان": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    },
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    },
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    },
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 112,
+      "imamId": 5,
+      "localId": 15
+    },
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    },
+    {
+      "globalId": 122,
+      "imamId": 6,
+      "localId": 10
+    },
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    },
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    },
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    },
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    },
+    {
+      "globalId": 163,
+      "imamId": 8,
+      "localId": 14
+    },
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    },
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    }
+  ],
+  "امر": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    }
+  ],
+  "بالمعروف": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    }
+  ],
+  "وانهي": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    }
+  ],
+  "عن": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "المنكر": [
+    {
+      "globalId": 67,
+      "imamId": 3,
+      "localId": 1
+    },
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    }
+  ],
+  "هيهات": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    }
+  ],
+  "منا": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    },
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "الذله": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    },
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "يابي": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    }
+  ],
+  "لنا": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    }
+  ],
+  "ذلك": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    },
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    },
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "ورسوله": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    }
+  ],
+  "والمومنون": [
+    {
+      "globalId": 68,
+      "imamId": 3,
+      "localId": 2
+    }
+  ],
+  "الموت": [
+    {
+      "globalId": 69,
+      "imamId": 3,
+      "localId": 3
+    },
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    }
+  ],
+  "اولي": [
+    {
+      "globalId": 69,
+      "imamId": 3,
+      "localId": 3
+    }
+  ],
+  "ركوب": [
+    {
+      "globalId": 69,
+      "imamId": 3,
+      "localId": 3
+    }
+  ],
+  "العار": [
+    {
+      "globalId": 69,
+      "imamId": 3,
+      "localId": 3
+    }
+  ],
+  "اني": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    },
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    },
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    },
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    }
+  ],
+  "اري": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    }
+  ],
+  "سعاده": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    }
+  ],
+  "ولا": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    },
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "الحياه": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    }
+  ],
+  "الظالمين": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    }
+  ],
+  "برما": [
+    {
+      "globalId": 70,
+      "imamId": 3,
+      "localId": 4
+    }
+  ],
+  "عبيد": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "والدين": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "لعق": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "السنتهم": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "يحوطونه": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "درت": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "معايشهم": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "فاذا": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    },
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "محصوا": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "بالبلاء": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "قل": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "الديانون": [
+    {
+      "globalId": 71,
+      "imamId": 3,
+      "localId": 5
+    }
+  ],
+  "الدعي": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "بن": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "قد": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    },
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "ركز": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "بين": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "اثنتين": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "السله": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "والذله": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "وهيهات": [
+    {
+      "globalId": 72,
+      "imamId": 3,
+      "localId": 6
+    }
+  ],
+  "يكن": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    },
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "لكم": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "دين": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    },
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    }
+  ],
+  "وكنتم": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "تخافون": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "المعاد": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "فكونوا": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "احرارا": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "دنياكم": [
+    {
+      "globalId": 73,
+      "imamId": 3,
+      "localId": 7
+    }
+  ],
+  "كان": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    },
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    },
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    },
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    }
+  ],
+  "محمد": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    },
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    },
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "يستقم": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    }
+  ],
+  "بقتلي": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    }
+  ],
+  "فيا": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    }
+  ],
+  "سيوف": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    }
+  ],
+  "خذيني": [
+    {
+      "globalId": 74,
+      "imamId": 3,
+      "localId": 8
+    }
+  ],
+  "الحمد": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    },
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    },
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    }
+  ],
+  "لله": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    },
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    },
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    },
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    }
+  ],
+  "الذي": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    },
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    }
+  ],
+  "خلقني": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    }
+  ],
+  "حرا": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    }
+  ],
+  "ولم": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    },
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "يجعلني": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    }
+  ],
+  "الجبارين": [
+    {
+      "globalId": 76,
+      "imamId": 3,
+      "localId": 10
+    }
+  ],
+  "اللهم": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    },
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    },
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    },
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    },
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    },
+    {
+      "globalId": 96,
+      "imamId": 4,
+      "localId": 15
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "اسالك": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    },
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    }
+  ],
+  "بحق": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "البقعه": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "وبحق": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "حل": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "بها": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "الملايكه": [
+    {
+      "globalId": 77,
+      "imamId": 3,
+      "localId": 11
+    }
+  ],
+  "صبرا": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "قضايك": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "يا": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "رب": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "اله": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "انت": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "غياث": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "المستغيثين": [
+    {
+      "globalId": 78,
+      "imamId": 3,
+      "localId": 12
+    }
+  ],
+  "انك": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "تري": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "مكاني": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "وتسمع": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "كلامي": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "فارحم": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "ضعفي": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "وقله": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "حيلتي": [
+    {
+      "globalId": 79,
+      "imamId": 3,
+      "localId": 13
+    }
+  ],
+  "اتوجه": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    }
+  ],
+  "اليك": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "بمحمد": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    }
+  ],
+  "وال": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    }
+  ],
+  "واسالك": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    }
+  ],
+  "بحرمه": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    }
+  ],
+  "نبيك": [
+    {
+      "globalId": 80,
+      "imamId": 3,
+      "localId": 14
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    }
+  ],
+  "الجهاد": [
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    }
+  ],
+  "كلمه": [
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    }
+  ],
+  "عدل": [
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    }
+  ],
+  "عند": [
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    },
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    },
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    },
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    }
+  ],
+  "امام": [
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    }
+  ],
+  "جاير": [
+    {
+      "globalId": 81,
+      "imamId": 3,
+      "localId": 15
+    }
+  ],
+  "الاول": [
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    }
+  ],
+  "قبل": [
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    },
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "الكل": [
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    }
+  ],
+  "والاخر": [
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    }
+  ],
+  "بعد": [
+    {
+      "globalId": 82,
+      "imamId": 4,
+      "localId": 1
+    }
+  ],
+  "صل": [
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    },
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "واله": [
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    },
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 89,
+      "imamId": 4,
+      "localId": 8
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    },
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    },
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "والبسني": [
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    }
+  ],
+  "زينه": [
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    }
+  ],
+  "المتقين": [
+    {
+      "globalId": 83,
+      "imamId": 4,
+      "localId": 2
+    },
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    }
+  ],
+  "واجعل": [
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "نفسي": [
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "واليقين": [
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "قلبي": [
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "والاخلاص": [
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "عملي": [
+    {
+      "globalId": 84,
+      "imamId": 4,
+      "localId": 3
+    }
+  ],
+  "تنزع": [
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    }
+  ],
+  "مني": [
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    }
+  ],
+  "احسن": [
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    },
+    {
+      "globalId": 109,
+      "imamId": 5,
+      "localId": 12
+    },
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    },
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    }
+  ],
+  "اعطيتني": [
+    {
+      "globalId": 85,
+      "imamId": 4,
+      "localId": 4
+    }
+  ],
+  "واجعلني": [
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    }
+  ],
+  "اهل": [
+    {
+      "globalId": 86,
+      "imamId": 4,
+      "localId": 5
+    },
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    }
+  ],
+  "اعوذ": [
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    }
+  ],
+  "بك": [
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    }
+  ],
+  "الفقر": [
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    },
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    }
+  ],
+  "الخوف": [
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    }
+  ],
+  "منك": [
+    {
+      "globalId": 87,
+      "imamId": 4,
+      "localId": 6
+    }
+  ],
+  "يودي": [
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "شكره": [
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    }
+  ],
+  "توفيقه": [
+    {
+      "globalId": 88,
+      "imamId": 4,
+      "localId": 7
+    }
+  ],
+  "واستعملني": [
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    }
+  ],
+  "بسنه": [
+    {
+      "globalId": 90,
+      "imamId": 4,
+      "localId": 9
+    }
+  ],
+  "واغفر": [
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    }
+  ],
+  "لي": [
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    }
+  ],
+  "اخطات": [
+    {
+      "globalId": 91,
+      "imamId": 4,
+      "localId": 10
+    }
+  ],
+  "اعظم": [
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    }
+  ],
+  "قدرا": [
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    }
+  ],
+  "ترك": [
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    }
+  ],
+  "يعنيه": [
+    {
+      "globalId": 92,
+      "imamId": 4,
+      "localId": 11
+    }
+  ],
+  "كفاه": [
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    }
+  ],
+  "يعلم": [
+    {
+      "globalId": 93,
+      "imamId": 4,
+      "localId": 12
+    },
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    },
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    },
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "بهايك": [
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    }
+  ],
+  "بابهاه": [
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    }
+  ],
+  "جمالك": [
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    }
+  ],
+  "باجمله": [
+    {
+      "globalId": 94,
+      "imamId": 4,
+      "localId": 13
+    }
+  ],
+  "واحفظني": [
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "يدي": [
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "خلفي": [
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "وعن": [
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "يميني": [
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "شمالي": [
+    {
+      "globalId": 95,
+      "imamId": 4,
+      "localId": 14
+    }
+  ],
+  "الهمنا": [
+    {
+      "globalId": 96,
+      "imamId": 4,
+      "localId": 15
+    }
+  ],
+  "ذكرك": [
+    {
+      "globalId": 96,
+      "imamId": 4,
+      "localId": 15
+    }
+  ],
+  "واعصمنا": [
+    {
+      "globalId": 96,
+      "imamId": 4,
+      "localId": 15
+    }
+  ],
+  "نسيانك": [
+    {
+      "globalId": 96,
+      "imamId": 4,
+      "localId": 15
+    }
+  ],
+  "احبكم": [
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    }
+  ],
+  "احسنكم": [
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    }
+  ],
+  "خلقا": [
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    },
+    {
+      "globalId": 104,
+      "imamId": 5,
+      "localId": 7
+    },
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "واعملكم": [
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    }
+  ],
+  "بطاعته": [
+    {
+      "globalId": 97,
+      "imamId": 4,
+      "localId": 16
+    }
+  ],
+  "نور": [
+    {
+      "globalId": 98,
+      "imamId": 5,
+      "localId": 1
+    },
+    {
+      "globalId": 165,
+      "imamId": 9,
+      "localId": 1
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    }
+  ],
+  "لو": [
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    },
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    },
+    {
+      "globalId": 131,
+      "imamId": 6,
+      "localId": 19
+    }
+  ],
+  "لطلبوه": [
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    }
+  ],
+  "بسفك": [
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    }
+  ],
+  "المهج": [
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    }
+  ],
+  "خوض": [
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    }
+  ],
+  "اللجج": [
+    {
+      "globalId": 99,
+      "imamId": 5,
+      "localId": 2
+    }
+  ],
+  "منكم": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "اجر": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "كاجر": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "المتعلم": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "فضل": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "فتعلموا": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "حملته": [
+    {
+      "globalId": 100,
+      "imamId": 5,
+      "localId": 3
+    }
+  ],
+  "عباده": [
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    },
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    }
+  ],
+  "يستحفي": [
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    }
+  ],
+  "سيما": [
+    {
+      "globalId": 101,
+      "imamId": 5,
+      "localId": 4
+    }
+  ],
+  "التوحيد": [
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    },
+    {
+      "globalId": 152,
+      "imamId": 8,
+      "localId": 3
+    }
+  ],
+  "تطيع": [
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    }
+  ],
+  "تشرك": [
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    }
+  ],
+  "شييا": [
+    {
+      "globalId": 102,
+      "imamId": 5,
+      "localId": 5
+    }
+  ],
+  "كم": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "معجب": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "اهلكته": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "عجبه": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "صاحب": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "اهلكه": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "جهله": [
+    {
+      "globalId": 103,
+      "imamId": 5,
+      "localId": 6
+    }
+  ],
+  "اكمل": [
+    {
+      "globalId": 104,
+      "imamId": 5,
+      "localId": 7
+    }
+  ],
+  "عقلا": [
+    {
+      "globalId": 104,
+      "imamId": 5,
+      "localId": 7
+    }
+  ],
+  "احسنهم": [
+    {
+      "globalId": 104,
+      "imamId": 5,
+      "localId": 7
+    },
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "الحسد": [
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    }
+  ],
+  "ياكل": [
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    }
+  ],
+  "كما": [
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    }
+  ],
+  "تاكل": [
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    }
+  ],
+  "النار": [
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    },
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "الحطب": [
+    {
+      "globalId": 105,
+      "imamId": 5,
+      "localId": 8
+    }
+  ],
+  "يحب": [
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "ليصون": [
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "عرضه": [
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "يقضي": [
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "دينه": [
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "يصل": [
+    {
+      "globalId": 106,
+      "imamId": 5,
+      "localId": 9
+    }
+  ],
+  "الغضب": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 179,
+      "imamId": 10,
+      "localId": 3
+    }
+  ],
+  "الشيطان": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    },
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "خلق": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    }
+  ],
+  "تطفا": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    }
+  ],
+  "بالماء": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    }
+  ],
+  "غضب": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    }
+  ],
+  "احدكم": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    }
+  ],
+  "فليتوضا": [
+    {
+      "globalId": 107,
+      "imamId": 5,
+      "localId": 10
+    }
+  ],
+  "اصبح": [
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    }
+  ],
+  "يهم": [
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    }
+  ],
+  "بظلم": [
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    }
+  ],
+  "احد": [
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    }
+  ],
+  "غفر": [
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "اجترم": [
+    {
+      "globalId": 108,
+      "imamId": 5,
+      "localId": 11
+    },
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    }
+  ],
+  "اصعبها": [
+    {
+      "globalId": 109,
+      "imamId": 5,
+      "localId": 12
+    }
+  ],
+  "افضلها": [
+    {
+      "globalId": 109,
+      "imamId": 5,
+      "localId": 12
+    }
+  ],
+  "اوقرها": [
+    {
+      "globalId": 109,
+      "imamId": 5,
+      "localId": 12
+    }
+  ],
+  "التقي": [
+    {
+      "globalId": 110,
+      "imamId": 5,
+      "localId": 13
+    },
+    {
+      "globalId": 147,
+      "imamId": 7,
+      "localId": 13
+    }
+  ],
+  "مسترخ": [
+    {
+      "globalId": 110,
+      "imamId": 5,
+      "localId": 13
+    }
+  ],
+  "جسده": [
+    {
+      "globalId": 110,
+      "imamId": 5,
+      "localId": 13
+    }
+  ],
+  "مجتهد": [
+    {
+      "globalId": 110,
+      "imamId": 5,
+      "localId": 13
+    }
+  ],
+  "مقرونان": [
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "قرن": [
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    },
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    }
+  ],
+  "ذهب": [
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "احدهما": [
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "تبعه": [
+    {
+      "globalId": 111,
+      "imamId": 5,
+      "localId": 14
+    }
+  ],
+  "تعرف": [
+    {
+      "globalId": 112,
+      "imamId": 5,
+      "localId": 15
+    }
+  ],
+  "الجهل": [
+    {
+      "globalId": 112,
+      "imamId": 5,
+      "localId": 15
+    }
+  ],
+  "غير": [
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    },
+    {
+      "globalId": 168,
+      "imamId": 9,
+      "localId": 4
+    },
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "يفسد": [
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    }
+  ],
+  "اكثر": [
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    }
+  ],
+  "مما": [
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    }
+  ],
+  "يصلح": [
+    {
+      "globalId": 113,
+      "imamId": 6,
+      "localId": 1
+    }
+  ],
+  "العلماء": [
+    {
+      "globalId": 114,
+      "imamId": 6,
+      "localId": 2
+    }
+  ],
+  "ورثه": [
+    {
+      "globalId": 114,
+      "imamId": 6,
+      "localId": 2
+    }
+  ],
+  "الانبياء": [
+    {
+      "globalId": 114,
+      "imamId": 6,
+      "localId": 2
+    }
+  ],
+  "يزال": [
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    }
+  ],
+  "المومن": [
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    },
+    {
+      "globalId": 171,
+      "imamId": 9,
+      "localId": 7
+    },
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    },
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    }
+  ],
+  "مومنا": [
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    },
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    },
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    }
+  ],
+  "يشهد": [
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    }
+  ],
+  "بزور": [
+    {
+      "globalId": 115,
+      "imamId": 6,
+      "localId": 3
+    }
+  ],
+  "واعظ": [
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    }
+  ],
+  "ينفعه": [
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    }
+  ],
+  "غيره": [
+    {
+      "globalId": 116,
+      "imamId": 6,
+      "localId": 4
+    }
+  ],
+  "خص": [
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    }
+  ],
+  "بايتين": [
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    }
+  ],
+  "يعبدوا": [
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    }
+  ],
+  "اياه": [
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    }
+  ],
+  "يشكروا": [
+    {
+      "globalId": 117,
+      "imamId": 6,
+      "localId": 5
+    }
+  ],
+  "التوحد": [
+    {
+      "globalId": 118,
+      "imamId": 6,
+      "localId": 6
+    }
+  ],
+  "اوحش": [
+    {
+      "globalId": 118,
+      "imamId": 6,
+      "localId": 6
+    }
+  ],
+  "القبر": [
+    {
+      "globalId": 118,
+      "imamId": 6,
+      "localId": 6
+    }
+  ],
+  "تنظروا": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    }
+  ],
+  "طول": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "ركوع": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "سجوده": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "اعتاده": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "فلو": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "تركه": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "استوحش": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "لكن": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    },
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    }
+  ],
+  "انظروا": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "صدق": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "حديثه": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "اداء": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "امانته": [
+    {
+      "globalId": 119,
+      "imamId": 6,
+      "localId": 7
+    }
+  ],
+  "لكل": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "حقيقه": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "بلغ": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "اصابه": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "ليخطيه": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "اخطاه": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "ليصيبه": [
+    {
+      "globalId": 120,
+      "imamId": 6,
+      "localId": 8
+    }
+  ],
+  "معرفه": [
+    {
+      "globalId": 122,
+      "imamId": 6,
+      "localId": 10
+    },
+    {
+      "globalId": 152,
+      "imamId": 8,
+      "localId": 3
+    },
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "جهه": [
+    {
+      "globalId": 122,
+      "imamId": 6,
+      "localId": 10
+    }
+  ],
+  "العباده": [
+    {
+      "globalId": 122,
+      "imamId": 6,
+      "localId": 10
+    },
+    {
+      "globalId": 141,
+      "imamId": 7,
+      "localId": 7
+    },
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "كظم": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "غيظا": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "شاء": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "يمضيه": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "امضاه": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "ملا": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "يوم": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "القيامه": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    },
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    },
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "رضاه": [
+    {
+      "globalId": 123,
+      "imamId": 6,
+      "localId": 11
+    }
+  ],
+  "صنايع": [
+    {
+      "globalId": 124,
+      "imamId": 6,
+      "localId": 12
+    }
+  ],
+  "المعروف": [
+    {
+      "globalId": 124,
+      "imamId": 6,
+      "localId": 12
+    },
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    }
+  ],
+  "تقي": [
+    {
+      "globalId": 124,
+      "imamId": 6,
+      "localId": 12
+    },
+    {
+      "globalId": 160,
+      "imamId": 8,
+      "localId": 11
+    }
+  ],
+  "مصارع": [
+    {
+      "globalId": 124,
+      "imamId": 6,
+      "localId": 12
+    }
+  ],
+  "السوء": [
+    {
+      "globalId": 124,
+      "imamId": 6,
+      "localId": 12
+    }
+  ],
+  "الصدقه": [
+    {
+      "globalId": 125,
+      "imamId": 6,
+      "localId": 13
+    }
+  ],
+  "بقدر": [
+    {
+      "globalId": 125,
+      "imamId": 6,
+      "localId": 13
+    }
+  ],
+  "العيال": [
+    {
+      "globalId": 125,
+      "imamId": 6,
+      "localId": 13
+    }
+  ],
+  "ثلاث": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    },
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "اخلاق": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    }
+  ],
+  "المومنين": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    },
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "البشر": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    }
+  ],
+  "بذل": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    }
+  ],
+  "كف": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    }
+  ],
+  "الاذي": [
+    {
+      "globalId": 126,
+      "imamId": 6,
+      "localId": 14
+    }
+  ],
+  "بالتفكر": [
+    {
+      "globalId": 127,
+      "imamId": 6,
+      "localId": 15
+    }
+  ],
+  "فانه": [
+    {
+      "globalId": 127,
+      "imamId": 6,
+      "localId": 15
+    }
+  ],
+  "حياه": [
+    {
+      "globalId": 127,
+      "imamId": 6,
+      "localId": 15
+    }
+  ],
+  "قلب": [
+    {
+      "globalId": 127,
+      "imamId": 6,
+      "localId": 15
+    },
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    }
+  ],
+  "البصير": [
+    {
+      "globalId": 127,
+      "imamId": 6,
+      "localId": 15
+    }
+  ],
+  "اقرار": [
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    }
+  ],
+  "باللسان": [
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    }
+  ],
+  "عقد": [
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    }
+  ],
+  "بالقلب": [
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    }
+  ],
+  "بالاركان": [
+    {
+      "globalId": 128,
+      "imamId": 6,
+      "localId": 16
+    }
+  ],
+  "مروه": [
+    {
+      "globalId": 129,
+      "imamId": 6,
+      "localId": 17
+    }
+  ],
+  "لكذوب": [
+    {
+      "globalId": 129,
+      "imamId": 6,
+      "localId": 17
+    }
+  ],
+  "غيبه": [
+    {
+      "globalId": 129,
+      "imamId": 6,
+      "localId": 17
+    }
+  ],
+  "لفاسق": [
+    {
+      "globalId": 129,
+      "imamId": 6,
+      "localId": 17
+    }
+  ],
+  "امتلات": [
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "عين": [
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "امري": [
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "دموع": [
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "خشيه": [
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "اجاره": [
+    {
+      "globalId": 130,
+      "imamId": 6,
+      "localId": 18
+    }
+  ],
+  "الدعاء": [
+    {
+      "globalId": 131,
+      "imamId": 6,
+      "localId": 19
+    },
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "يرد": [
+    {
+      "globalId": 131,
+      "imamId": 6,
+      "localId": 19
+    }
+  ],
+  "القضاء": [
+    {
+      "globalId": 131,
+      "imamId": 6,
+      "localId": 19
+    }
+  ],
+  "ابرم": [
+    {
+      "globalId": 131,
+      "imamId": 6,
+      "localId": 19
+    }
+  ],
+  "ابراما": [
+    {
+      "globalId": 131,
+      "imamId": 6,
+      "localId": 19
+    }
+  ],
+  "درجه": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "يبلغ": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "اليها": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "يكره": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "اهلها": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "الشكر": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "يجمعون": [
+    {
+      "globalId": 132,
+      "imamId": 6,
+      "localId": 20
+    }
+  ],
+  "تقبلوا": [
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    }
+  ],
+  "عالم": [
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    }
+  ],
+  "مذهبه": [
+    {
+      "globalId": 133,
+      "imamId": 6,
+      "localId": 21
+    }
+  ],
+  "اوحي": [
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    }
+  ],
+  "عز": [
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    },
+    {
+      "globalId": 171,
+      "imamId": 9,
+      "localId": 7
+    }
+  ],
+  "جل": [
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    }
+  ],
+  "خدمي": [
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    }
+  ],
+  "خدمني": [
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    }
+  ],
+  "اتعدي": [
+    {
+      "globalId": 134,
+      "imamId": 6,
+      "localId": 22
+    }
+  ],
+  "البليه": [
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    }
+  ],
+  "مصيبه": [
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    }
+  ],
+  "الجزع": [
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    }
+  ],
+  "جمل": [
+    {
+      "globalId": 135,
+      "imamId": 7,
+      "localId": 1
+    }
+  ],
+  "عنوان": [
+    {
+      "globalId": 136,
+      "imamId": 7,
+      "localId": 2
+    }
+  ],
+  "الوقار": [
+    {
+      "globalId": 136,
+      "imamId": 7,
+      "localId": 2
+    }
+  ],
+  "الارض": [
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "يسعون": [
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "حوايج": [
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "هم": [
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "الامنون": [
+    {
+      "globalId": 137,
+      "imamId": 7,
+      "localId": 3
+    }
+  ],
+  "الكاظم": [
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    }
+  ],
+  "ظلمه": [
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    },
+    {
+      "globalId": 165,
+      "imamId": 9,
+      "localId": 1
+    }
+  ],
+  "ياخذ": [
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    },
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "بحقه": [
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "او": [
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    }
+  ],
+  "يتركه": [
+    {
+      "globalId": 138,
+      "imamId": 7,
+      "localId": 4
+    }
+  ],
+  "العبد": [
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    }
+  ],
+  "جوعه": [
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    }
+  ],
+  "شبع": [
+    {
+      "globalId": 139,
+      "imamId": 7,
+      "localId": 5
+    }
+  ],
+  "تشتم": [
+    {
+      "globalId": 140,
+      "imamId": 7,
+      "localId": 6
+    }
+  ],
+  "فتكسيب": [
+    {
+      "globalId": 140,
+      "imamId": 7,
+      "localId": 6
+    }
+  ],
+  "عداوه": [
+    {
+      "globalId": 140,
+      "imamId": 7,
+      "localId": 6
+    }
+  ],
+  "العفاف": [
+    {
+      "globalId": 141,
+      "imamId": 7,
+      "localId": 7
+    }
+  ],
+  "يخلف": [
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    }
+  ],
+  "الميعاد": [
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    }
+  ],
+  "يجهل": [
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    }
+  ],
+  "السر": [
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    }
+  ],
+  "العلانيه": [
+    {
+      "globalId": 142,
+      "imamId": 7,
+      "localId": 8
+    }
+  ],
+  "تولي": [
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    }
+  ],
+  "عملا": [
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    }
+  ],
+  "فليرفق": [
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    }
+  ],
+  "بمن": [
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    }
+  ],
+  "تحت": [
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    }
+  ],
+  "يده": [
+    {
+      "globalId": 143,
+      "imamId": 7,
+      "localId": 9
+    }
+  ],
+  "دليل": [
+    {
+      "globalId": 144,
+      "imamId": 7,
+      "localId": 10
+    }
+  ],
+  "تدعوا": [
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    }
+  ],
+  "لاهلها": [
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    }
+  ],
+  "فانها": [
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    }
+  ],
+  "تترككم": [
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    }
+  ],
+  "لها": [
+    {
+      "globalId": 145,
+      "imamId": 7,
+      "localId": 11
+    }
+  ],
+  "صلي": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "ركعتين": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    }
+  ],
+  "يلهو": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    }
+  ],
+  "فيهما": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    }
+  ],
+  "بنفسه": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    }
+  ],
+  "تقدم": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "ذنبه": [
+    {
+      "globalId": 146,
+      "imamId": 7,
+      "localId": 12
+    },
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "رييس": [
+    {
+      "globalId": 147,
+      "imamId": 7,
+      "localId": 13
+    }
+  ],
+  "اطعم": [
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    }
+  ],
+  "جوع": [
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    }
+  ],
+  "اطعمه": [
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    }
+  ],
+  "ثمار": [
+    {
+      "globalId": 148,
+      "imamId": 7,
+      "localId": 14
+    }
+  ],
+  "داء": [
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    }
+  ],
+  "ايسر": [
+    {
+      "globalId": 149,
+      "imamId": 7,
+      "localId": 15
+    }
+  ],
+  "ليس": [
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    }
+  ],
+  "كثره": [
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "الصلاه": [
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    },
+    {
+      "globalId": 160,
+      "imamId": 8,
+      "localId": 11
+    }
+  ],
+  "الصيام": [
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    }
+  ],
+  "التفكر": [
+    {
+      "globalId": 150,
+      "imamId": 8,
+      "localId": 1
+    }
+  ],
+  "يقول": [
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    },
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    }
+  ],
+  "الامر": [
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    },
+    {
+      "globalId": 174,
+      "imamId": 9,
+      "localId": 10
+    }
+  ],
+  "النهي": [
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    }
+  ],
+  "فريضتان": [
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    }
+  ],
+  "عظيمتان": [
+    {
+      "globalId": 151,
+      "imamId": 8,
+      "localId": 2
+    }
+  ],
+  "الاقرار": [
+    {
+      "globalId": 152,
+      "imamId": 8,
+      "localId": 3
+    }
+  ],
+  "بالله": [
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    },
+    {
+      "globalId": 171,
+      "imamId": 9,
+      "localId": 7
+    }
+  ],
+  "انا": [
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    },
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "ظن": [
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    }
+  ],
+  "عبدي": [
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    }
+  ],
+  "بي": [
+    {
+      "globalId": 153,
+      "imamId": 8,
+      "localId": 4
+    }
+  ],
+  "واقيه": [
+    {
+      "globalId": 154,
+      "imamId": 8,
+      "localId": 5
+    }
+  ],
+  "العناء": [
+    {
+      "globalId": 154,
+      "imamId": 8,
+      "localId": 5
+    }
+  ],
+  "نظر": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "اخيه": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    },
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    }
+  ],
+  "المسلم": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "نظره": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "موده": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "يزل": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "ينظر": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "اليه": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "بالرحمه": [
+    {
+      "globalId": 155,
+      "imamId": 8,
+      "localId": 6
+    }
+  ],
+  "تكون": [
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    }
+  ],
+  "ترضي": [
+    {
+      "globalId": 156,
+      "imamId": 8,
+      "localId": 7
+    }
+  ],
+  "يتم": [
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "المرء": [
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    },
+    {
+      "globalId": 173,
+      "imamId": 9,
+      "localId": 9
+    }
+  ],
+  "عشر": [
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "خصال": [
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "يوخذ": [
+    {
+      "globalId": 157,
+      "imamId": 8,
+      "localId": 8
+    }
+  ],
+  "هو": [
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    }
+  ],
+  "اولا": [
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    }
+  ],
+  "ثم": [
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    }
+  ],
+  "اليقين": [
+    {
+      "globalId": 158,
+      "imamId": 8,
+      "localId": 9
+    }
+  ],
+  "خزاين": [
+    {
+      "globalId": 159,
+      "imamId": 8,
+      "localId": 10
+    }
+  ],
+  "مفاتيحه": [
+    {
+      "globalId": 159,
+      "imamId": 8,
+      "localId": 10
+    }
+  ],
+  "السوال": [
+    {
+      "globalId": 159,
+      "imamId": 8,
+      "localId": 10
+    }
+  ],
+  "قربان": [
+    {
+      "globalId": 160,
+      "imamId": 8,
+      "localId": 11
+    }
+  ],
+  "الرحمون": [
+    {
+      "globalId": 161,
+      "imamId": 8,
+      "localId": 12
+    }
+  ],
+  "يرحمهم": [
+    {
+      "globalId": 161,
+      "imamId": 8,
+      "localId": 12
+    }
+  ],
+  "الرحمن": [
+    {
+      "globalId": 161,
+      "imamId": 8,
+      "localId": 12
+    }
+  ],
+  "تتولو": [
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    }
+  ],
+  "احدا": [
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    }
+  ],
+  "تعرفوا": [
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    }
+  ],
+  "ربه": [
+    {
+      "globalId": 162,
+      "imamId": 8,
+      "localId": 13
+    }
+  ],
+  "يدفع": [
+    {
+      "globalId": 163,
+      "imamId": 8,
+      "localId": 14
+    }
+  ],
+  "بالصدقه": [
+    {
+      "globalId": 163,
+      "imamId": 8,
+      "localId": 14
+    }
+  ],
+  "ينوي": [
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    }
+  ],
+  "ظلم": [
+    {
+      "globalId": 164,
+      "imamId": 8,
+      "localId": 15
+    }
+  ],
+  "وقوه": [
+    {
+      "globalId": 165,
+      "imamId": 9,
+      "localId": 1
+    }
+  ],
+  "والجهل": [
+    {
+      "globalId": 165,
+      "imamId": 9,
+      "localId": 1
+    }
+  ],
+  "وضعف": [
+    {
+      "globalId": 165,
+      "imamId": 9,
+      "localId": 1
+    }
+  ],
+  "اصغي": [
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "ناطق": [
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "فقد": [
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    },
+    {
+      "globalId": 168,
+      "imamId": 9,
+      "localId": 4
+    },
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "عبده": [
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "الناطق": [
+    {
+      "globalId": 166,
+      "imamId": 9,
+      "localId": 2
+    }
+  ],
+  "حلم": [
+    {
+      "globalId": 167,
+      "imamId": 9,
+      "localId": 3
+    }
+  ],
+  "عتب": [
+    {
+      "globalId": 168,
+      "imamId": 9,
+      "localId": 4
+    }
+  ],
+  "مريب": [
+    {
+      "globalId": 168,
+      "imamId": 9,
+      "localId": 4
+    }
+  ],
+  "ظاهره": [
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    }
+  ],
+  "ارجح": [
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    }
+  ],
+  "باطنه": [
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    }
+  ],
+  "خف": [
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    }
+  ],
+  "ميزانه": [
+    {
+      "globalId": 169,
+      "imamId": 9,
+      "localId": 5
+    }
+  ],
+  "يعرف": [
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    }
+  ],
+  "الحق": [
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    },
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    }
+  ],
+  "الباطل": [
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    },
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    },
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    }
+  ],
+  "فهو": [
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    },
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "ضلال": [
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    }
+  ],
+  "مبين": [
+    {
+      "globalId": 170,
+      "imamId": 9,
+      "localId": 6
+    }
+  ],
+  "غناه": [
+    {
+      "globalId": 171,
+      "imamId": 9,
+      "localId": 7
+    }
+  ],
+  "يعرفون": [
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    }
+  ],
+  "سلم": [
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    }
+  ],
+  "جورهم": [
+    {
+      "globalId": 172,
+      "imamId": 9,
+      "localId": 8
+    }
+  ],
+  "كرم": [
+    {
+      "globalId": 173,
+      "imamId": 9,
+      "localId": 9
+    }
+  ],
+  "طلاقه": [
+    {
+      "globalId": 173,
+      "imamId": 9,
+      "localId": 9
+    }
+  ],
+  "وجهه": [
+    {
+      "globalId": 173,
+      "imamId": 9,
+      "localId": 9
+    }
+  ],
+  "وطيب": [
+    {
+      "globalId": 173,
+      "imamId": 9,
+      "localId": 9
+    }
+  ],
+  "تخرجن": [
+    {
+      "globalId": 174,
+      "imamId": 9,
+      "localId": 10
+    }
+  ],
+  "مجراه": [
+    {
+      "globalId": 174,
+      "imamId": 9,
+      "localId": 10
+    }
+  ],
+  "يبلغن": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "بالعبد": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "رضوان": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "الاستغفار": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "وخفض": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "الجناح": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "وسخاء": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "النفس": [
+    {
+      "globalId": 175,
+      "imamId": 9,
+      "localId": 11
+    }
+  ],
+  "نجاه": [
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    }
+  ],
+  "سوء": [
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    }
+  ],
+  "وحرز": [
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    }
+  ],
+  "عدو": [
+    {
+      "globalId": 176,
+      "imamId": 9,
+      "localId": 12
+    }
+  ],
+  "ركب": [
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    }
+  ],
+  "ظهر": [
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    }
+  ],
+  "نزل": [
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    }
+  ],
+  "ميدان": [
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    }
+  ],
+  "الندم": [
+    {
+      "globalId": 178,
+      "imamId": 10,
+      "localId": 2
+    }
+  ],
+  "شر": [
+    {
+      "globalId": 179,
+      "imamId": 10,
+      "localId": 3
+    },
+    {
+      "globalId": 195,
+      "imamId": 11,
+      "localId": 7
+    }
+  ],
+  "العفو": [
+    {
+      "globalId": 180,
+      "imamId": 10,
+      "localId": 4
+    }
+  ],
+  "تاج": [
+    {
+      "globalId": 180,
+      "imamId": 10,
+      "localId": 4
+    }
+  ],
+  "النايبه": [
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    }
+  ],
+  "يورث": [
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    }
+  ],
+  "الاجر": [
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    }
+  ],
+  "الجزيل": [
+    {
+      "globalId": 181,
+      "imamId": 10,
+      "localId": 5
+    }
+  ],
+  "احب": [
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    }
+  ],
+  "اكرم": [
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    },
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "فليتق": [
+    {
+      "globalId": 182,
+      "imamId": 10,
+      "localId": 6
+    }
+  ],
+  "العالم": [
+    {
+      "globalId": 183,
+      "imamId": 10,
+      "localId": 7
+    }
+  ],
+  "قدره": [
+    {
+      "globalId": 183,
+      "imamId": 10,
+      "localId": 7
+    }
+  ],
+  "والحكيم": [
+    {
+      "globalId": 183,
+      "imamId": 10,
+      "localId": 7
+    }
+  ],
+  "امره": [
+    {
+      "globalId": 183,
+      "imamId": 10,
+      "localId": 7
+    }
+  ],
+  "الحكمه": [
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    }
+  ],
+  "ضاله": [
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    }
+  ],
+  "فخذ": [
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    }
+  ],
+  "ولو": [
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    }
+  ],
+  "الضلاله": [
+    {
+      "globalId": 184,
+      "imamId": 10,
+      "localId": 8
+    }
+  ],
+  "تادب": [
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    }
+  ],
+  "باداب": [
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    }
+  ],
+  "تكاملت": [
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    }
+  ],
+  "اسباب": [
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    }
+  ],
+  "الشرف": [
+    {
+      "globalId": 185,
+      "imamId": 10,
+      "localId": 9
+    },
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "صدر": [
+    {
+      "globalId": 186,
+      "imamId": 10,
+      "localId": 10
+    }
+  ],
+  "صندوق": [
+    {
+      "globalId": 186,
+      "imamId": 10,
+      "localId": 10
+    }
+  ],
+  "سره": [
+    {
+      "globalId": 186,
+      "imamId": 10,
+      "localId": 10
+    }
+  ],
+  "زار": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "قبر": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "الحسين": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "السلام": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "عارفا": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "وما": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    },
+    {
+      "globalId": 204,
+      "imamId": 12,
+      "localId": 4
+    }
+  ],
+  "تاخر": [
+    {
+      "globalId": 187,
+      "imamId": 10,
+      "localId": 11
+    }
+  ],
+  "يغضب": [
+    {
+      "globalId": 188,
+      "imamId": 10,
+      "localId": 12
+    }
+  ],
+  "تعالي": [
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    }
+  ],
+  "جليلا": [
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    }
+  ],
+  "قلت": [
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    }
+  ],
+  "عينه": [
+    {
+      "globalId": 189,
+      "imamId": 11,
+      "localId": 1
+    }
+  ],
+  "واعقلهم": [
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "اشدهم": [
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "لنفسه": [
+    {
+      "globalId": 190,
+      "imamId": 11,
+      "localId": 2
+    }
+  ],
+  "المكروه": [
+    {
+      "globalId": 191,
+      "imamId": 11,
+      "localId": 3
+    }
+  ],
+  "النسيان": [
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "وافه": [
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "الهوي": [
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "العجب": [
+    {
+      "globalId": 192,
+      "imamId": 11,
+      "localId": 4
+    }
+  ],
+  "رضي": [
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "بدون": [
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "المجلس": [
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "وملايكته": [
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "يصلون": [
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "ينصرف": [
+    {
+      "globalId": 193,
+      "imamId": 11,
+      "localId": 5
+    }
+  ],
+  "راحه": [
+    {
+      "globalId": 194,
+      "imamId": 11,
+      "localId": 6
+    }
+  ],
+  "الارواح": [
+    {
+      "globalId": 194,
+      "imamId": 11,
+      "localId": 6
+    }
+  ],
+  "العباد": [
+    {
+      "globalId": 195,
+      "imamId": 11,
+      "localId": 7
+    }
+  ],
+  "يخشاه": [
+    {
+      "globalId": 195,
+      "imamId": 11,
+      "localId": 7
+    }
+  ],
+  "لشره": [
+    {
+      "globalId": 195,
+      "imamId": 11,
+      "localId": 7
+    }
+  ],
+  "الصحبه": [
+    {
+      "globalId": 196,
+      "imamId": 11,
+      "localId": 8
+    }
+  ],
+  "وحسن": [
+    {
+      "globalId": 196,
+      "imamId": 11,
+      "localId": 8
+    }
+  ],
+  "الادب": [
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    }
+  ],
+  "اظهار": [
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    }
+  ],
+  "الفرح": [
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    }
+  ],
+  "المحزون": [
+    {
+      "globalId": 197,
+      "imamId": 11,
+      "localId": 9
+    }
+  ],
+  "يجعله": [
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    }
+  ],
+  "يشاء": [
+    {
+      "globalId": 198,
+      "imamId": 11,
+      "localId": 10
+    }
+  ],
+  "الاخوان": [
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    }
+  ],
+  "نسي": [
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    }
+  ],
+  "ذنب": [
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    }
+  ],
+  "وعجل": [
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    },
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "عذره": [
+    {
+      "globalId": 199,
+      "imamId": 11,
+      "localId": 11
+    }
+  ],
+  "كانت": [
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "قنعت": [
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "باليسير": [
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "تطمع": [
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "الكثير": [
+    {
+      "globalId": 200,
+      "imamId": 11,
+      "localId": 12
+    }
+  ],
+  "واما": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "الحوادث": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "الواقعه": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "فارجعوا": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "رواه": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "حديثنا": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "فانهم": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "حجتي": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "وانا": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    },
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    },
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "حجه": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "عليهم": [
+    {
+      "globalId": 201,
+      "imamId": 12,
+      "localId": 1
+    }
+  ],
+  "كلنا": [
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    }
+  ],
+  "حجج": [
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    }
+  ],
+  "ارضه": [
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    }
+  ],
+  "الحجه": [
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    }
+  ],
+  "القايمه": [
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    }
+  ],
+  "بسيفي": [
+    {
+      "globalId": 202,
+      "imamId": 12,
+      "localId": 2
+    }
+  ],
+  "مهملين": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "لمراعاتكم": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "ناسين": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "لذكركم": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "ولولا": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "لنزل": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "بكم": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "اللواء": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "واصطلمكم": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "الاعداء": [
+    {
+      "globalId": 203,
+      "imamId": 12,
+      "localId": 3
+    }
+  ],
+  "يرحمنا": [
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    }
+  ],
+  "ويرحم": [
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    }
+  ],
+  "شيعتنا": [
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    }
+  ],
+  "فمن": [
+    {
+      "globalId": 205,
+      "imamId": 12,
+      "localId": 5
+    },
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "اكثروا": [
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "بتعجيل": [
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "فرجكم": [
+    {
+      "globalId": 206,
+      "imamId": 12,
+      "localId": 6
+    }
+  ],
+  "سياتي": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "لشيعتي": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "يدعي": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "المشاهده": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "ادعي": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "خروجي": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "كذاب": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "مفتر": [
+    {
+      "globalId": 207,
+      "imamId": 12,
+      "localId": 7
+    }
+  ],
+  "اننا": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "نشكو": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "نبينا": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "وغبيه": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "امامنا": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "وشماته": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "اعداينا": [
+    {
+      "globalId": 208,
+      "imamId": 12,
+      "localId": 8
+    }
+  ],
+  "والعن": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "ظلمهم": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "واذلهم": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "الاولين": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "والاخرين": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "فرجنا": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "وفرج": [
+    {
+      "globalId": 209,
+      "imamId": 12,
+      "localId": 9
+    }
+  ],
+  "ولن": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "تخفي": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "علينا": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "خبر": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "اخباركم": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "واعلموا": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "نالو": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "جهدا": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ],
+  "نصرتكم": [
+    {
+      "globalId": 210,
+      "imamId": 12,
+      "localId": 10
+    }
+  ]
+}

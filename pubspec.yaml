@@ -1,0 +1,146 @@
+name: daily_islamic_widget
+description: A beautiful Islamic companion application with daily widgets, Quran, Hadith, and more.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+
+  # Navigation
+  go_router: ^14.8.1
+
+  # Local Storage
+  shared_preferences: ^2.3.4
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Database (Offline First)
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
+  # Connectivity
+  connectivity_plus: ^6.0.3
+
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.10.1
+
+  # Location & Qibla
+  geolocator: ^14.0.2
+  flutter_qiblah: ^3.2.0
+  geocoding: ^3.0.0
+  permission_handler: ^11.3.1
+  vector_math: ^2.2.0
+
+  # Prayer Times
+  adhan_dart: ^2.0.1
+
+  # Utils
+  intl: any
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
+  url_launcher: ^6.3.1
+
+  # UI
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.16
+  flutter_animate: ^4.5.2
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  percent_indicator: ^4.2.3
+  flutter_staggered_animations: ^1.1.1
+  smooth_page_indicator: ^1.2.0+3
+  gap: ^3.0.1
+
+  # Responsive
+  responsive_framework: ^1.5.1
+
+  # Image generation
+  screenshot: ^3.0.0
+  path_provider_foundation: ^2.4.0
+
+  # Package Info
+  package_info_plus: ^8.0.0
+
+  # HTTP
+  http: ^1.2.2
+  dio: ^5.9.2
+
+  # UUID
+  uuid: ^4.5.1
+
+  # Home Screen Widgets
+  home_widget: ^0.9.3
+
+  # Audio
+  just_audio: ^0.9.42
+  audio_session: ^0.1.21
+  audio_service: ^0.18.17
+
+  # Zoom / Photo View
+  photo_view: ^0.15.0
+  scrollable_positioned_list: ^0.3.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.13
+  flutter_launcher_icons: ^0.14.3
+  isar_generator: ^3.1.0+1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#07111F"
+  adaptive_icon_foreground: "assets/icons/app_icon.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/data/
+    - assets/data/ziyarat/
+    - assets/data/duas/
+    - assets/data/sahifa/
+    - assets/data/mafatih/
+    - assets/data/occasions/
+    - assets/data/imams/
+    - assets/data/imams/quotes/
+    - assets/data/quran/
+    - assets/quran-svg/svg/
+    - assets/quran-svg/json/
+    - assets/data/hadith/
+    - assets/data/fatwa/
+    - assets/data/prayer/
+    - assets/data/tafsir/
+    - assets/data/other/
+    - assets/data/aqwal/
+    - assets/icons/
+    - assets/audio/
+    - assets/quran/quranbackgroung/
+    - assets/decorations/
+    - shorebird.yaml
+
+  fonts:
+    - family: NotoNaskhArabic
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic-Regular.ttf
+    - family: DecoTypeThuluth
+      fonts:
+        - asset: assets/fonts/decotype-thuluth-iii.ttf

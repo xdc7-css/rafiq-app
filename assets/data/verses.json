@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "surah_number": 2,
+    "surah_name": "Al-Baqarah",
+    "surah_name_arabic": "البقرة",
+    "verse_number": 255,
+    "text_arabic": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+    "text_english": "Allah - there is no deity except Him, the Ever-Living, the Sustainer of [all] existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth.",
+    "juz": 3
+  },
+  {
+    "id": 2,
+    "surah_number": 36,
+    "surah_name": "Ya-Sin",
+    "surah_name_arabic": "يس",
+    "verse_number": 82,
+    "text_arabic": "إِنَّمَا أَمْرُهُ إِذَا أَرَادَ شَيْئًا أَن يَقُولَ لَهُ كُن فَيَكُونُ",
+    "text_english": "His command is only when He intends a thing that He says to it, \"Be,\" and it is.",
+    "juz": 22
+  },
+  {
+    "id": 3,
+    "surah_number": 94,
+    "surah_name": "Ash-Sharh",
+    "surah_name_arabic": "الشرح",
+    "verse_number": 5,
+    "text_arabic": "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
+    "text_english": "For indeed, with hardship [will be] ease.",
+    "juz": 30
+  },
+  {
+    "id": 4,
+    "surah_number": 2,
+    "surah_name": "Al-Baqarah",
+    "surah_name_arabic": "البقرة",
+    "verse_number": 286,
+    "text_arabic": "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ",
+    "text_english": "Allah does not charge a soul except [with that within] its capacity. It will have [the consequence of] what [good] it has gained, and upon it [the consequence of] what [evil] it has earned.",
+    "juz": 3
+  },
+  {
+    "id": 5,
+    "surah_number": 93,
+    "surah_name": "Ad-Duha",
+    "surah_name_arabic": "الضحى",
+    "verse_number": 3,
+    "text_arabic": "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ",
+    "text_english": "Your Lord has not taken leave of you, [O Muhammad], nor has He detested [you].",
+    "juz": 30
+  },
+  {
+    "id": 6,
+    "surah_number": 112,
+    "surah_name": "Al-Ikhlas",
+    "surah_name_arabic": "الإخلاص",
+    "verse_number": 1,
+    "text_arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+    "text_english": "Say, \"He is Allah, [who is] One.\"",
+    "juz": 30
+  },
+  {
+    "id": 7,
+    "surah_number": 113,
+    "surah_name": "Al-Falaq",
+    "surah_name_arabic": "الفلق",
+    "verse_number": 1,
+    "text_arabic": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+    "text_english": "Say, \"I seek refuge in the Lord of daybreak.\"",
+    "juz": 30
+  },
+  {
+    "id": 8,
+    "surah_number": 114,
+    "surah_name": "An-Nas",
+    "surah_name_arabic": "الناس",
+    "verse_number": 1,
+    "text_arabic": "قُلْ أَعُوذُ بِرَبِّ النَّاسِ",
+    "text_english": "Say, \"I seek refuge in the Lord of mankind.\"",
+    "juz": 30
+  },
+  {
+    "id": 9,
+    "surah_number": 1,
+    "surah_name": "Al-Fatihah",
+    "surah_name_arabic": "الفاتحة",
+    "verse_number": 2,
+    "text_arabic": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+    "text_english": "All praise is due to Allah, Lord of the worlds.",
+    "juz": 1
+  },
+  {
+    "id": 10,
+    "surah_number": 55,
+    "surah_name": "Ar-Rahman",
+    "surah_name_arabic": "الرحمن",
+    "verse_number": 13,
+    "text_arabic": "فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ",
+    "text_english": "So which of the favors of your Lord would you deny?",
+    "juz": 27
+  }
+]

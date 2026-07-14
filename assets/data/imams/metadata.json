@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "totalQuotes": 210,
+  "totalImams": 12,
+  "featuredCount": 56,
+  "dailyCount": 210,
+  "searchIndexWords": 911,
+  "uniqueTopics": 43,
+  "uniqueKeywords": 450,
+  "imams": {
+    "ali": 50,
+    "hasan": 16,
+    "hussain": 15,
+    "sajjad": 16,
+    "baqir": 15,
+    "sadiq": 22,
+    "kadhim": 15,
+    "rida": 15,
+    "jawad": 12,
+    "hadi": 12,
+    "askari": 12,
+    "mahdi": 10
+  },
+  "sources": [
+    {
+      "name": "تحف العقول",
+      "count": 93
+    },
+    {
+      "name": "نهج البلاغة",
+      "count": 35
+    },
+    {
+      "name": "الكافي",
+      "count": 31
+    },
+    {
+      "name": "بحار الأنوار",
+      "count": 20
+    },
+    {
+      "name": "غرر الحكم",
+      "count": 15
+    },
+    {
+      "name": "الصحيفة السجادية",
+      "count": 13
+    },
+    {
+      "name": "بحار الأنوار / كمال الدين",
+      "count": 3
+    }
+  ],
+  "lastUpdated": "2026-06-26"
+}

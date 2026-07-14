@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_prayer_desc">أوقات الصلاة مع العد التنازلي</string>
+    <string name="widget_quran_desc">آخر صفحة مقروءة واستمرار القراءة</string>
+    <string name="widget_tasbih_desc">عداد التسبيح التفاعلي</string>
+    <string name="widget_dashboard_desc">لوحة شاملة: الصلاة القرآن التسبيح</string>
+</resources>

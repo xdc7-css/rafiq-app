@@ -1,0 +1,78 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+*.tmp
+*.temp
+*.orig
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IDE and editor settings
+.idea/
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android build artifacts
+android/.gradle/
+android/app/build/
+android/build/
+
+# iOS/macOS build artifacts
+ios/Pods/
+macos/Pods/
+macos/Build/
+
+# Linux/Windows build artifacts
+linux/build/
+windows/build/
+
+# Firebase and local generated output
+.firebase/
+
+# Node and package manager artifacts
+node_modules/
+
+# Generated temporary files
+flutter_error.txt
+flutter_output.txt
+
+# Secrets and private keys
+*.jks
+*.keystore
+*.p12
+*.p8
+*.pem
+*.der
+*.key
+*.crt
+*.csr
+.env
+
+# Android Studio debug/profile/release outputs
+/android/app/debug
+/android/app/profile
+/android/app/release

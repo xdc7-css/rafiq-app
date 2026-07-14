@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "text_arabic": "إنما الأعمال بالنيات وإنما لكل امرئ ما نوى",
+    "text_english": "Actions are but by intentions, and every person shall have only what they intended.",
+    "source": "Sahih al-Bukhari",
+    "narrator": "Umar ibn Al-Khattab",
+    "book_number": 1,
+    "hadith_number": 1,
+    "grade": "Sahih"
+  },
+  {
+    "id": 2,
+    "text_arabic": "خيركم من تعلم القرآن وعلمه",
+    "text_english": "The best among you are those who learn the Quran and teach it.",
+    "source": "Sahih al-Bukhari",
+    "narrator": "Uthman ibn Affan",
+    "book_number": 6,
+    "hadith_number": 545,
+    "grade": "Sahih"
+  },
+  {
+    "id": 3,
+    "text_arabic": "لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه",
+    "text_english": "None of you will believe until you love for your brother what you love for yourself.",
+    "source": "Sahih al-Bukhari",
+    "narrator": "Anas ibn Malik",
+    "book_number": 2,
+    "hadith_number": 13,
+    "grade": "Sahih"
+  },
+  {
+    "id": 4,
+    "text_arabic": "إن الله جميل يحب الجمال",
+    "text_english": "Indeed, Allah is Beautiful and He loves beauty.",
+    "source": "Sahih Muslim",
+    "narrator": "Abu Hurairah",
+    "book_number": 1,
+    "hadith_number": 91,
+    "grade": "Sahih"
+  },
+  {
+    "id": 5,
+    "text_arabic": "أحب الأعمال إلى الله أدومها وإن قل",
+    "text_english": "The most beloved of deeds to Allah are those that are most consistent, even if they are small.",
+    "source": "Sahih al-Bukhari",
+    "narrator": "Aisha",
+    "book_number": 81,
+    "hadith_number": 471,
+    "grade": "Sahih"
+  },
+  {
+    "id": 6,
+    "text_arabic": "اتق الله حيثما كنت وأتبع السيئة الحسنة تمحها وخالق الناس بخلق حسن",
+    "text_english": "Have consciousness of Allah wherever you are, follow up a bad deed with a good one and it will wipe it out, and behave well towards people.",
+    "source": "Jami at-Tirmidhi",
+    "narrator": "Adi ibn Hatim",
+    "book_number": 4,
+    "hadith_number": 2621,
+    "grade": "Hasan"
+  },
+  {
+    "id": 7,
+    "text_arabic": "من سلك طريقا يلتمس فيه علما سهل الله له طريقا إلى الجنة",
+    "text_english": "Whoever takes a path in search of knowledge, Allah will make easy for him the path to Paradise.",
+    "source": "Sahih Muslim",
+    "narrator": "Abu Hurairah",
+    "book_number": 54,
+    "hadith_number": 2699,
+    "grade": "Sahih"
+  },
+  {
+    "id": 8,
+    "text_arabic": "المسلم من سلم المسلمون من لسانه ويده والمهاجر من هجر ما نهى الله عنه",
+    "text_english": "A Muslim is the one from whose tongue and hands the Muslims are safe, and the emigrant is the one who abandons what Allah has forbidden.",
+    "source": "Sahih al-Bukhari",
+    "narrator": "Abdullah ibn Amr",
+    "book_number": 2,
+    "hadith_number": 10,
+    "grade": "Sahih"
+  },
+  {
+    "id": 9,
+    "text_arabic": "اتق الله حيثما كنت وأتبع السيئة الحسنة تمحها وخالق الناس بخلق حسن",
+    "text_english": "Have consciousness of Allah wherever you are, follow up a bad deed with a good one and it will wipe it out, and behave well towards people.",
+    "source": "Jami at-Tirmidhi",
+    "narrator": "Adi ibn Hatim",
+    "book_number": 4,
+    "hadith_number": 2621,
+    "grade": "Hasan"
+  },
+  {
+    "id": 10,
+    "text_arabic": "من سلك طريقا يلتمس فيه علما سهل الله له طريقا إلى الجنة",
+    "text_english": "Whoever takes a path in search of knowledge, Allah will make easy for him the path to Paradise.",
+    "source": "Sahih Muslim",
+    "narrator": "Abu Hurairah",
+    "book_number": 54,
+    "hadith_number": 2699,
+    "grade": "Sahih"
+  }
+]
