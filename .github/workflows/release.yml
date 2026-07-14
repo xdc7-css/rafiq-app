@@ -53,7 +53,7 @@ jobs:
       - run: flutter build web --release
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: "رَفيِقْ v${{ steps.version.outputs.VERSION }}"
           body: |
