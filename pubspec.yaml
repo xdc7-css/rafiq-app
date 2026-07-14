@@ -71,7 +71,7 @@ dependencies:
   path_provider_foundation: ^2.4.0
 
   # Package Info
-  package_info_plus: ^8.0.0
+  package_info_plus: ^9.0.1
 
   # HTTP
   http: ^1.2.2
