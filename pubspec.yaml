@@ -1,7 +1,7 @@
 name: daily_islamic_widget
 description: A beautiful Islamic companion application with daily widgets, Quran, Hadith, and more.
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.3.0+1
 
 environment:
   sdk: ^3.12.1
