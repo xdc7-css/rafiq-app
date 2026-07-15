@@ -8,6 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.util.Log
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getIntOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getStringOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.textColor
 
 class QuranWidgetProvider : AppWidgetProvider() {
 
@@ -44,25 +47,22 @@ class QuranWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val prefs = context.getSharedPreferences(
-            PrayerTimesWidgetProvider.PREFS_NAME, Context.MODE_PRIVATE
-        )
+        val prefs = WidgetPreferences.obtain(context)
 
         val views = RemoteViews(context.packageName, R.layout.widget_quran_2x3)
 
-        val surahName = prefs.getString("widget_quran_surah_name", "سورة الفاتحة") ?: "سورة الفاتحة"
-        val ayah = prefs.getInt("widget_quran_ayah", 1)
-        val page = prefs.getInt("widget_quran_page", 1)
-        val totalPages = prefs.getInt("widget_quran_total_pages", 604)
-        val progress = prefs.getInt("widget_quran_progress", 0)
-        val hasKhatmah = prefs.getBoolean("widget_quran_has_khatmah", false)
+        val surahName = prefs.getStringOr(WidgetKeys.QURAN_SURAH_NAME, "سورة الفاتحة")
+        val ayah = prefs.getIntOr(WidgetKeys.QURAN_AYAH, 1)
+        val page = prefs.getIntOr(WidgetKeys.QURAN_PAGE, 1)
+        val totalPages = prefs.getIntOr(WidgetKeys.QURAN_TOTAL_PAGES, 604)
+        val progress = prefs.getIntOr(WidgetKeys.QURAN_PROGRESS, 0)
 
         views.setTextViewText(R.id.widget_quran_surah_name, surahName)
         views.setTextViewText(R.id.widget_quran_ayah, "الآية $ayah")
         views.setTextViewText(R.id.widget_quran_page, "الصفحة $page / $totalPages")
         views.setProgressBar(R.id.widget_quran_progress, 100, progress, false)
 
-        val textColor = prefs.getInt("widget_text_color", 0xFFF8F8F8.toInt())
+        val textColor = prefs.textColor()
         views.setTextColor(R.id.widget_quran_surah_name, textColor)
         views.setTextColor(R.id.widget_quran_ayah, textColor)
         views.setTextColor(R.id.widget_quran_page, 0x99F8F8F8.toInt())

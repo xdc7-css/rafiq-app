@@ -8,6 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.util.Log
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getIntOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getStringOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.textColor
 
 class DashboardWidgetProvider : AppWidgetProvider() {
 
@@ -44,23 +47,20 @@ class DashboardWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val prefs = context.getSharedPreferences(
-            PrayerTimesWidgetProvider.PREFS_NAME, Context.MODE_PRIVATE
-        )
+        val prefs = WidgetPreferences.obtain(context)
 
         val views = RemoteViews(context.packageName, R.layout.widget_dashboard_4x4)
 
         // ─── Date ───
-        val hijriDate = prefs.getString("widget_hijri_date", "") ?: ""
-        val gregorianDate = prefs.getString("widget_gregorian_date", "") ?: ""
+        val hijriDate = prefs.getStringOr(WidgetKeys.HIJRI_DATE)
         views.setTextViewText(R.id.widget_hijri_date, hijriDate)
 
         // ─── Prayer Times ───
-        val fajrTime = prefs.getString("widget_fajr_time", "--:--") ?: "--:--"
-        val dhuhrTime = prefs.getString("widget_dhuhr_time", "--:--") ?: "--:--"
-        val asrTime = prefs.getString("widget_asr_time", "--:--") ?: "--:--"
-        val maghribTime = prefs.getString("widget_maghrib_time", "--:--") ?: "--:--"
-        val ishaTime = prefs.getString("widget_isha_time", "--:--") ?: "--:--"
+        val fajrTime = prefs.getStringOr(WidgetKeys.FAJR_TIME, "--:--")
+        val dhuhrTime = prefs.getStringOr(WidgetKeys.DHUHR_TIME, "--:--")
+        val asrTime = prefs.getStringOr(WidgetKeys.ASR_TIME, "--:--")
+        val maghribTime = prefs.getStringOr(WidgetKeys.MAGHRIB_TIME, "--:--")
+        val ishaTime = prefs.getStringOr(WidgetKeys.ISHA_TIME, "--:--")
 
         views.setTextViewText(R.id.widget_fajr_time, fajrTime)
         views.setTextViewText(R.id.widget_dhuhr_time, dhuhrTime)
@@ -69,9 +69,9 @@ class DashboardWidgetProvider : AppWidgetProvider() {
         views.setTextViewText(R.id.widget_isha_time, ishaTime)
 
         // ─── Quran ───
-        val quranSurah = prefs.getString("widget_quran_surah_name", "") ?: ""
-        val quranAyah = prefs.getInt("widget_quran_ayah", 1)
-        val quranProgress = prefs.getInt("widget_quran_progress", 0)
+        val quranSurah = prefs.getStringOr(WidgetKeys.QURAN_SURAH_NAME)
+        val quranAyah = prefs.getIntOr(WidgetKeys.QURAN_AYAH, 1)
+        val quranProgress = prefs.getIntOr(WidgetKeys.QURAN_PROGRESS, 0)
         val quranText = if (quranSurah.isNotEmpty()) {
             "$quranSurah - الآية $quranAyah"
         } else {
@@ -81,16 +81,16 @@ class DashboardWidgetProvider : AppWidgetProvider() {
         views.setProgressBar(R.id.widget_quran_progress, 100, quranProgress, false)
 
         // ─── Tasbih ───
-        val tasbihName = prefs.getString("widget_tasbih_name", "سبحان الله") ?: "سبحان الله"
-        val tasbihCount = prefs.getInt("widget_tasbih_count", 0)
-        val tasbihTarget = prefs.getInt("widget_tasbih_target", 33)
-        val tasbihId = prefs.getString("widget_tasbih_id", "") ?: ""
+        val tasbihName = prefs.getStringOr(WidgetKeys.TASBIH_NAME, "سبحان الله")
+        val tasbihCount = prefs.getIntOr(WidgetKeys.TASBIH_COUNT, 0)
+        val tasbihTarget = prefs.getIntOr(WidgetKeys.TASBIH_TARGET, 33)
+        val tasbihId = prefs.getStringOr(WidgetKeys.TASBIH_ID)
 
         views.setTextViewText(R.id.widget_tasbih_name, tasbihName)
         views.setTextViewText(R.id.widget_tasbih_count, "$tasbihCount / $tasbihTarget")
 
         // ─── Colors ───
-        val textColor = prefs.getInt("widget_text_color", 0xFFF8F8F8.toInt())
+        val textColor = prefs.textColor()
         views.setTextColor(R.id.widget_hijri_date, textColor)
         views.setTextColor(R.id.widget_fajr_label, textColor)
         views.setTextColor(R.id.widget_fajr_time, textColor)

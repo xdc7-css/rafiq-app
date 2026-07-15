@@ -9,12 +9,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.widget.RemoteViews
 import android.util.Log
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getBooleanOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getIntOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getStringOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.textColor
 
 class PrayerTimesWidgetProvider : AppWidgetProvider() {
 
     companion object {
         private const val TAG = "PrayerWidget"
-        const val PREFS_NAME = "HomeWidgetPreferences"
 
         fun updateAllWidgets(context: Context) {
             val intent = Intent(context, PrayerTimesWidgetProvider::class.java).apply {
@@ -46,18 +49,18 @@ class PrayerTimesWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = WidgetPreferences.obtain(context)
 
         val views = RemoteViews(context.packageName, R.layout.widget_prayer_4x2)
 
-        val nextPrayer = prefs.getString("widget_next_prayer", "الصلاة") ?: "الصلاة"
-        val nextTime = prefs.getString("widget_next_time", "--:--") ?: "--:--"
-        val countdown = prefs.getString("widget_countdown", "") ?: ""
-        val fajrTime = prefs.getString("widget_fajr_time", "--:--") ?: "--:--"
-        val dhuhrTime = prefs.getString("widget_dhuhr_time", "--:--") ?: "--:--"
-        val asrTime = prefs.getString("widget_asr_time", "--:--") ?: "--:--"
-        val maghribTime = prefs.getString("widget_maghrib_time", "--:--") ?: "--:--"
-        val ishaTime = prefs.getString("widget_isha_time", "--:--") ?: "--:--"
+        val nextPrayer = prefs.getStringOr(WidgetKeys.NEXT_PRAYER_NAME, "الصلاة")
+        val nextTime = prefs.getStringOr(WidgetKeys.NEXT_PRAYER_TIME, "--:--")
+        val countdown = prefs.getStringOr(WidgetKeys.COUNTDOWN)
+        val fajrTime = prefs.getStringOr(WidgetKeys.FAJR_TIME, "--:--")
+        val dhuhrTime = prefs.getStringOr(WidgetKeys.DHUHR_TIME, "--:--")
+        val asrTime = prefs.getStringOr(WidgetKeys.ASR_TIME, "--:--")
+        val maghribTime = prefs.getStringOr(WidgetKeys.MAGHRIB_TIME, "--:--")
+        val ishaTime = prefs.getStringOr(WidgetKeys.ISHA_TIME, "--:--")
 
         views.setTextViewText(R.id.widget_next_prayer_name, nextPrayer)
         views.setTextViewText(R.id.widget_next_prayer_time, nextTime)
@@ -68,7 +71,7 @@ class PrayerTimesWidgetProvider : AppWidgetProvider() {
         views.setTextViewText(R.id.widget_maghrib_time, maghribTime)
         views.setTextViewText(R.id.widget_isha_time, ishaTime)
 
-        applyColors(context, prefs, views)
+        applyColors(prefs, views)
 
         val openAppIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
         if (openAppIntent != null) {
@@ -83,8 +86,8 @@ class PrayerTimesWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun applyColors(context: Context, prefs: SharedPreferences, views: RemoteViews) {
-        val textColor = prefs.getInt("widget_text_color", 0xFFF8F8F8.toInt())
+    private fun applyColors(prefs: SharedPreferences, views: RemoteViews) {
+        val textColor = prefs.textColor()
         val goldColor = 0xFFD8B56A.toInt()
 
         views.setTextColor(R.id.widget_next_prayer_name, textColor)

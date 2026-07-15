@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getIntOr
 
 class WidgetActionReceiver : BroadcastReceiver() {
 
@@ -14,7 +15,6 @@ class WidgetActionReceiver : BroadcastReceiver() {
         const val ACTION_TASBIH_INCREMENT = "com.dailyislamicwidget.action.TASBIH_INCREMENT"
         const val ACTION_TASBIH_RESET = "com.dailyislamicwidget.action.TASBIH_RESET"
         const val ACTION_NEXT_TASBIH = "com.dailyislamicwidget.action.NEXT_TASBIH"
-        const val PREFS_NAME = "HomeWidgetPreferences"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -28,13 +28,13 @@ class WidgetActionReceiver : BroadcastReceiver() {
     }
 
     private fun handleTasbihIncrement(context: Context, intent: Intent) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val count = prefs.getInt("widget_tasbih_count", 0)
-        val target = prefs.getInt("widget_tasbih_target", 33)
+        val prefs = WidgetPreferences.obtain(context)
+        val count = prefs.getIntOr(WidgetKeys.TASBIH_COUNT, 0)
+        val target = prefs.getIntOr(WidgetKeys.TASBIH_TARGET, 33)
 
         val newCount = if (count >= target) 0 else count + 1
 
-        prefs.edit().putInt("widget_tasbih_count", newCount).apply()
+        prefs.edit().putInt(WidgetKeys.TASBIH_COUNT, newCount).apply()
 
         Log.i(TAG, "Tasbih incremented: $count -> $newCount (target: $target)")
 
@@ -42,8 +42,8 @@ class WidgetActionReceiver : BroadcastReceiver() {
     }
 
     private fun handleTasbihReset(context: Context, intent: Intent) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putInt("widget_tasbih_count", 0).apply()
+        val prefs = WidgetPreferences.obtain(context)
+        prefs.edit().putInt(WidgetKeys.TASBIH_COUNT, 0).apply()
 
         Log.i(TAG, "Tasbih reset to 0")
 
@@ -51,14 +51,14 @@ class WidgetActionReceiver : BroadcastReceiver() {
     }
 
     private fun handleNextTasbih(context: Context, intent: Intent) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val totalItems = prefs.getInt("widget_tasbih_total_items", 1)
-        var currentIndex = prefs.getInt("widget_tasbih_index", 0)
+        val prefs = WidgetPreferences.obtain(context)
+        val totalItems = prefs.getIntOr(WidgetKeys.TASBIH_TOTAL_ITEMS, 1)
+        var currentIndex = prefs.getIntOr(WidgetKeys.TASBIH_INDEX, 0)
 
         currentIndex = (currentIndex + 1) % totalItems
         prefs.edit()
-            .putInt("widget_tasbih_index", currentIndex)
-            .putInt("widget_tasbih_count", 0)
+            .putInt(WidgetKeys.TASBIH_INDEX, currentIndex)
+            .putInt(WidgetKeys.TASBIH_COUNT, 0)
             .apply()
 
         Log.i(TAG, "Next tasbih selected: index=$currentIndex")
@@ -67,7 +67,6 @@ class WidgetActionReceiver : BroadcastReceiver() {
     }
 
     private fun triggerWidgetUpdate(context: Context) {
-        // Update all widget types
         PrayerTimesWidgetProvider.updateAllWidgets(context)
         QuranWidgetProvider.updateAllWidgets(context)
         TasbihWidgetProvider.updateAllWidgets(context)

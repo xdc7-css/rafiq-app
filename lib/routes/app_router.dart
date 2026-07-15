@@ -21,6 +21,7 @@ import '../features/settings/settings_screen.dart';
 import '../features/search/search_screen.dart';
 import '../features/khatmah/khatmah_screen.dart';
 import '../features/widget_settings/widget_settings_screen.dart';
+import '../features/widget_studio/widget_studio_screen.dart';
 import '../features/more/more_screen.dart';
 import '../theme/app_theme.dart';
 import '../widgets/floating_dock_nav.dart';
@@ -116,6 +117,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/search', builder: (context, state) => const SearchScreen()),
       GoRoute(path: '/khatmah', builder: (context, state) => const KhatmahScreen()),
       GoRoute(path: '/widget-settings', builder: (context, state) => const WidgetSettingsScreen()),
+      GoRoute(path: '/widget-studio', builder: (context, state) => const WidgetStudioScreen()),
       GoRoute(path: '/books', builder: (context, state) => const BooksScreen()),
       GoRoute(
         path: '/books/:bookId',

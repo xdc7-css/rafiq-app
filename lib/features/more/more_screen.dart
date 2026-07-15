@@ -214,7 +214,7 @@ final List<_MoreItem> _items = [
   _MoreItem(
     icon: Icons.widgets_rounded, label: 'الودجت',
     subtitle: 'إعدادات القطعة الإسلامية',
-    route: '/widget-settings',
+    route: '/widget-studio',
     gradient: const LinearGradient(colors: [Color(0xFF1ABC9C), Color(0xFF16A085)]),
   ),
   _MoreItem(

@@ -1155,8 +1155,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         SettingsTile(
           icon: Icons.share_outlined,
           title: 'مشاركة التطبيق',
-          onTap: () => Share.share(
-              'جرب تطبيق الذكر اليومي، رفيقك الإيماني المتكامل: https://dailyislamic.app'),
+          onTap: _shareApp,
           trailing: Icon(
             Icons.arrow_forward_ios_rounded,
             color: AppTheme.textMuted.withValues(alpha: 0.3),
@@ -1627,87 +1626,327 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  void _shareApp() {
+    Share.share(
+      '━━━━━━━━━━━━━━━━━━\n'
+      '📖 رَفِيقْ\n'
+      'رفيقك الإسلامي اليومي\n\n'
+      'تطبيق يجمع بين:\n'
+      '• القرآن الكريم\n'
+      '• مواقيت الصلاة\n'
+      '• الأذكار\n'
+      '• القبلة\n'
+      '• التسبيح\n'
+      '• الأدعية\n\n'
+      'حمّل التطبيق من هنا:\n\n'
+      '🌐 الموقع الرسمي\n'
+      'https://rafiqart.tech\n\n'
+      '📦 GitHub Releases\n'
+      'https://github.com/xdc7-css/rafiq-app/releases/latest\n\n'
+      '━━━━━━━━━━━━━━━━━━',
+    );
+  }
+
   void _showAboutBottomSheet(BuildContext context, AppSettings settings) {
     final w = MediaQuery.sizeOf(context).width;
+    final isSmall = w < 360;
+    final pad = isSmall ? 20.0 : 28.0;
+    final version = _packageInfo?.version ?? '1.0.0';
+    final buildNumber = _packageInfo?.buildNumber ?? '1';
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) {
-        final sheetH = MediaQuery.of(context).size.height * 0.7;
-        final pad = w < 360 ? 20.0 : 32.0;
-        return Container(
-          height: sheetH,
-          decoration: BoxDecoration(
-            color: AppTheme.bgSecondary,
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(32)),
-            border: Border.all(color: AppTheme.borderGold, width: 1.0),
+        return DraggableScrollableSheet(
+          initialChildSize: 0.88,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: AppTheme.bgSecondary,
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(28)),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 12, bottom: 8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.goldPrimary.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView(
+                      controller: scrollController,
+                      padding: EdgeInsets.fromLTRB(pad, 8, pad, 40),
+                      children: [
+                        const SizedBox(height: 16),
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(28),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppTheme.goldPrimary
+                                      .withValues(alpha: 0.15),
+                                  blurRadius: 30,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(28),
+                              child: Image.asset(
+                                'assets/icons/app_icon.png',
+                                width: isSmall ? 80 : 100,
+                                height: isSmall ? 80 : 100,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: Text(
+                            'رَفِيقْ',
+                            style: GoogleFonts.notoKufiArabic(
+                              fontSize: isSmall ? 26 : 30,
+                              fontWeight: FontWeight.w800,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppTheme.goldPrimary
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppTheme.borderGold,
+                                width: 0.5,
+                              ),
+                            ),
+                            child: Text(
+                              'الإصدار $version ($buildNumber)',
+                              style: GoogleFonts.notoKufiArabic(
+                                fontSize: 12,
+                                color: AppTheme.goldPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        AppTheme.goldDivider(width: 48),
+                        const SizedBox(height: 24),
+                        Text(
+                          'رَفِيقْ هو رفيقك الإسلامي اليومي، يجمع بين القرآن الكريم، مواقيت الصلاة، الأذكار، التسبيح، القبلة، والأدعية في تجربة حديثة وأنيقة، مصممة لتساعدك على المحافظة على عباداتك بسهولة وراحة.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.notoKufiArabic(
+                            fontSize: isSmall ? 14 : 15,
+                            height: 1.8,
+                            color: AppTheme.textPrimary
+                                .withValues(alpha: 0.88),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        _buildAboutInfoCard(
+                          title: 'المطور',
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.person_outline_rounded,
+                                size: 18,
+                                color: AppTheme.goldPrimary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'م. حسين علي',
+                                style: GoogleFonts.notoKufiArabic(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildAboutInfoCard(
+                          title: 'معلومات التطبيق',
+                          child: Column(
+                            children: [
+                              _buildInfoRow('الإصدار', 'v$version'),
+                              _buildInfoRow('رقم البناء', buildNumber),
+                              _buildInfoRow(
+                                  'الترخيص', 'MIT License'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        _buildAboutActionTile(
+                          icon: Icons.share_outlined,
+                          label: 'مشاركة التطبيق',
+                          onTap: () {
+                            Navigator.pop(context);
+                            _shareApp();
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        _buildAboutActionTile(
+                          icon: Icons.language_rounded,
+                          label: 'زيارة الموقع',
+                          onTap: () {
+                            Navigator.pop(context);
+                            _launchURL('https://rafiqart.tech');
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        _buildAboutActionTile(
+                          icon: Icons.code_rounded,
+                          label: 'GitHub',
+                          onTap: () {
+                            Navigator.pop(context);
+                            _launchURL(
+                                'https://github.com/xdc7-css/rafiq-app');
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        _buildAboutActionTile(
+                          icon: Icons.star_outline_rounded,
+                          label: 'قيم التطبيق',
+                          onTap: () {
+                            Navigator.pop(context);
+                            _launchURL(
+                                'https://play.google.com/store/apps/details?id=com.daily.islamic.widget');
+                          },
+                        ),
+                        const SizedBox(height: 32),
+                        Center(
+                          child: Text(
+                            '© 2026 جميع الحقوق محفوظة',
+                            style: GoogleFonts.notoKufiArabic(
+                              fontSize: 12,
+                              color: AppTheme.textMuted
+                                  .withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildAboutInfoCard({
+    required String title,
+    required Widget child,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: AppTheme.glassCard(radius: 20),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.notoKufiArabic(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.goldPrimary,
+            ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(pad),
-          child: Column(
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.notoKufiArabic(
+              fontSize: 13,
+              color: AppTheme.textMuted,
+            ),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.notoKufiArabic(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAboutActionTile({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppTheme.bgCard.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppTheme.borderGold,
+              width: 0.5,
+            ),
+          ),
+          child: Row(
             children: [
-              Container(
-                width: 44,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white12,
-                  borderRadius: BorderRadius.circular(2),
+              Icon(icon, size: 20, color: AppTheme.goldPrimary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: GoogleFonts.notoKufiArabic(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
               ),
-              const SizedBox(height: 32),
-              const PrayerBeadsIllustration(
-                size: 80,
-                color: AppTheme.goldPrimary,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'رَفِيقْ',
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              Text(
-                'الإصدار ${_packageInfo?.version ?? "1.0.0"} (${_packageInfo?.buildNumber ?? "1"})',
-                style:
-                    GoogleFonts.notoKufiArabic(color: AppTheme.textMuted),
-              ),
-              const SizedBox(height: 32),
-              AppTheme.goldDivider(width: 60),
-              const SizedBox(height: 32),
-              Text(
-                'تطبيق إسلامي شيعي متكامل يهدف لمساعدة المؤمن في أداء عباداته اليومية من خلال واجهة مستخدم حديثة وفخمة تجمع بين الأصالة والمعاصرة.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 16,
-                  height: 1.7,
-                  color: AppTheme.textPrimary.withValues(alpha: 0.9),
-                ),
-              ),
-              const Spacer(),
-              Text(
-                'تم التطوير بواسطة م. أحمد السعدي',
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 14,
-                  color: AppTheme.textMuted,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'حقوق النشر © 2024 جميع الحقوق محفوظة',
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 12,
-                  color: AppTheme.textMuted.withValues(alpha: 0.7),
-                ),
+              Icon(
+                Icons.chevron_left_rounded,
+                size: 20,
+                color: AppTheme.textMuted.withValues(alpha: 0.4),
               ),
             ],
           ),
         ),
-      );
-      },
+      ),
     );
   }
 }

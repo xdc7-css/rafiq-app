@@ -95,6 +95,10 @@ node_modules/
 *.backup
 *.tmp
 
+# Release artifacts (attach to GitHub Release, don't commit)
+*.apk
+*.zip
+
 # Keep source assets and platform folders tracked
 !android/
 !ios/

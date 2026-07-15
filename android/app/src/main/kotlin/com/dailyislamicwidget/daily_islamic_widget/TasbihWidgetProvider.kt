@@ -8,6 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.util.Log
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getIntOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.getStringOr
+import com.dailyislamicwidget.daily_islamic_widget.WidgetPreferences.textColor
 
 class TasbihWidgetProvider : AppWidgetProvider() {
 
@@ -44,22 +47,20 @@ class TasbihWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val prefs = context.getSharedPreferences(
-            PrayerTimesWidgetProvider.PREFS_NAME, Context.MODE_PRIVATE
-        )
+        val prefs = WidgetPreferences.obtain(context)
 
         val views = RemoteViews(context.packageName, R.layout.widget_tasbih_2x2)
 
-        val tasbihName = prefs.getString("widget_tasbih_name", "سبحان الله") ?: "سبحان الله"
-        val count = prefs.getInt("widget_tasbih_count", 0)
-        val target = prefs.getInt("widget_tasbih_target", 33)
-        val tasbihId = prefs.getString("widget_tasbih_id", "") ?: ""
+        val tasbihName = prefs.getStringOr(WidgetKeys.TASBIH_NAME, "سبحان الله")
+        val count = prefs.getIntOr(WidgetKeys.TASBIH_COUNT, 0)
+        val target = prefs.getIntOr(WidgetKeys.TASBIH_TARGET, 33)
+        val tasbihId = prefs.getStringOr(WidgetKeys.TASBIH_ID)
 
         views.setTextViewText(R.id.widget_tasbih_name, tasbihName)
         views.setTextViewText(R.id.widget_tasbih_count, count.toString())
         views.setTextViewText(R.id.widget_tasbih_target, "/ $target")
 
-        val textColor = prefs.getInt("widget_text_color", 0xFFF8F8F8.toInt())
+        val textColor = prefs.textColor()
         views.setTextColor(R.id.widget_tasbih_name, 0xFFD8B56A.toInt())
         views.setTextColor(R.id.widget_tasbih_count, textColor)
         views.setTextColor(R.id.widget_tasbih_target, 0x66F8F8F8.toInt())
