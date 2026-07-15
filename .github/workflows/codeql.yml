@@ -36,10 +36,9 @@ jobs:
       - uses: github/codeql-action/init@v4
         with:
           languages: java-kotlin
-          paths-ignore:
-            - 'build/**'
-            - 'android/.gradle/**'
-            - '**/generated/**'
+        - uses: github/codeql-action/init@v4
+  with:
+    languages: java-kotlin
 
       - name: Build Android for CodeQL
         run: flutter build apk --debug
