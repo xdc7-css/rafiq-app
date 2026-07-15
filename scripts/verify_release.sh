@@ -6,4 +6,4 @@ flutter analyze --no-fatal-infos
 flutter test
 flutter build apk --release
 flutter build appbundle --release
-flutter build web --release --web-renderer canvaskit
+flutter build web --release

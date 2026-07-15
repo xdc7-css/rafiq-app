@@ -72,6 +72,7 @@ jobs:
       - name: Generate release metadata
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_FILE: build/web/release-info.json
         run: node scripts/sync_release_info.js
 
