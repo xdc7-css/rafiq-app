@@ -48,6 +48,11 @@ jobs:
       - run: flutter build appbundle --release
       - run: flutter build web --release
 
+      - name: Create and push version tag
+        run: |
+          git tag "v${{ steps.version.outputs.VERSION }}"
+          git push origin "v${{ steps.version.outputs.VERSION }}"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
