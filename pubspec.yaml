@@ -53,7 +53,7 @@ dependencies:
   url_launcher: ^6.3.1
 
   # UI
-  google_fonts: ^6.2.1
+  google_fonts: ^8.2.0
   vector_graphics: ^1.1.0
   flutter_svg: ^2.0.16
   flutter_animate: ^4.5.2
