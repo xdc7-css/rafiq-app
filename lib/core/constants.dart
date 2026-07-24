@@ -40,6 +40,10 @@ class AppConstants {
   static const int adhanDhuhrNotificationId = 2002;
   static const int adhanMaghribNotificationId = 2003;
 
+  // Quran Download
+  static const String keyQuranDownloadCompleted = 'quran_download_completed';
+  static const String keyQuranDownloadVersion = 'quran_download_version';
+
   // SharedPreferences Keys
   static const String keyOnboardingComplete = 'onboarding_complete';
   static const String keyThemeMode = 'theme_mode';

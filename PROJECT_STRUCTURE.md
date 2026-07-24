@@ -1,4 +1,4 @@
-# 🕌 هيكل المشروع — Daily Islamic Widget
+# هيكل المشروع — Daily Islamic Widget
 
 > **رَفيِقْ** — رفيقك الإسلامي اليومي
 > تطبيق Flutter عربي خالص بتصميم فاخر (نيلي + ذهبي)
@@ -19,7 +19,7 @@
 
 ---
 
-## 📁 هيكل المجلدات الرئيسي
+## هيكل المجلدات الرئيسي
 
 ```
 lib/
@@ -52,7 +52,7 @@ lib/
 │   ├── collections.dart               # تعريفات Isar (16 مجموعة)
 │   ├── collections.g.dart             # كود Isar المولّد
 │   ├── isar_service.dart              # خدمة Isar المركزية
-│   ├── local_database.dart            # ✨ واجهة مختلطة المنصات
+│   ├── local_database.dart            # واجهة مختلطة المنصات
 │   ├── local_database_android.dart    # ← تنفيذ Isar
 │   ├── local_database_web.dart        # ← تنفيذ SharedPreferences
 │   ├── local_database_stub.dart       # ← حماية kompilasi
@@ -160,7 +160,7 @@ lib/
 
 ---
 
-## 🏗️ الهيكل المعماري
+## الهيكل المعماري
 
 ### نمط التصميم
 - **Feature-First Architecture** مع طبقات مستوحاة من Clean Architecture
@@ -178,7 +178,7 @@ lib/
 
 ---
 
-## 📦 نظام قاعدة البيانات (Offline First)
+## نظام قاعدة البيانات (Offline First)
 
 ### المعمارية الجديدة — تجcross-platform
 
@@ -252,7 +252,7 @@ import 'database/migration/data_migrator.dart'
 
 ---
 
-## 🎵 النظام الصوتي
+## النظام الصوتي
 
 - **مكتبة التشغيل**: `audio_service ^0.18.17` للخلفية على Android
 - **استثناء الويب**: `QuranAudioHandler` يتم إنشاؤه مباشرة على الويب
@@ -265,7 +265,7 @@ import 'database/migration/data_migrator.dart'
 
 ---
 
-## 🔔 نظام الإشعارات
+## نظام الإشعارات
 
 | الإشعار | الوصف |
 |---|---|
@@ -276,7 +276,7 @@ import 'database/migration/data_migrator.dart'
 
 ---
 
-## 🔐 نظام أذونات التطبيق (8 خطوات)
+## نظام أذونات التطبيق (8 خطوات)
 
 1. ترحيب
 2. الإشعارات
@@ -289,20 +289,20 @@ import 'database/migration/data_migrator.dart'
 
 ---
 
-## 📱 الويدجت (Home Widget)
+## الويدجت (Home Widget)
 
 - **ودجت القرآن**: يعرض السورة والآية والصفحة الحالية
 - **ودجت التسبيح**: عداد حي مع إمكانية التحديث من الشاشة الرئيسية
 
 ---
 
-## 🌐 التوافق
+## التوافق
 
 | المنصة | الحالة | قاعدة البيانات |
 |---|---|---|
-| Android | ✅ يبني بنجاح | Isar |
-| Web | ✅ يبني بنجاح | SharedPreferences |
-| iOS | ✅ مدعوم | Isar |
+| Android | مبني بنجاح | Isar |
+| Web | مبني بنجاح | SharedPreferences |
+| iOS | مدعوم | Isar |
 
 ### ملاحظات الويب
 - لا يتم تحميل أي كود Isar على الويب
@@ -311,7 +311,7 @@ import 'database/migration/data_migrator.dart'
 
 ---
 
-## 📊 إحصائيات المشروع
+## إحصائيات المشروع
 
 | الفئة | العدد |
 |---|---|
@@ -330,7 +330,7 @@ import 'database/migration/data_migrator.dart'
 
 ---
 
-## 🛠️ أوامر التطوير
+## أوامر التطوير
 
 ```bash
 # بناء Android
@@ -348,7 +348,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ---
 
-## 📋 قائمة المراجععة (Checklist)
+## قائمة المراجععة (Checklist)
 
 - [x] تصميم فاخر نيلي + ذهبي
 - [x] واجهة عربية بالكامل (RTL)

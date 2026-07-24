@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class AnimatedLogo extends StatelessWidget {
@@ -11,8 +11,8 @@ class AnimatedLogo extends StatelessWidget {
       child: SizedBox(
         width: 125,
         height: 125,
-        child: SvgPicture.asset(
-          'assets/images/logo.svg',
+        child: VectorGraphic(
+          loader: AssetBytesLoader('assets/images/logo.svg.vec'),
           fit: BoxFit.contain,
         ),
       )

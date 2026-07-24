@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
+import '../core/config/debug_flags.dart';
 import 'connectivity_service.dart';
 import '../database/local_database.dart';
 
@@ -11,6 +12,7 @@ class BackgroundSyncService {
 
   Timer? _periodicTimer;
   Timer? _connectivityTimer;
+  StreamSubscription? _connectivitySubscription;
   final ConnectivityService _connectivity = ConnectivityService();
   bool _initialized = false;
   bool _syncing = false;
@@ -22,7 +24,7 @@ class BackgroundSyncService {
     if (_initialized) return;
     _initialized = true;
 
-    _connectivity.onConnectivityChanged.listen((result) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {
       if (result != ConnectivityResult.none) {
         debugPrint('[BackgroundSync] Connectivity restored, triggering sync');
         _triggerSync();
@@ -58,13 +60,16 @@ class BackgroundSyncService {
     if (!_connectivity.isOnline) return;
     try {
       debugPrint('[BackgroundSync] Refreshing prayer times cache');
-      // TODO: Implement actual prayer times refresh with AladhanApi
     } catch (e) {
       debugPrint('[BackgroundSync] Prayer times sync failed: $e');
     }
   }
 
   Future<void> syncShiaHadithCache() async {
+    if (DebugFlags.disableNonCriticalStartupApis) {
+      debugPrint('[BackgroundSync] Shia Hadith sync skipped via DebugFlags.');
+      return;
+    }
     if (!_connectivity.isOnline) return;
     try {
       final cacheKey = 'shia_hadith_daily';
@@ -92,6 +97,7 @@ class BackgroundSyncService {
   void dispose() {
     _periodicTimer?.cancel();
     _connectivityTimer?.cancel();
+    _connectivitySubscription?.cancel();
     _initialized = false;
   }
 }

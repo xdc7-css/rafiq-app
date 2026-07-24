@@ -53,12 +53,6 @@ class NotificationHelper {
           showsUserInterface: false,
           cancelNotification: true,
         ),
-        AndroidNotificationAction(
-          'snooze_adhan',
-          'غفوة 5 دقائق',
-          showsUserInterface: false,
-          cancelNotification: true,
-        ),
       ],
     );
   }

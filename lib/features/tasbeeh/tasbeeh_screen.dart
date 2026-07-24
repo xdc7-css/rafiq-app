@@ -5,16 +5,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 import '../../providers/tasbih_al_zahra_provider.dart';
 import '../../providers/tasbeeh_stats_provider.dart';
 import '../../providers/tasbeeh_custom_provider.dart';
 import '../../providers/tasbeeh_history_provider.dart';
+import '../../services/haptic_service.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/ds_components.dart';
+import '../../widgets/premium_success_notification.dart';
 import '../hadith_shia/presentation/widgets/tasbih_hadith_popup.dart';
+import '../mercy_register/providers/mercy_register_providers.dart';
+import '../mercy_register/data/models/reward.dart';
 
 enum TasbihMode { standard, zahra, custom }
 
@@ -42,6 +46,13 @@ class _Particle {
 class _TasbeehBackgroundPainter extends CustomPainter {
   final double time;
   final List<_Particle> particles;
+
+  static final _maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5);
+  static final _ornamentPaint = Paint()
+    ..color = AppTheme.goldPrimary.withValues(alpha: 0.025)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 0.5;
+  final _particlePaint = Paint()..maskFilter = _maskFilter;
 
   _TasbeehBackgroundPainter(this.time, this.particles);
 
@@ -71,10 +82,7 @@ class _TasbeehBackgroundPainter extends CustomPainter {
       ).createShader(Rect.fromCircle(center: Offset(centerX, centerY), radius: size.width * 0.6));
     canvas.drawCircle(Offset(centerX, centerY), size.width * 0.6, radialPaint);
 
-    final ornamentPaint = Paint()
-      ..color = AppTheme.goldPrimary.withValues(alpha: 0.025)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
+    final ornamentPaint = _ornamentPaint;
     final ornSize = size.shortestSide * 0.7;
     final ornPath = Path();
     final cx = size.width / 2;
@@ -101,10 +109,8 @@ class _TasbeehBackgroundPainter extends CustomPainter {
       final dx = p.x + math.sin(time * p.speed + p.phase) * p.amplitude;
       final dy = p.y + math.cos(time * p.speed * 0.7 + p.phase * 1.3) * p.amplitude * 0.6;
       final alpha = (p.opacity * (0.6 + 0.4 * math.sin(time * 0.5 + p.phase))).clamp(0.0, 1.0);
-      final particlePaint = Paint()
-        ..color = AppTheme.goldPrimary.withValues(alpha: alpha)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5);
-      canvas.drawCircle(Offset(dx, dy), p.size, particlePaint);
+      _particlePaint.color = AppTheme.goldPrimary.withValues(alpha: alpha);
+      canvas.drawCircle(Offset(dx, dy), p.size, _particlePaint);
     }
   }
 
@@ -125,12 +131,11 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   int _standardCount = 0;
   int _customIndex = 0;
   int _customCount = 0;
-  bool _vibration = true;
   bool _showStats = false;
+  bool _isSubmittingDedication = false;
 
   late AnimationController _tapController;
   late AnimationController _breatheController;
-  late AnimationController _celebrateController;
   late AnimationController _particleController;
   late AnimationController _entranceController;
   late AnimationController _counterPopController;
@@ -139,6 +144,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   late AnimationController _stageFlashController;
   Timer? _justAdvancedTimer;
   TasbihAlZahraStage? _flashStage;
+  String? _memorialId;
 
   List<_Particle> _particles = [];
 
@@ -151,9 +157,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     _breatheController = AnimationController(
       vsync: this, duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
-    _celebrateController = AnimationController(
-      vsync: this, duration: const Duration(seconds: 2),
-    );
     _particleController = AnimationController(
       vsync: this, duration: const Duration(seconds: 30),
     )..repeat();
@@ -191,7 +194,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
   void dispose() {
     _tapController.dispose();
     _breatheController.dispose();
-    _celebrateController.dispose();
     _particleController.dispose();
     _entranceController.dispose();
     _counterPopController.dispose();
@@ -207,6 +209,12 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     final w = MediaQuery.sizeOf(context).width;
     final zahraState = ref.watch(tasbihAlZahraProvider);
     final stats = ref.watch(tasbihStatsProvider);
+    _memorialId = GoRouterState.of(context).uri.queryParameters['memorialId'];
+
+    // Determines whether any count has been started in the current mode.
+    final hasCount = (_mode == TasbihMode.zahra && zahraState.currentCount > 0) ||
+        (_mode == TasbihMode.standard && _standardCount > 0) ||
+        (_mode == TasbihMode.custom && _customCount > 0);
 
     return Scaffold(
       body: Stack(
@@ -223,7 +231,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
           SafeArea(
             child: Column(
               children: [
-                _buildAppBar(),
+                _buildAppBar(hasCount),
                 _buildModeChips(),
                 Expanded(
                   child: SingleChildScrollView(
@@ -262,7 +270,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
               ],
             ),
           ),
-          if (zahraState.isComplete) _buildCompletionOverlay(zahraState),
+
         ],
       ),
     );
@@ -270,7 +278,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
 
   // ─── Premium App Bar ───
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(bool hasCount) {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 6, 16, 4),
       decoration: BoxDecoration(
@@ -321,9 +329,35 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 const Spacer(),
                 _glassIconButton(Icons.tune_rounded, _showSettingsSheet),
                 const SizedBox(width: 6),
-                _glassIconButton(Icons.bar_chart_rounded, () {
-                  setState(() => _showStats = !_showStats);
-                }),
+                // ── Stats / Reset toggle ──
+                // Occupies the exact same 40×40 slot at all times.
+                // AnimatedSwitcher fades+scales between the two states so the
+                // layout never shifts and the fingerprint button never moves.
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, anim) => FadeTransition(
+                    opacity: anim,
+                    child: ScaleTransition(
+                      scale: Tween<double>(begin: 0.75, end: 1.0).animate(
+                        CurvedAnimation(parent: anim, curve: Curves.easeOutBack),
+                      ),
+                      child: child,
+                    ),
+                  ),
+                  child: hasCount
+                      ? _glassIconButton(
+                          Icons.restart_alt_rounded,
+                          _confirmReset,
+                          key: const ValueKey('appbar_reset'),
+                        )
+                      : _glassIconButton(
+                          Icons.bar_chart_rounded,
+                          () => setState(() => _showStats = !_showStats),
+                          key: const ValueKey('appbar_stats'),
+                        ),
+                ),
               ],
             ),
           ),
@@ -332,8 +366,9 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     );
   }
 
-  Widget _glassIconButton(IconData icon, VoidCallback onTap) {
+  Widget _glassIconButton(IconData icon, VoidCallback onTap, {Key? key}) {
     return GestureDetector(
+      key: key,
       onTap: onTap,
       child: Container(
         width: 40, height: 40,
@@ -343,6 +378,144 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
           border: Border.all(color: AppTheme.borderGold, width: 0.5),
         ),
         child: Icon(icon, color: AppTheme.goldPrimary, size: 20),
+      ),
+    );
+  }
+
+  // ─── Reset Confirmation ───
+
+  void _confirmReset() {
+    final hasCount = (_mode == TasbihMode.standard && _standardCount > 0) ||
+        (_mode == TasbihMode.custom && _customCount > 0) ||
+        (_mode == TasbihMode.zahra &&
+            ref.read(tasbihAlZahraProvider).currentCount > 0);
+    if (!hasCount) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        content: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppTheme.bgSurface.withValues(alpha: 0.95),
+                    AppTheme.bgCard.withValues(alpha: 0.9),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(28),
+                border: Border.all(color: AppTheme.borderGold, width: 0.5),
+              ),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 56, height: 56,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(colors: [
+                        AppTheme.goldPrimary.withValues(alpha: 0.15),
+                        AppTheme.goldPrimary.withValues(alpha: 0.05),
+                      ]),
+                      border: Border.all(
+                          color: AppTheme.borderGold, width: 0.5),
+                    ),
+                    child: Icon(Icons.restart_alt_rounded,
+                        color: AppTheme.goldPrimary, size: 28),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('إعادة تعيين التسبيح؟',
+                      style: GoogleFonts.notoKufiArabic(
+                          fontSize: 18, fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary)),
+                  const SizedBox(height: 8),
+                  Text('سيتم تصفير العداد الحالي فقط، ولن يؤثر ذلك على الثواب أو السجل أو الإنجازات.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.notoKufiArabic(
+                          fontSize: 13, color: AppTheme.textMuted)),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Text('إلغاء',
+                              style: GoogleFonts.notoKufiArabic(
+                                  color: AppTheme.textMuted,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(ctx);
+                            _resetCounter();
+                          },
+                          child: Container(
+                            height: 44,
+                            decoration: BoxDecoration(
+                              gradient: AppTheme.goldGradient,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Center(
+                              child: Text('إعادة تعيين',
+                                  style: GoogleFonts.notoKufiArabic(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.bgPrimary)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _resetCounter() {
+    switch (_mode) {
+      case TasbihMode.zahra:
+        ref.read(tasbihAlZahraProvider.notifier).reset();
+        break;
+      case TasbihMode.standard:
+        setState(() => _standardCount = 0);
+        break;
+      case TasbihMode.custom:
+        setState(() => _customCount = 0);
+        break;
+    }
+    HapticService.instance.lightTap();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle_outline, color: Colors.white, size: 20),
+            const SizedBox(width: 12),
+            Text('تم تصفير العداد',
+                style: GoogleFonts.notoKufiArabic(
+                    fontWeight: FontWeight.w700, color: Colors.white)),
+          ],
+        ),
+        backgroundColor: const Color(0xFF0F8B6D),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -503,169 +676,175 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
 
   Widget _buildCounterRing(int current, int target, double progress) {
     final w = MediaQuery.sizeOf(context).width;
-    return AnimatedBuilder(
-      animation: Listenable.merge([_breatheController, _tapController, _webPulseController]),
-      builder: (context, _) {
-        final breathe = _breatheController.value;
-        final tapScale = 1.0 - _tapController.value * 0.02;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedBuilder(
+          animation: Listenable.merge([_breatheController, _tapController, _webPulseController]),
+          builder: (context, _) {
+            final breathe = _breatheController.value;
+            final tapScale = 1.0 - _tapController.value * 0.02;
 
-        double webScale = 1.0;
-        double webGlow = 0.0;
-        if (kIsWeb && _webPulseController.isAnimating) {
-          final wv = _webPulseController.value;
-          webScale = wv < 0.5 ? 1.0 - wv * 2 * 0.015 : 1.0 - (1.0 - wv) * 2 * 0.015;
-          webGlow = wv < 0.5 ? 0.15 + wv * 2 * 0.20 : 0.15 + (1.0 - wv) * 2 * 0.20;
-        }
+            double webScale = 1.0;
+            double webGlow = 0.0;
+            if (kIsWeb && _webPulseController.isAnimating) {
+              final wv = _webPulseController.value;
+              webScale = wv < 0.5 ? 1.0 - wv * 2 * 0.015 : 1.0 - (1.0 - wv) * 2 * 0.015;
+              webGlow = wv < 0.5 ? 0.15 + wv * 2 * 0.20 : 0.15 + (1.0 - wv) * 2 * 0.20;
+            }
 
-        final ringSize = w < 360 ? 220.0 : 260.0;
-        final innerSize = ringSize - 32;
+            final ringSize = w < 360 ? 220.0 : 260.0;
+            final innerSize = ringSize - 32;
 
-        return Transform.scale(
-          scale: tapScale * webScale,
-          child: Container(
-            width: ringSize,
-            height: ringSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.shadowDark,
-                  blurRadius: 40, offset: const Offset(0, 12), spreadRadius: -8,
-                ),
-                BoxShadow(
-                  color: AppTheme.goldPrimary.withValues(alpha: 0.08 + breathe * 0.1 + webGlow),
-                  blurRadius: 50 + breathe * 30,
-                  spreadRadius: 4 + breathe * 4,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(ringSize / 2),
-              child: BackdropFilter(
-                filter: ui.ImageFilter.blur(sigmaX: 12 + breathe * 4, sigmaY: 12 + breathe * 4),
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        AppTheme.bgCard.withValues(alpha: 0.35 + breathe * 0.1),
-                        AppTheme.bgSecondary.withValues(alpha: 0.2),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            return Transform.scale(
+              scale: tapScale * webScale,
+              child: Container(
+                width: ringSize,
+                height: ringSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.shadowDark,
+                      blurRadius: 40, offset: const Offset(0, 12), spreadRadius: -8,
                     ),
-                    border: Border.all(
-                      color: AppTheme.borderGold.withValues(alpha: 0.15 + breathe * 0.1),
-                      width: 1.0,
+                    BoxShadow(
+                      color: AppTheme.goldPrimary.withValues(alpha: 0.08 + breathe * 0.1 + webGlow),
+                      blurRadius: 50 + breathe * 30,
+                      spreadRadius: 4 + breathe * 4,
                     ),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: innerSize,
-                        height: innerSize,
-                        child: CircularProgressIndicator(
-                          value: 1.0,
-                          strokeWidth: 3,
-                          color: AppTheme.goldPrimary.withValues(alpha: 0.05),
-                          backgroundColor: Colors.transparent,
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(ringSize / 2),
+                  child: BackdropFilter(
+                    filter: ui.ImageFilter.blur(sigmaX: 12 + breathe * 4, sigmaY: 12 + breathe * 4),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            AppTheme.bgCard.withValues(alpha: 0.35 + breathe * 0.1),
+                            AppTheme.bgSecondary.withValues(alpha: 0.2),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: AppTheme.borderGold.withValues(alpha: 0.15 + breathe * 0.1),
+                          width: 1.0,
                         ),
                       ),
-                      SizedBox(
-                        width: innerSize,
-                        height: innerSize,
-                        child: CircularProgressIndicator(
-                          value: progress.clamp(0.0, 1.0),
-                          strokeWidth: 8,
-                          color: AppTheme.goldPrimary.withValues(alpha: 0.15 + breathe * 0.1),
-                          backgroundColor: Colors.transparent,
-                          strokeCap: StrokeCap.round,
-                        ),
-                      ),
-                      SizedBox(
-                        width: innerSize - 20,
-                        height: innerSize - 20,
-                        child: CircularProgressIndicator(
-                          value: progress.clamp(0.0, 1.0),
-                          strokeWidth: 6,
-                          color: AppTheme.goldPrimary,
-                          backgroundColor: AppTheme.goldPrimary.withValues(alpha: 0.05),
-                          strokeCap: StrokeCap.round,
-                        ),
-                      ),
-                      SizedBox(
-                        width: innerSize - 48,
-                        height: innerSize - 48,
-                        child: CircularProgressIndicator(
-                          value: progress.clamp(0.0, 1.0),
-                          strokeWidth: 3,
-                          color: AppTheme.goldSoft.withValues(alpha: 0.3 + breathe * 0.2),
-                          backgroundColor: Colors.transparent,
-                          strokeCap: StrokeCap.round,
-                        ),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
+                      padding: const EdgeInsets.all(16),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          AnimatedBuilder(
-                            animation: _counterPopController,
-                            builder: (context, child) {
-                              final v = _counterPopController.value;
-                              final popScale = v < 0.5
-                                  ? 1.0 + v * 2 * 0.08
-                                  : 1.0 + (1.0 - v) * 2 * 0.08;
-                              return Transform.scale(
-                                scale: popScale,
-                                child: child,
-                              );
-                            },
-                            child: Text(
-                              '$current',
-                              style: GoogleFonts.inter(
-                                fontSize: w < 360 ? 42 : 52,
-                                fontWeight: FontWeight.w800,
-                                color: AppTheme.goldPrimary,
-                                shadows: [
-                                  Shadow(
-                                    color: AppTheme.goldPrimary.withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                  ),
-                                ],
-                              ),
+                          SizedBox(
+                            width: innerSize,
+                            height: innerSize,
+                            child: CircularProgressIndicator(
+                              value: 1.0,
+                              strokeWidth: 3,
+                              color: AppTheme.goldPrimary.withValues(alpha: 0.05),
+                              backgroundColor: Colors.transparent,
                             ),
                           ),
-                          const SizedBox(height: 2),
-                          Text('من $target',
-                              style: GoogleFonts.notoKufiArabic(
-                                  fontSize: 14, color: AppTheme.textMuted)),
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppTheme.goldPrimary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
+                          SizedBox(
+                            width: innerSize,
+                            height: innerSize,
+                            child: CircularProgressIndicator(
+                              value: progress.clamp(0.0, 1.0),
+                              strokeWidth: 8,
+                              color: AppTheme.goldPrimary.withValues(alpha: 0.15 + breathe * 0.1),
+                              backgroundColor: Colors.transparent,
+                              strokeCap: StrokeCap.round,
                             ),
-                            child: Text(
-                              '${(progress * 100).toInt()}%',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.goldPrimary,
+                          ),
+                          SizedBox(
+                            width: innerSize - 20,
+                            height: innerSize - 20,
+                            child: CircularProgressIndicator(
+                              value: progress.clamp(0.0, 1.0),
+                              strokeWidth: 6,
+                              color: AppTheme.goldPrimary,
+                              backgroundColor: AppTheme.goldPrimary.withValues(alpha: 0.05),
+                              strokeCap: StrokeCap.round,
+                            ),
+                          ),
+                          SizedBox(
+                            width: innerSize - 48,
+                            height: innerSize - 48,
+                            child: CircularProgressIndicator(
+                              value: progress.clamp(0.0, 1.0),
+                              strokeWidth: 3,
+                              color: AppTheme.goldSoft.withValues(alpha: 0.3 + breathe * 0.2),
+                              backgroundColor: Colors.transparent,
+                              strokeCap: StrokeCap.round,
+                            ),
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedBuilder(
+                                animation: _counterPopController,
+                                builder: (context, child) {
+                                  final v = _counterPopController.value;
+                                  final popScale = v < 0.5
+                                      ? 1.0 + v * 2 * 0.08
+                                      : 1.0 + (1.0 - v) * 2 * 0.08;
+                                  return Transform.scale(
+                                    scale: popScale,
+                                    child: child,
+                                  );
+                                },
+                                child: Text(
+                                  '$current',
+                                  style: GoogleFonts.inter(
+                                    fontSize: w < 360 ? 42 : 52,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppTheme.goldPrimary,
+                                    shadows: [
+                                      Shadow(
+                                        color: AppTheme.goldPrimary.withValues(alpha: 0.3),
+                                        blurRadius: 12,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 2),
+                              Text('من $target',
+                                  style: GoogleFonts.notoKufiArabic(
+                                      fontSize: 14, color: AppTheme.textMuted)),
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.goldPrimary.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  '${(progress * 100).toInt()}%',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppTheme.goldPrimary,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+
+      ],
     );
   }
 
@@ -680,7 +859,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     return GestureDetector(
       onTapDown: (_) {
         _tapController.forward();
-        HapticFeedback.lightImpact();
+        if (zahraState.vibration) HapticService.instance.lightTap();
       },
       onTapUp: (_) {
         _tapController.reverse();
@@ -1131,7 +1310,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 onTap: () {
                   if (_customIndex > 0) {
                     setState(() { _customIndex--; _customCount = 0; });
-                    HapticFeedback.selectionClick();
+                    if (ref.read(tasbihAlZahraProvider).vibration) HapticService.instance.mediumTap();
                   }
                 },
                 child: Container(
@@ -1139,7 +1318,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                   decoration: BoxDecoration(
                     color: AppTheme.goldPrimary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppTheme.borderGold, width: 0.5),
+                    border: Border.all(color: AppTheme.borderGold, width: 0.3),
                   ),
                   child: const Icon(Icons.arrow_forward_rounded,
                       color: AppTheme.goldPrimary, size: 20),
@@ -1155,7 +1334,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 onTap: () {
                   if (_customIndex < customList.length - 1) {
                     setState(() { _customIndex++; _customCount = 0; });
-                    HapticFeedback.selectionClick();
+                    if (ref.read(tasbihAlZahraProvider).vibration) HapticService.instance.mediumTap();
                   }
                 },
                 child: Container(
@@ -1208,7 +1387,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       }
 
       if (willComplete) {
-        _celebrateController.forward(from: 0);
         ref.read(tasbihHistoryProvider.notifier).add(TasbihSession(
               id: const Uuid().v4(),
               type: 'zahra',
@@ -1216,15 +1394,26 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
               count: zahraState.totalCount + 1,
               startedAt: DateTime.now(),
             ));
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          if (mounted) TasbihHadithPopup.show(context);
-        });
+        String? memorialName;
+        if (_memorialId != null) {
+          final memorials = ref.read(memorialsProvider);
+          final m = memorials.where((e) => e.id == _memorialId).firstOrNull;
+          memorialName = m?.displayName;
+        }
+        if (mounted) {
+          TasbihHadithPopup.show(
+            context,
+            memorialName: memorialName,
+            onDismiss: () => ref.read(tasbihAlZahraProvider.notifier).reset(),
+            onDedicate: _memorialId != null ? _dedicateTasbeeh : null,
+          );
+        }
       }
     } else if (_mode == TasbihMode.standard) {
       final type = _standardTypes[_standardIndex];
       final newCount = _standardCount + 1;
       if (newCount >= type.target) {
-        HapticFeedback.heavyImpact();
+        if (zahraState.vibration) HapticService.instance.strongTap();
         ref.read(tasbihHistoryProvider.notifier).add(TasbihSession(
               id: const Uuid().v4(),
               type: 'standard',
@@ -1233,23 +1422,26 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
               startedAt: DateTime.now(),
             ));
         Future.delayed(const Duration(milliseconds: 300), () {
-          if (mounted) TasbihHadithPopup.show(context);
+          if (mounted) TasbihHadithPopup.show(
+            context,
+            onDedicate: _memorialId != null ? _dedicateTasbeeh : null,
+          );
         });
       } else if (newCount % 33 == 0) {
-        HapticFeedback.heavyImpact();
-      } else {
+        if (zahraState.vibration) HapticService.instance.strongTap();
+      } else if (zahraState.vibration) {
         switch (_standardIndex) {
           case 0:
-            HapticFeedback.selectionClick();
+            HapticService.instance.mediumTap();
             break;
           case 1:
-            HapticFeedback.lightImpact();
+            HapticService.instance.lightTap();
             break;
           case 2:
-            HapticFeedback.mediumImpact();
+            HapticService.instance.mediumTap();
             break;
           default:
-            HapticFeedback.lightImpact();
+            HapticService.instance.lightTap();
             break;
         }
       }
@@ -1266,7 +1458,7 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
         final c = customList[_customIndex];
         final newCount = _customCount + 1;
         if (newCount >= c.target) {
-          HapticFeedback.heavyImpact();
+          if (zahraState.vibration) HapticService.instance.strongTap();
           ref.read(tasbihHistoryProvider.notifier).add(TasbihSession(
                 id: const Uuid().v4(),
                 type: 'custom',
@@ -1275,12 +1467,15 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                 startedAt: DateTime.now(),
               ));
           Future.delayed(const Duration(milliseconds: 300), () {
-            if (mounted) TasbihHadithPopup.show(context);
+            if (mounted) TasbihHadithPopup.show(
+              context,
+              onDedicate: _memorialId != null ? _dedicateTasbeeh : null,
+            );
           });
         } else if (newCount % 33 == 0) {
-          HapticFeedback.mediumImpact();
-        } else {
-          HapticFeedback.lightImpact();
+          if (zahraState.vibration) HapticService.instance.mediumTap();
+        } else if (zahraState.vibration) {
+          HapticService.instance.lightTap();
         }
 
         _counterPopController.forward(from: 0);
@@ -1289,6 +1484,40 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
         setState(() {
           _customCount = newCount >= c.target ? 0 : newCount;
         });
+      }
+    }
+  }
+
+  // ─── Dedicate Tasbih Reward ───
+
+  Future<void> _dedicateTasbeeh() async {
+    if (_isSubmittingDedication || _memorialId == null) return;
+    setState(() => _isSubmittingDedication = true);
+    try {
+      final repo = await ref.read(memorialRepositoryProvider.future);
+      final reward = Reward.create(
+        memorialId: _memorialId!,
+        type: RewardType.tasbeeh,
+        note: 'التسبيح',
+      );
+      await repo.addReward(reward);
+      final updated = (await repo.getMemorialById(_memorialId!)).dataOrNull;
+      if (updated != null) {
+        ref.read(memorialsProvider.notifier).updateSingleMemorial(updated);
+      }
+      if (mounted) {
+        HapticFeedback.heavyImpact();
+        showPremiumSuccess(
+          context,
+          message: 'تم إهداء ثواب التسبيح إلى المرحوم، تقبل الله منكم.',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 700));
+        if (mounted) context.go('/mercy-register');
+      }
+    } catch (e) {
+      if (mounted) {
+        showPremiumSuccess(context, message: 'حدث خطأ، حاول مرة أخرى');
+        setState(() => _isSubmittingDedication = false);
       }
     }
   }
@@ -1493,200 +1722,6 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
     );
   }
 
-  // ─── Premium Completion Overlay ───
-
-  Widget _buildCompletionOverlay(TasbihAlZahraState state) {
-    final w = MediaQuery.sizeOf(context).width;
-    return Positioned.fill(
-      child: AnimatedBuilder(
-        animation: _celebrateController,
-        builder: (context, _) {
-          final celebrate = _celebrateController.value;
-          final scale = 0.6 + 0.4 * celebrate;
-          final opacity = celebrate.clamp(0.0, 1.0);
-          final particleOpacity = (0.5 * (1.0 - (celebrate - 0.5).clamp(0.0, 0.5) * 2)).clamp(0.0, 1.0);
-
-          return GestureDetector(
-            onTap: () {},
-            child: Container(
-              color: Colors.transparent,
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ui.ImageFilter.blur(
-                    sigmaX: 20 * celebrate,
-                    sigmaY: 20 * celebrate,
-                  ),
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.7 * celebrate),
-                    child: Stack(
-                      children: [
-                        CustomPaint(
-                          painter: _CompletionParticlesPainter(celebrate, particleOpacity),
-                          size: Size.infinite,
-                        ),
-                        Center(
-                          child: Transform.scale(
-                            scale: scale,
-                            child: Opacity(
-                              opacity: opacity,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: w < 360 ? 68 : 80,
-                                    height: w < 360 ? 68 : 80,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: AppTheme.goldGradient,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppTheme.goldPrimary.withValues(alpha: 0.4),
-                                          blurRadius: 30,
-                                          spreadRadius: 4,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Icon(Icons.celebration_rounded,
-                                        color: AppTheme.bgPrimary, size: w < 360 ? 36 : 44),
-                                  ),
-                                  SizedBox(height: w < 360 ? 18 : 24),
-                                  ShaderMask(
-                                    shaderCallback: (bounds) => AppTheme.goldGradient.createShader(bounds),
-                                    child: Text('✨ تقبل الله ✨',
-                                        style: GoogleFonts.notoKufiArabic(
-                                            fontSize: w < 360 ? 26 : 34,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.goldPrimary.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: AppTheme.borderGold,
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                    child: Text('أحسنت',
-                                        style: GoogleFonts.notoKufiArabic(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppTheme.goldPrimary)),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text('لقد أتممت التسبيح بنجاح',
-                                      style: GoogleFonts.notoKufiArabic(
-                                          fontSize: 14, color: Colors.white70)),
-                                  const SizedBox(height: 24),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _completionStat('عدد التكبيرات', '34'),
-                                      _completionDivider(),
-                                      _completionStat('عدد التحميدات', '33'),
-                                      _completionDivider(),
-                                      _completionStat('عدد التسبيحات', '33'),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text('المجموع: ${state.totalCount}',
-                                        style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppTheme.goldPrimary)),
-                                  ),
-                                  SizedBox(height: w < 360 ? 20 : 28),
-                                  GoldButton(
-                                    label: 'إعادة',
-                                    onTap: () => ref.read(tasbihAlZahraProvider.notifier).reset(),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  GestureDetector(
-                                    onTap: _shareAchievement,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(18),
-                                        border: Border.all(
-                                          color: AppTheme.borderGold,
-                                          width: 0.5,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.share_rounded,
-                                              color: AppTheme.goldPrimary, size: 16),
-                                          const SizedBox(width: 8),
-                                          Text('مشاركة الإنجاز',
-                                              style: GoogleFonts.notoKufiArabic(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppTheme.goldPrimary)),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  TextButton(
-                                    onPressed: () => ref.read(tasbihAlZahraProvider.notifier).reset(),
-                                    child: Text('إغلاق',
-                                        style: GoogleFonts.notoKufiArabic(
-                                            color: Colors.white54, fontSize: 13)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _completionStat(String label, String value) {
-    return Column(
-      children: [
-        Text(value,
-            style: GoogleFonts.inter(
-                fontSize: 18, fontWeight: FontWeight.bold,
-                color: AppTheme.goldPrimary)),
-        Text(label,
-            style: GoogleFonts.notoKufiArabic(
-                fontSize: 9, color: Colors.white60)),
-      ],
-    );
-  }
-
-  Widget _completionDivider() {
-    return Container(
-      width: 1,
-      height: 30,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      color: AppTheme.borderGold,
-    );
-  }
-
-  void _shareAchievement() {
-    final s = ref.read(tasbihAlZahraProvider);
-    Share.share('✨ تقبل الله ✨\nأحسنت! لقد أتممت تسبيحة الزهراء\nالمجموع: ${s.totalCount} تسبيحة\n#رفيق');
-  }
-
   // ─── Settings Sheet ───
 
   void _showSettingsSheet() {
@@ -1747,11 +1782,16 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
                   icon: Icons.vibration_rounded,
                   title: 'الاهتزاز',
                   subtitle: 'اهتزاز عند كل ضغطة',
-                  trailing: Switch(
-                    value: _vibration,
-                    onChanged: (v) => setState(() => _vibration = v),
-                    activeTrackColor: AppTheme.goldPrimary.withValues(alpha: 0.3),
-                    activeThumbColor: AppTheme.goldPrimary,
+                  trailing: Consumer(
+                    builder: (context, ref, _) {
+                      final vib = ref.watch(tasbihAlZahraProvider).vibration;
+                      return Switch(
+                        value: vib,
+                        onChanged: (v) => ref.read(tasbihAlZahraProvider.notifier).setVibration(v),
+                        activeTrackColor: AppTheme.goldPrimary.withValues(alpha: 0.3),
+                        activeThumbColor: AppTheme.goldPrimary,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -2003,51 +2043,4 @@ class _TasbeehScreenState extends ConsumerState<TasbeehScreen>
       ),
     );
   }
-}
-
-// ─── Completion Particles Painter ───
-
-class _CompletionParticlesPainter extends CustomPainter {
-  final double progress;
-  final double opacity;
-
-  _CompletionParticlesPainter(this.progress, this.opacity);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (opacity <= 0) return;
-    final rng = math.Random(42);
-    for (int i = 0; i < 30; i++) {
-      final x = rng.nextDouble() * size.width;
-      final y = (rng.nextDouble() * size.height * 0.6) +
-          (progress * size.height * 0.4);
-      final alpha = opacity * (0.2 + 0.8 * (1.0 - (y / size.height)));
-      final particleSize = 1.5 + rng.nextDouble() * 2.5;
-      final paint = Paint()
-        ..color = AppTheme.goldPrimary.withValues(alpha: alpha.clamp(0.0, 0.4))
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1);
-      canvas.drawCircle(Offset(x, y), particleSize, paint);
-    }
-
-    final cx = size.width / 2;
-    final cy = size.height * 0.3;
-    final ornamentPaint = Paint()
-      ..color = AppTheme.goldPrimary.withValues(alpha: (0.04 * opacity).clamp(0.0, 0.04))
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
-    final r = 80 + (1.0 - progress) * 20;
-    final path = Path();
-    for (int i = 0; i < 8; i++) {
-      final angle = i * math.pi / 4;
-      final x = cx + r * math.cos(angle);
-      final y = cy + r * math.sin(angle);
-      if (i == 0) { path.moveTo(x, y); } else { path.lineTo(x, y); }
-    }
-    path.close();
-    canvas.drawPath(path, ornamentPaint);
-  }
-
-  @override
-  bool shouldRepaint(_CompletionParticlesPainter old) =>
-      old.progress != progress || old.opacity != opacity;
 }

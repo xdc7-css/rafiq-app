@@ -61,13 +61,15 @@
             android:name=".AdhanAlarmReceiver"
             android:exported="false" />
 
-        <!-- Adhan Boot Receiver — reschedules alarms after device restart -->
+        <!-- Adhan Boot Receiver — reschedules alarms after device restart, timezone change, or time correction -->
         <receiver
             android:name=".AdhanBootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_CHANGED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -168,6 +170,19 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_dashboard_info" />
+        </receiver>
+
+        <!-- Debug Widget (isolated test) -->
+        <receiver
+            android:name=".DebugWidgetProvider"
+            android:exported="true"
+            android:label="Debug Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_debug_info" />
         </receiver>
 
         <!-- Widget Action Receiver (interactive buttons) -->

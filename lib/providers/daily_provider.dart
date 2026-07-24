@@ -64,7 +64,7 @@ final dailyVerseNotifierProvider =
 });
 
 class DailyHadithNotifier extends StateNotifier<HadithModel> {
-  final HadithLocalSource _source = HadithLocalSource();
+  static final HadithLocalSource _sharedSource = HadithLocalSource();
   int _lastIndex = -1;
   bool _disposed = false;
   bool _loaded = false;
@@ -74,8 +74,7 @@ class DailyHadithNotifier extends StateNotifier<HadithModel> {
   }
 
   static HadithModel _defaultHadith() {
-    final src = HadithLocalSource();
-    final daily = src.getDailyHadith();
+    final daily = _sharedSource.getDailyHadith();
     if (daily != null) return _aqwalToHadith(daily);
     return HadithModel(id: 1, textArabic: 'خير ما نبدأ به هو ذكر الله');
   }
@@ -84,7 +83,7 @@ class DailyHadithNotifier extends StateNotifier<HadithModel> {
     if (_loaded || _disposed) return;
     _loaded = true;
     try {
-      await _source.loadAllAhadith();
+      await _sharedSource.loadAllAhadith();
     } catch (_) {}
   }
 
@@ -104,7 +103,7 @@ class DailyHadithNotifier extends StateNotifier<HadithModel> {
       }
     }
     if (fromStorage >= 0) _lastIndex = fromStorage;
-    _source.loadAllAhadith().then((list) async {
+    _sharedSource.loadAllAhadith().then((list) async {
       if (_disposed || list.isEmpty) return;
       int next;
       if (_lastIndex < 0 || _lastIndex >= list.length - 1) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'app.dart';
 import 'database/local_database.dart';
 import 'database/migration/data_migrator.dart'
     if (dart.library.html) 'database/migration/data_migrator_stub.dart';
+import 'firebase_options.dart';
 import 'services/storage_service.dart';
 import 'services/notification_service.dart';
 import 'services/home_widget_service.dart';
@@ -27,6 +29,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPrint('[Startup] WidgetsFlutterBinding: ${mainSw.elapsedMilliseconds} ms');
 
+  // ═══ CRITICAL: Firebase initialization MUST come before any Firebase usage ═══
+  debugPrint('[Startup] Firebase.initializeApp...');
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('[Startup] Firebase initialized: ${mainSw.elapsedMilliseconds} ms');
+  } catch (e) {
+    // Firebase init may fail if API keys are placeholder values.
+    // Replace values in lib/firebase_options.dart with real Firebase Console values.
+    debugPrint('[Startup] Firebase FAILED (check firebase_options.dart): $e');
+  }
+
   if (!kIsWeb) {
     try {
       await SystemChrome.setPreferredOrientations([
@@ -43,7 +58,7 @@ void main() async {
   try {
     await StorageService.init().timeout(
       const Duration(seconds: 5),
-      onTimeout: () => debugPrint('[Startup] ⚠ StorageService.init TIMED OUT (5s)'),
+      onTimeout: () => debugPrint('[Startup] StorageService.init TIMED OUT (5s)'),
     );
     debugPrint('[Startup] StorageService done: ${mainSw.elapsedMilliseconds} ms');
   } catch (e) {

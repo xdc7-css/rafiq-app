@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Mercy Register: Memorials ───────────────────────────────────────
+    match /memorials/{memorialId} {
+      // Public memorials readable by anyone; private only by owner
+      allow read: if resource.data.isPublic == true
+        || (request.auth != null && resource.data.userId == request.auth.uid);
+
+      // Authenticated users can create — field validation enforced
+      allow create: if request.auth != null
+        && request.resource.data.keys.hasAll([
+             'id', 'deceasedName', 'dateOfDeath', 'createdAt',
+             'updatedAt', 'isPublic', 'type', 'searchName'
+           ])
+        && request.resource.data.userId == request.auth.uid
+        // ── Field type & range validation ──
+        && request.resource.data.deceasedName is string
+        && request.resource.data.deceasedName.size() > 0
+        && request.resource.data.deceasedName.size() <= 120
+        && request.resource.data.isPublic is bool
+        && request.resource.data.type is string
+        && request.resource.data.type in ['deathAnniversary', 'death', 'generalPrayer', 'ongoing']
+        && request.resource.data.prayerCount is int
+        && request.resource.data.prayerCount >= 0
+        && request.resource.data.duaCount is int
+        && request.resource.data.duaCount >= 0
+        && request.resource.data.khatmahCount is int
+        && request.resource.data.khatmahCount >= 0
+        && request.resource.data.tasbeehCount is int
+        && request.resource.data.tasbeehCount >= 0;
+
+      // Only owner can update — userId must not be changed
+      allow update: if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        // ── Counter fields must remain non-negative ints ──
+        && request.resource.data.prayerCount is int
+        && request.resource.data.prayerCount >= 0
+        && request.resource.data.duaCount is int
+        && request.resource.data.duaCount >= 0
+        && request.resource.data.khatmahCount is int
+        && request.resource.data.khatmahCount >= 0
+        && request.resource.data.tasbeehCount is int
+        && request.resource.data.tasbeehCount >= 0;
+
+      // Only owner can delete
+      allow delete: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
+
+    // ── Mercy Register: Rewards ─────────────────────────────────────────
+    match /rewards/{rewardId} {
+      // Rewards readable by anyone (public prayer ledger)
+      allow read: if true;
+
+      // Authenticated users can create — field validation enforced
+      allow create: if request.auth != null
+        && request.resource.data.keys.hasAll([
+             'id', 'memorialId', 'type', 'count', 'createdAt', 'points'
+           ])
+        && request.resource.data.userId == request.auth.uid
+        // ── Field type & range validation ──
+        && request.resource.data.memorialId is string
+        && request.resource.data.memorialId.size() > 0
+        && request.resource.data.type is string
+        && request.resource.data.type in ['prayer', 'surahRecitation', 'dua', 'charity', 'quranKhatmah', 'tasbeeh']
+        && request.resource.data.count is int
+        && request.resource.data.count > 0
+        && request.resource.data.count <= 100
+        && request.resource.data.points is int
+        && request.resource.data.points >= 0
+        && request.resource.data.points <= 1000;
+
+      // No updates or deletes allowed (immutable ledger)
+      allow update, delete: if false;
+    }
+  }
+}

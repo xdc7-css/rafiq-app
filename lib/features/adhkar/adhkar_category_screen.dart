@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,10 @@ import '../../providers/adhkar_provider.dart';
 import '../../models/models.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/ds_components.dart';
+import '../mercy_register/data/models/reward.dart';
+import '../mercy_register/providers/mercy_register_providers.dart';
+
+final Set<String> _pendingDedications = {};
 
 class AdhkarCategoryScreen extends ConsumerStatefulWidget {
   final String categoryId;
@@ -24,6 +29,7 @@ class _AdhkarCategoryScreenState extends ConsumerState<AdhkarCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
+    final memorialId = GoRouterState.of(context).uri.queryParameters['memorialId'];
     final categories = ref.watch(adhkarCategoriesProvider);
     final category = categories.firstWhere(
       (c) => c.id == widget.categoryId,
@@ -52,13 +58,24 @@ class _AdhkarCategoryScreenState extends ConsumerState<AdhkarCategoryScreen> {
         ],
       ),
       body: ListView.builder(
-        padding: EdgeInsets.fromLTRB(w < 360 ? 12 : 16, 8, w < 360 ? 12 : 16, w < 360 ? 16 : 24),
+        padding: EdgeInsets.fromLTRB(
+          w < 360 ? 12 : 16,
+          8,
+          w < 360 ? 12 : 16,
+          memorialId != null ? 80 : (w < 360 ? 16 : 24),
+        ),
         itemCount: category.adhkar.length,
         itemBuilder: (context, index) {
           final dhikr = category.adhkar[index];
           return _DhikrCard(dhikr: dhikr, categoryId: widget.categoryId);
         },
       ),
+      bottomNavigationBar: memorialId != null
+          ? _DedicationBar(
+              memorialId: memorialId,
+              rewardType: RewardType.dua,
+            )
+          : null,
     );
   }
 }
@@ -223,5 +240,110 @@ class _DhikrCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _DedicationBar extends ConsumerWidget {
+  final String memorialId;
+  final RewardType rewardType;
+
+  const _DedicationBar({required this.memorialId, required this.rewardType});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        12,
+        16,
+        MediaQuery.paddingOf(context).bottom + 12,
+      ),
+      decoration: BoxDecoration(
+        color: AppTheme.bgCard,
+        border: Border(
+          top: BorderSide(color: AppTheme.borderSubtle, width: 0.5),
+        ),
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        height: 48,
+        child: ElevatedButton.icon(
+          onPressed: () => _dedicate(context, ref),
+          icon: const Icon(Icons.favorite_outline_rounded, size: 18),
+          label: Text(
+            'إهداء لهذا المتوفى',
+            style: GoogleFonts.notoKufiArabic(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.goldPrimary,
+            foregroundColor: AppTheme.bgPrimary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            elevation: 0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _dedicate(BuildContext context, WidgetRef ref) async {
+    if (_pendingDedications.contains(memorialId)) return;
+    _pendingDedications.add(memorialId);
+    try {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: AppTheme.bgCard,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            'إهداء الدعاء',
+            style: GoogleFonts.notoKufiArabic(
+              color: AppTheme.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'هل تريد إهداء ثواب هذا الدعاء للمتوفى؟',
+            style: GoogleFonts.notoKufiArabic(color: AppTheme.textMuted),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text('إلغاء', style: TextStyle(color: AppTheme.textMuted)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text('إهداء', style: TextStyle(color: AppTheme.goldPrimary)),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !context.mounted) return;
+      final repo = await ref.read(memorialRepositoryProvider.future);
+      final reward = Reward.create(memorialId: memorialId, type: rewardType);
+      await repo.addReward(reward);
+      final updated = (await repo.getMemorialById(memorialId)).dataOrNull;
+      if (updated != null) {
+        ref.read(memorialsProvider.notifier).updateSingleMemorial(updated);
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'تم إهداء الدعاء بنجاح',
+              style: GoogleFonts.notoKufiArabic(),
+            ),
+            backgroundColor: AppTheme.bgCard,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } finally {
+      _pendingDedications.remove(memorialId);
+    }
   }
 }

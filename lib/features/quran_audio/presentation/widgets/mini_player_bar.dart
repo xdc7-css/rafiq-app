@@ -174,6 +174,29 @@ class _MiniPlayerBarState extends ConsumerState<MiniPlayerBar>
                             ),
                           ),
                         ),
+                      GestureDetector(
+                        onTap: () {
+                          ref.read(audioPlayerNotifierProvider.notifier).close();
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            color: AppTheme.goldPrimary.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppTheme.borderGold.withValues(alpha: 0.3),
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: AppTheme.textMuted,
+                            size: 16,
+                          ),
+                        ),
+                      ),
                       const SizedBox(width: 8),
                     ],
                   ),

@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../providers/api_providers.dart';
 import '../../data/models/shia_hadith_models.dart';
-import '../../data/datasources/hadith_remote_datasource.dart';
 import '../../data/datasources/hadith_local_datasource.dart';
 import '../../data/repository/hadith_repository_impl.dart';
-
-final hadithRemoteDataSourceProvider = Provider<HadithRemoteDataSource>((ref) {
-  return HadithRemoteDataSource();
-});
 
 final hadithLocalDataSourceProvider = Provider<HadithLocalDataSource>((ref) {
   return HadithLocalDataSource();

@@ -391,6 +391,80 @@ class WebDatabaseService implements LocalDatabaseService {
   Future<void> clearSearchHistory() async {
     await _p.remove(_searchHistoryKey);
   }
+
+  // ── Memorials (Mercy Register) ──────────────────────────────────────
+  static const _memorialsKey = '${_prefix}memorials_mercy';
+  static const _rewardsKey = '${_prefix}rewards_mercy';
+
+  @override
+  Future<List<MemorialEntry>> getMemorials({
+    String? userId,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    var list = _loadList(_memorialsKey).map(MemorialEntry.fromJson).toList();
+    if (userId != null) {
+      list = list.where((e) => e.userId == userId).toList();
+    }
+    list.sort((a, b) => b.updatedAtMs.compareTo(a.updatedAtMs));
+    if (offset >= list.length) return [];
+    return list.sublist(offset, (offset + limit).clamp(0, list.length));
+  }
+
+  @override
+  Stream<List<MemorialEntry>> watchMemorials({String? userId}) async* {
+    yield await getMemorials(userId: userId);
+  }
+
+  @override
+  Future<MemorialEntry?> getMemorialById(String memorialId) async {
+    final list = _loadList(_memorialsKey).map(MemorialEntry.fromJson).toList();
+    try {
+      return list.firstWhere((e) => e.memorialId == memorialId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> putMemorial(MemorialEntry m) async {
+    final list = _loadList(_memorialsKey);
+    list.removeWhere((e) => e['memorialId'] == m.memorialId);
+    list.insert(0, m.toJson());
+    await _saveList(_memorialsKey, list);
+  }
+
+  @override
+  Future<void> deleteMemorialById(String memorialId) async {
+    final list = _loadList(_memorialsKey);
+    list.removeWhere((e) => e['memorialId'] == memorialId);
+    await _saveList(_memorialsKey, list);
+    final rewards = _loadList(_rewardsKey);
+    rewards.removeWhere((e) => e['memorialId'] == memorialId);
+    await _saveList(_rewardsKey, rewards);
+  }
+
+  // ── Rewards (Mercy Register) ────────────────────────────────────────
+
+  @override
+  Future<List<RewardEntry>> getRewardsByMemorialId(
+    String memorialId, {
+    int limit = 50,
+  }) async {
+    var list = _loadList(_rewardsKey).map(RewardEntry.fromJson).toList();
+    list = list.where((e) => e.memorialId == memorialId).toList();
+    list.sort((a, b) => b.createdAtMs.compareTo(a.createdAtMs));
+    if (list.length > limit) return list.sublist(0, limit);
+    return list;
+  }
+
+  @override
+  Future<void> putReward(RewardEntry r) async {
+    final list = _loadList(_rewardsKey);
+    list.removeWhere((e) => e['rewardId'] == r.rewardId);
+    list.insert(0, r.toJson());
+    await _saveList(_rewardsKey, list);
+  }
 }
 
 LocalDatabaseService createLocalDatabaseService() => WebDatabaseService();

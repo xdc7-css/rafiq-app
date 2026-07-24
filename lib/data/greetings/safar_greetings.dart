@@ -257,7 +257,7 @@ const Map<GreetingPeriod, List<GreetingEntry>> safarGreetings = {
   GreetingPeriod.midnight: [
     GreetingEntry(
       title: 'سَحَرُ الصَّبْر',
-      subtitle: 'في جوف ليل صفر، الله ي獎勵 الصابرين في السَّحَر',
+      subtitle: 'في جوف ليل صفر، الله يُثيب الصابرين في السَّحَر',
     ),
     GreetingEntry(
       title: 'اللَّهُمَّ اسْمَعْ دُعَائِي',

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../services/haptic_service.dart';
 
 enum TasbihAlZahraStage { takbeer, tahmeed, tasbeeh }
 
@@ -11,6 +11,7 @@ class TasbihAlZahraState {
   final bool isComplete;
   final bool justAdvanced;
   final String? completedDhikr;
+  final bool vibration;
 
   const TasbihAlZahraState({
     this.stage = TasbihAlZahraStage.takbeer,
@@ -19,6 +20,7 @@ class TasbihAlZahraState {
     this.isComplete = false,
     this.justAdvanced = false,
     this.completedDhikr,
+    this.vibration = true,
   });
 
   int get target {
@@ -65,6 +67,7 @@ class TasbihAlZahraState {
     bool? isComplete,
     bool? justAdvanced,
     String? completedDhikr,
+    bool? vibration,
   }) {
     return TasbihAlZahraState(
       stage: stage ?? this.stage,
@@ -73,6 +76,7 @@ class TasbihAlZahraState {
       isComplete: isComplete ?? this.isComplete,
       justAdvanced: justAdvanced ?? this.justAdvanced,
       completedDhikr: completedDhikr ?? this.completedDhikr,
+      vibration: vibration ?? this.vibration,
     );
   }
 }
@@ -81,6 +85,8 @@ class TasbihAlZahraNotifier extends StateNotifier<TasbihAlZahraState> {
   Timer? _advanceTimer;
 
   TasbihAlZahraNotifier() : super(const TasbihAlZahraState());
+
+  void setVibration(bool enabled) => state = state.copyWith(vibration: enabled);
 
   void increment() {
     if (state.isComplete) return;
@@ -106,22 +112,24 @@ class TasbihAlZahraNotifier extends StateNotifier<TasbihAlZahraState> {
         totalCount: newTotal,
         isComplete: true,
       );
-      HapticFeedback.vibrate();
+      if (state.vibration) HapticService.instance.strongTap();
     } else {
       state = state.copyWith(
         currentCount: newCount,
         totalCount: newTotal,
       );
-      switch (state.stage) {
-        case TasbihAlZahraStage.tasbeeh:
-          HapticFeedback.selectionClick();
-          break;
-        case TasbihAlZahraStage.tahmeed:
-          HapticFeedback.lightImpact();
-          break;
-        case TasbihAlZahraStage.takbeer:
-          HapticFeedback.mediumImpact();
-          break;
+      if (state.vibration) {
+        switch (state.stage) {
+          case TasbihAlZahraStage.tasbeeh:
+            HapticService.instance.mediumTap();
+            break;
+          case TasbihAlZahraStage.tahmeed:
+            HapticService.instance.lightTap();
+            break;
+          case TasbihAlZahraStage.takbeer:
+            HapticService.instance.mediumTap();
+            break;
+        }
       }
     }
   }
@@ -131,7 +139,7 @@ class TasbihAlZahraNotifier extends StateNotifier<TasbihAlZahraState> {
     required int totalCount,
     required String completedDhikr,
   }) {
-    HapticFeedback.heavyImpact();
+    if (state.vibration) HapticService.instance.strongTap();
 
     state = state.copyWith(
       stage: stage,
@@ -152,7 +160,7 @@ class TasbihAlZahraNotifier extends StateNotifier<TasbihAlZahraState> {
   void reset() {
     _advanceTimer?.cancel();
     state = const TasbihAlZahraState();
-    HapticFeedback.mediumImpact();
+    if (state.vibration) HapticService.instance.mediumTap();
   }
 
   @override

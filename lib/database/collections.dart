@@ -1,4 +1,4 @@
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 part 'collections.g.dart';
 
@@ -172,4 +172,61 @@ class SearchHistoryIsar {
   late String query;
   late DateTime searchedAt;
   late int resultCount;
+}
+
+@collection
+class MemorialIsar {
+  Id id = Isar.autoIncrement;
+  @Index(unique: true, replace: true)
+  late String memorialId;
+  late String deceasedName;
+  String? deceasedNameArabic;
+  late int dateOfDeathMs;
+  String? description;
+  late int prayerCount;
+  late int duaCount;
+  late int khatmahCount;
+  late int tasbeehCount;
+  late int createdAtMs;
+  late int updatedAtMs;
+  String? userId;
+  late bool isPublic;
+  late int typeIndex;
+  int? surahNumber;
+  String? duaText;
+  String? photoUrl;
+  late String searchName;
+  String? searchNameArabic;
+}
+
+@collection
+class RewardIsar {
+  Id id = Isar.autoIncrement;
+  @Index(unique: true, replace: true)
+  late String rewardId;
+  @Index()
+  late String memorialId;
+  String? userId;
+  late int typeIndex;
+  late int count;
+  late int createdAtMs;
+  late int points;
+  String? note;
+}
+
+@collection
+class QuranSvgPageIsar {
+  Id id = Isar.autoIncrement;
+  @Index(unique: true, replace: true)
+  late int pageNumber;
+  late String svgContent;
+  late DateTime cachedAt;
+}
+
+@collection
+class DownloadStateIsar {
+  Id id = Isar.autoIncrement;
+  @Index(unique: true, replace: true)
+  late String key;
+  late String value;
 }

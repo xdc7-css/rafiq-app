@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'isar_service.dart';
 import 'collections.dart';
 import 'local_database.dart';
-import 'models/database_models.dart';
 
 class IsarDatabaseService implements LocalDatabaseService {
   bool _initialized = false;
@@ -452,6 +451,166 @@ class IsarDatabaseService implements LocalDatabaseService {
   @override
   Future<void> clearSearchHistory() async {
     await IsarService.clearSearchHistory();
+  }
+
+  // ── Memorials (Mercy Register) ──────────────────────────────────────
+
+  @override
+  Future<List<MemorialEntry>> getMemorials({
+    String? userId,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final entries =
+        await IsarService.getMemorials(userId: userId, limit: limit, offset: offset);
+    return entries.map((e) => MemorialEntry(
+      memorialId: e.memorialId,
+      deceasedName: e.deceasedName,
+      deceasedNameArabic: e.deceasedNameArabic ?? '',
+      dateOfDeathMs: e.dateOfDeathMs,
+      description: e.description ?? '',
+      prayerCount: e.prayerCount,
+      duaCount: e.duaCount,
+      khatmahCount: e.khatmahCount,
+      tasbeehCount: e.tasbeehCount,
+      createdAtMs: e.createdAtMs,
+      updatedAtMs: e.updatedAtMs,
+      userId: e.userId ?? '',
+      isPublic: e.isPublic,
+      typeIndex: e.typeIndex,
+      surahNumber: e.surahNumber ?? 0,
+      duaText: e.duaText ?? '',
+      photoUrl: e.photoUrl ?? '',
+      searchName: e.searchName,
+      searchNameArabic: e.searchNameArabic ?? '',
+    )).toList();
+  }
+
+  @override
+  Stream<List<MemorialEntry>> watchMemorials({String? userId}) {
+    return IsarService.watchMemorials(userId: userId).map((list) => list
+        .map((e) => MemorialEntry(
+              memorialId: e.memorialId,
+              deceasedName: e.deceasedName,
+              deceasedNameArabic: e.deceasedNameArabic ?? '',
+              dateOfDeathMs: e.dateOfDeathMs,
+              description: e.description ?? '',
+              prayerCount: e.prayerCount,
+              duaCount: e.duaCount,
+              khatmahCount: e.khatmahCount,
+              tasbeehCount: e.tasbeehCount,
+              createdAtMs: e.createdAtMs,
+              updatedAtMs: e.updatedAtMs,
+              userId: e.userId ?? '',
+              isPublic: e.isPublic,
+              typeIndex: e.typeIndex,
+              surahNumber: e.surahNumber ?? 0,
+              duaText: e.duaText ?? '',
+              photoUrl: e.photoUrl ?? '',
+              searchName: e.searchName,
+              searchNameArabic: e.searchNameArabic ?? '',
+            ))
+        .toList());
+  }
+
+  @override
+  Future<MemorialEntry?> getMemorialById(String memorialId) async {
+    final e = await IsarService.getMemorialByMemorialId(memorialId);
+    if (e == null) return null;
+    return MemorialEntry(
+      memorialId: e.memorialId,
+      deceasedName: e.deceasedName,
+      deceasedNameArabic: e.deceasedNameArabic ?? '',
+      dateOfDeathMs: e.dateOfDeathMs,
+      description: e.description ?? '',
+      prayerCount: e.prayerCount,
+      duaCount: e.duaCount,
+      khatmahCount: e.khatmahCount,
+      tasbeehCount: e.tasbeehCount,
+      createdAtMs: e.createdAtMs,
+      updatedAtMs: e.updatedAtMs,
+      userId: e.userId ?? '',
+      isPublic: e.isPublic,
+      typeIndex: e.typeIndex,
+      surahNumber: e.surahNumber ?? 0,
+      duaText: e.duaText ?? '',
+      photoUrl: e.photoUrl ?? '',
+      searchName: e.searchName,
+      searchNameArabic: e.searchNameArabic ?? '',
+    );
+  }
+
+  @override
+  Future<void> putMemorial(MemorialEntry m) async {
+    debugPrint('[IsarDatabaseService] putMemorial: entry memorialId="${m.memorialId}"');
+    try {
+      final isarObj = MemorialIsar()
+        ..memorialId = m.memorialId
+        ..deceasedName = m.deceasedName
+        ..deceasedNameArabic = m.deceasedNameArabic.isEmpty ? null : m.deceasedNameArabic
+        ..dateOfDeathMs = m.dateOfDeathMs
+        ..description = m.description.isEmpty ? null : m.description
+        ..prayerCount = m.prayerCount
+        ..duaCount = m.duaCount
+        ..khatmahCount = m.khatmahCount
+        ..tasbeehCount = m.tasbeehCount
+        ..createdAtMs = m.createdAtMs
+        ..updatedAtMs = m.updatedAtMs
+        ..userId = m.userId.isEmpty ? null : m.userId
+        ..isPublic = m.isPublic
+        ..typeIndex = m.typeIndex
+        ..surahNumber = m.surahNumber == 0 ? null : m.surahNumber
+        ..duaText = m.duaText.isEmpty ? null : m.duaText
+        ..photoUrl = m.photoUrl.isEmpty ? null : m.photoUrl
+        ..searchName = m.searchName
+        ..searchNameArabic = m.searchNameArabic.isEmpty ? null : m.searchNameArabic;
+
+      debugPrint('[IsarDatabaseService] Calling IsarService.putMemorial...');
+      await IsarService.putMemorial(isarObj);
+      debugPrint('[IsarDatabaseService] IsarService.putMemorial completed.');
+    } catch (e, st) {
+      debugPrint('[IsarDatabaseService] EXCEPTION in putMemorial: $e');
+      debugPrint('[IsarDatabaseService] Stack trace:\n$st');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteMemorialById(String memorialId) async {
+    await IsarService.deleteMemorialByMemorialId(memorialId);
+  }
+
+  // ── Rewards (Mercy Register) ────────────────────────────────────────
+
+  @override
+  Future<List<RewardEntry>> getRewardsByMemorialId(
+    String memorialId, {
+    int limit = 50,
+  }) async {
+    final entries = await IsarService.getRewardsByMemorialId(memorialId, limit: limit);
+    return entries.map((e) => RewardEntry(
+      rewardId: e.rewardId,
+      memorialId: e.memorialId,
+      userId: e.userId ?? '',
+      typeIndex: e.typeIndex,
+      count: e.count,
+      createdAtMs: e.createdAtMs,
+      points: e.points,
+      note: e.note ?? '',
+    )).toList();
+  }
+
+  @override
+  Future<void> putReward(RewardEntry r) async {
+    await IsarService.putReward(RewardIsar()
+      ..rewardId = r.rewardId
+      ..memorialId = r.memorialId
+      ..userId = r.userId.isEmpty ? null : r.userId
+      ..typeIndex = r.typeIndex
+      ..count = r.count
+      ..createdAtMs = r.createdAtMs
+      ..points = r.points
+      ..note = r.note.isEmpty ? null : r.note);
   }
 }
 

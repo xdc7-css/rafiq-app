@@ -17,50 +17,57 @@ class FloatingDockNav extends StatelessWidget {
   static const _items = [
     (Icons.home_outlined, Icons.home_rounded, 'الرئيسية'),
     (Icons.menu_book_outlined, Icons.menu_book_rounded, 'القرآن'),
-    (Icons.mosque_outlined, Icons.mosque_rounded, 'الزيارات'),
+    (Icons.wb_sunny_outlined, Icons.wb_sunny_rounded, 'الأذكار'),
     (Icons.nights_stay_outlined, Icons.nights_stay_rounded, 'الحديث'),
     (Icons.settings_outlined, Icons.settings_rounded, 'الإعدادات'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final bottomSafety = MediaQuery.paddingOf(context).bottom;
-    final w = MediaQuery.sizeOf(context).width;
-    final dockH = w < 360 ? 62.0 : w < 420 ? 68.0 : 72.0;
-    final radius = w < 360 ? 24.0 : 28.0;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: EdgeInsets.fromLTRB(12, 0, 12, bottomSafety > 0 ? bottomSafety + 8 : 12),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: BorderRadius.circular(28),
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: 24, sigmaY: 24),
           child: Container(
-            height: dockH,
+            height: 72,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  AppTheme.bgCard.withValues(alpha: 0.82),
-                  AppTheme.bgSurface.withValues(alpha: 0.65),
-                ],
+                colors: isDark
+                    ? [
+                        AppTheme.bgCard.withValues(alpha: 0.82),
+                        AppTheme.bgSurface.withValues(alpha: 0.65),
+                      ]
+                    : [
+                        AppTheme.lightBgCard.withValues(alpha: 0.9),
+                        AppTheme.lightBgCard.withValues(alpha: 0.75),
+                      ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(radius),
+              borderRadius: BorderRadius.circular(28),
               border: Border.all(
-                color: AppTheme.borderSubtle,
+                color: isDark
+                    ? AppTheme.borderSubtle
+                    : AppTheme.goldPrimary.withValues(alpha: 0.12),
                 width: 0.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.bgPrimary.withValues(alpha: 0.5),
+                  color: isDark
+                      ? AppTheme.bgPrimary.withValues(alpha: 0.5)
+                      : Colors.black.withValues(alpha: 0.06),
                   blurRadius: 32,
                   offset: const Offset(0, 12),
                 ),
-                BoxShadow(
-                  color: AppTheme.glowGold,
-                  blurRadius: 40,
-                  spreadRadius: -12,
-                ),
+                if (isDark)
+                  BoxShadow(
+                    color: AppTheme.glowGold,
+                    blurRadius: 40,
+                    spreadRadius: -12,
+                  ),
               ],
             ),
             child: Row(
@@ -100,7 +107,8 @@ class _DockItem extends StatefulWidget {
   State<_DockItem> createState() => _DockItemState();
 }
 
-class _DockItemState extends State<_DockItem> with SingleTickerProviderStateMixin {
+class _DockItemState extends State<_DockItem>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scale;
 
@@ -111,9 +119,10 @@ class _DockItemState extends State<_DockItem> with SingleTickerProviderStateMixi
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    _scale = Tween<double>(begin: 1, end: 0.92).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _scale = Tween<double>(
+      begin: 1,
+      end: 0.92,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -123,29 +132,22 @@ class _DockItemState extends State<_DockItem> with SingleTickerProviderStateMixi
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
-    final mutedColor = AppTheme.textMuted;
-    final media = MediaQuery.of(context);
-    final w = media.size.width;
-    final hPad = w < 360 ? 6.0 : 10.0;
-    final iconSz = w < 360 ? 20.0 : 22.0;
-    final labelSz = w < 360 ? 8.0 : 9.0;
-    return MediaQuery(
-      data: media.copyWith(textScaler: const TextScaler.linear(1.0)),
-      child: GestureDetector(
-        onTapDown: (_) => _controller.forward(),
-        onTapUp: (_) {
-          _controller.reverse();
-          widget.onTap();
-        },
-        onTapCancel: () => _controller.reverse(),
-        child: ScaleTransition(
-          scale: _scale,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final mutedColor = isDark ? AppTheme.textMuted : AppTheme.lightTextMuted;
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: ScaleTransition(
+        scale: _scale,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: widget.selected
                 ? AppTheme.goldPrimary.withValues(alpha: 0.12)
@@ -155,30 +157,24 @@ class _DockItemState extends State<_DockItem> with SingleTickerProviderStateMixi
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Icon with glow indicator embedded as shadow — no extra height.
               Stack(
                 alignment: Alignment.center,
-                clipBehavior: Clip.none,
                 children: [
                   if (widget.selected)
-                    Positioned.fill(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.glowGold,
-                              blurRadius: 14,
-                            ),
-                          ],
-                        ),
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(color: AppTheme.glowGold, blurRadius: 16),
+                        ],
                       ),
                     ),
                   Icon(
                     widget.icon,
-                    size: iconSz,
+                    size: 24,
                     color: widget.selected ? AppTheme.goldPrimary : mutedColor,
                   ),
                 ],
@@ -187,35 +183,31 @@ class _DockItemState extends State<_DockItem> with SingleTickerProviderStateMixi
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
                 style: GoogleFonts.notoKufiArabic(
-                  fontSize: labelSz,
-                  fontWeight: widget.selected ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 10,
+                  fontWeight: widget.selected
+                      ? FontWeight.w700
+                      : FontWeight.w500,
                   color: widget.selected ? AppTheme.goldPrimary : mutedColor,
                 ),
-                child: Text(widget.label, maxLines: 1),
+                child: Text(widget.label),
               ),
-              // Dot: uses SizedBox with fixed 5px height always, width animates to 0 when hidden.
-              SizedBox(
-                height: 5,
-                child: Center(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    width: widget.selected ? 4 : 0,
-                    height: widget.selected ? 4 : 0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.goldPrimary,
-                      boxShadow: widget.selected
-                          ? [BoxShadow(color: AppTheme.glowGold, blurRadius: 5)]
-                          : null,
-                    ),
-                  ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                margin: const EdgeInsets.only(top: 3),
+                width: widget.selected ? 4 : 0,
+                height: widget.selected ? 4 : 0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.goldPrimary,
+                  boxShadow: [
+                    BoxShadow(color: AppTheme.glowGold, blurRadius: 6),
+                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

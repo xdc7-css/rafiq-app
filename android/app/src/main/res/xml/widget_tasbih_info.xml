@@ -12,5 +12,4 @@
     android:widgetCategory="home_screen"
     android:previewLayout="@layout/widget_tasbih_2x2"
     android:label="المسبحة"
-    android:description="@string/widget_tasbih_desc"
-    android:screenOrientation="unspecified" />
+    android:description="@string/widget_tasbih_desc" />

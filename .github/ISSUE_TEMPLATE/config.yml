@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 💬 Discussions
+  - name: Discussions
     url: https://github.com/Daily-Islamic-Widget/rafeeq/discussions
     about: Ask questions and discuss ideas
-  - name: 📖 Documentation
+  - name: Documentation
     url: https://github.com/Daily-Islamic-Widget/rafeeq#readme
     about: Read the project documentation

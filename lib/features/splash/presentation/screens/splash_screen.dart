@@ -24,6 +24,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     super.initState();
     debugPrint('[Startup] SplashScreen.initState');
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
     _scheduleNavigation();
   }
 
@@ -92,9 +95,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     try {
       final settings = ref.read(settingsNotifierProvider);
-      final route = settings.onboarded ? '/home' : '/onboarding';
-      debugPrint('[Startup] Route: $route');
-      context.go(route);
+      if (!settings.onboarded) {
+        debugPrint('[Startup] Route: /onboarding');
+        context.go('/onboarding');
+        return;
+      }
+
+      debugPrint('[Startup] Route: /home');
+      context.go('/home');
     } catch (e) {
       debugPrint('[Startup] Navigation error: $e');
       try {
@@ -105,18 +113,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
   }
 
+  bool _imagePrecached = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_imagePrecached) {
+      _imagePrecached = true;
+      precacheImage(
+        const AssetImage('assets/images/Splash Screen.png'),
+        context,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-    );
-
     return Scaffold(
       body: Image.asset(
         'assets/images/Splash Screen.png',
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
+        gaplessPlayback: true,
       ),
     );
   }

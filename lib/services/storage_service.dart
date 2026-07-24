@@ -5,6 +5,7 @@ import '../core/constants.dart';
 
 class StorageService {
   static SharedPreferences? _prefs;
+  static AppSettings? _settingsCache;
 
   static Future<void> init() async {
     _prefs ??= await SharedPreferences.getInstance();
@@ -50,15 +51,18 @@ class StorageService {
 
   // Settings
   static AppSettings getSettings() {
+    if (_settingsCache != null) return _settingsCache!;
     if (_prefs == null) return AppSettings();
     final jsonString = _prefs!.getString('settings');
     if (jsonString == null) {
       final settings = AppSettings();
       saveSettings(settings);
+      _settingsCache = settings;
       return settings;
     }
     try {
-      return AppSettings.fromJson(json.decode(jsonString));
+      _settingsCache = AppSettings.fromJson(json.decode(jsonString));
+      return _settingsCache!;
     } catch (_) {
       return AppSettings();
     }
@@ -66,6 +70,7 @@ class StorageService {
 
   static Future<void> saveSettings(AppSettings settings) async {
     await _ensureInit();
+    _settingsCache = settings;
     await _prefs!.setString('settings', json.encode(settings.toJson()));
   }
 
@@ -195,6 +200,28 @@ class StorageService {
     await _prefs!.setString('tasbeeh_al_zahra', jsonString);
   }
 
+  // ── Quran Download ────────────────────────────────────────────────────────
+
+  static bool getQuranDownloadCompleted() {
+    if (_prefs == null) return false;
+    return _prefs!.getBool(AppConstants.keyQuranDownloadCompleted) ?? false;
+  }
+
+  static Future<void> setQuranDownloadCompleted(bool value) async {
+    await _ensureInit();
+    await _prefs!.setBool(AppConstants.keyQuranDownloadCompleted, value);
+  }
+
+  static String getQuranDownloadVersion() {
+    if (_prefs == null) return '';
+    return _prefs!.getString(AppConstants.keyQuranDownloadVersion) ?? '';
+  }
+
+  static Future<void> setQuranDownloadVersion(String version) async {
+    await _ensureInit();
+    await _prefs!.setString(AppConstants.keyQuranDownloadVersion, version);
+  }
+
   // ── Prayer Scheduler ──────────────────────────────────────────────────────
 
   /// Persist the day key (YYYYMMDD-like int) of the last scheduled day.
@@ -207,5 +234,22 @@ class StorageService {
   static int getLastScheduledDay() {
     if (_prefs == null) return -1;
     return _prefs!.getInt('last_scheduled_prayer_day') ?? -1;
+  }
+
+  // Mercy Register Daily Message Cache
+  static String? getMercyMessageCachedDay() {
+    if (_prefs == null) return null;
+    return _prefs!.getString('mercy_msg_cached_day');
+  }
+
+  static String? getMercyMessageCachedMsg() {
+    if (_prefs == null) return null;
+    return _prefs!.getString('mercy_msg_cached_text');
+  }
+
+  static Future<void> saveMercyMessageCache(String msg, String dayStr) async {
+    await _ensureInit();
+    await _prefs!.setString('mercy_msg_cached_day', dayStr);
+    await _prefs!.setString('mercy_msg_cached_text', msg);
   }
 }

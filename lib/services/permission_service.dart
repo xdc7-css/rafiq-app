@@ -85,13 +85,6 @@ class PermissionService {
 
   static bool get supportsAutoStart => Platform.isAndroid;
 
-  static bool get isXiaomi => false;
-  static bool get isHuawei => false;
-  static bool get isOppo => false;
-  static bool get isVivo => false;
-  static bool get isOnePlus => false;
-  static bool get isSamsung => false;
-
   static Future<void> openAutoStartSettings() async {
     if (kIsWeb || !Platform.isAndroid) return;
     try {

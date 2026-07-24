@@ -1,3 +1,4 @@
+import '../../../../core/config/debug_flags.dart';
 import '../models/shia_hadith_models.dart';
 import '../datasources/hadith_remote_datasource.dart';
 import '../datasources/hadith_local_datasource.dart';
@@ -16,6 +17,10 @@ class HadithRepositoryImpl {
     final cached = await _local.getCachedHadiths(bookId);
     if (cached.isNotEmpty) return cached;
 
+    if (DebugFlags.disableNonCriticalStartupApis) {
+      return cached;
+    }
+
     try {
       final hadiths = await _remote.getBookHadiths(bookId);
       await _local.cacheHadiths(bookId, hadiths);
@@ -26,6 +31,13 @@ class HadithRepositoryImpl {
   }
 
   Future<ShiaHadith?> getHadith(String bookId, int hadithNumber) async {
+    if (DebugFlags.disableNonCriticalStartupApis) {
+      final cached = await _local.getCachedHadiths(bookId);
+      for (final h in cached) {
+        if (h.number == hadithNumber) return h;
+      }
+      return null;
+    }
     try {
       return await _remote.getHadith(bookId, hadithNumber);
     } catch (_) {
@@ -43,6 +55,19 @@ class HadithRepositoryImpl {
   }) async {
     final q = query.trim();
     if (q.isEmpty) return [];
+
+    if (DebugFlags.disableNonCriticalStartupApis) {
+      if (bookId != null) {
+        final cached = await _local.getCachedHadiths(bookId);
+        return cached
+            .where((h) =>
+                h.text.contains(q) ||
+                (h.subject?.contains(q) ?? false) ||
+                (h.narrator?.contains(q) ?? false))
+            .toList();
+      }
+      return [];
+    }
 
     if (bookId != null) {
       try {
@@ -82,6 +107,13 @@ class HadithRepositoryImpl {
   Future<ShiaHadith> getDailyHadith() async {
     final cached = await _local.getCachedDailyHadith();
     if (cached != null && cached.text.isNotEmpty) return cached;
+
+    if (DebugFlags.disableNonCriticalStartupApis) {
+      final fallbacks = await _local.getFallbackHadiths();
+      final dayOfYear =
+          DateTime.now().difference(DateTime(DateTime.now().year)).inDays;
+      return fallbacks[dayOfYear % fallbacks.length];
+    }
 
     try {
       final allBooks = [

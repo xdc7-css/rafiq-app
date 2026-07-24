@@ -3,90 +3,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../providers/qibla_provider.dart';
-import '../../../../theme/app_theme.dart';
 import '../../models/qibla_models.dart';
-import '../../widgets/compass_dial.dart';
-import '../../widgets/kaaba_icon.dart';
-import '../../widgets/alignment_indicator.dart';
-import '../../widgets/qibla_info_panel.dart';
+import '../../widgets/qibla_compass.dart';
+import '../../widgets/help_card.dart';
+import '../../widgets/status_card.dart';
+import '../../widgets/glass_bottom_nav.dart';
 import '../../widgets/qibla_error_state.dart';
-
-class _QP {
-  final double x, y, size, opacity, phase, speed, amp;
-  const _QP(this.x, this.y, this.size, this.opacity, this.phase, this.speed, this.amp);
-}
-
-class _QiblaBgPainter extends CustomPainter {
-  final double time;
-  final List<_QP> particles;
-
-  _QiblaBgPainter(this.time, this.particles);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final bg = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Color(0xFF060D1A), Color(0xFF0B1A30), Color(0xFF0F2640)],
-      ).createShader(rect);
-    canvas.drawRect(rect, bg);
-
-    final cx = size.width / 2;
-    final cy = size.height * 0.38;
-    final radial = Paint()
-      ..shader = RadialGradient(
-        center: Alignment.center,
-        radius: 0.5,
-        colors: [
-          AppTheme.goldPrimary.withValues(alpha: 0.05),
-          AppTheme.goldPrimary.withValues(alpha: 0.015),
-          Colors.transparent,
-        ],
-      ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: size.width * 0.5));
-    canvas.drawCircle(Offset(cx, cy), size.width * 0.5, radial);
-
-    final ornPaint = Paint()
-      ..color = AppTheme.goldPrimary.withValues(alpha: 0.02)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
-    final ornSize = size.shortestSide * 0.6;
-    final ornPath = Path();
-    final r = ornSize / 2;
-    for (int i = 0; i < 8; i++) {
-      final a = i * math.pi / 4;
-      final x = cx + r * math.cos(a);
-      final y = cy + r * math.sin(a);
-      if (i == 0) {
-        ornPath.moveTo(x, y);
-      } else {
-        ornPath.lineTo(x, y);
-      }
-    }
-    ornPath.close();
-    canvas.drawPath(ornPath, ornPaint);
-    canvas.drawCircle(Offset(cx, cy), r * 0.15, ornPaint);
-
-    for (final p in particles) {
-      final dx = p.x + math.sin(time * p.speed + p.phase) * p.amp;
-      final dy = p.y + math.cos(time * p.speed * 0.7 + p.phase * 1.3) * p.amp * 0.6;
-      final alpha =
-          (p.opacity * (0.5 + 0.5 * math.sin(time * 0.5 + p.phase))).clamp(0.0, 1.0);
-      final pp = Paint()
-        ..color = AppTheme.goldPrimary.withValues(alpha: alpha)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.5);
-      canvas.drawCircle(Offset(dx, dy), p.size, pp);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_QiblaBgPainter old) => old.time != time;
-}
 
 class QiblaScreen extends ConsumerStatefulWidget {
   const QiblaScreen({super.key});
@@ -97,47 +23,36 @@ class QiblaScreen extends ConsumerStatefulWidget {
 class _QiblaScreenState extends ConsumerState<QiblaScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _breatheController;
-  late AnimationController _alignedController;
+  late AnimationController _alignController;
   late AnimationController _entranceController;
   late AnimationController _particleController;
-  late AnimationController _calibrateController;
-  List<_QP> _particles = [];
+  int _selectedNav = 2;
+  int _lastHapticDegree = -999;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
     _breatheController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
-    _alignedController = AnimationController(
+
+    _alignController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    );
-    _entranceController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    )..forward();
-    _particleController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 30),
-    )..repeat();
-    _calibrateController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(milliseconds: 1200),
     );
 
-    final rng = math.Random(42);
-    _particles = List.generate(35, (_) => _QP(
-          rng.nextDouble() * 500,
-          rng.nextDouble() * 900,
-          1.0 + rng.nextDouble() * 2.5,
-          0.06 + rng.nextDouble() * 0.2,
-          rng.nextDouble() * math.pi * 2,
-          0.3 + rng.nextDouble() * 0.8,
-          8 + rng.nextDouble() * 25,
-        ));
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    )..forward();
+
+    _particleController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 25),
+    )..repeat();
 
     Future.microtask(() => ref.read(qiblaProvider.notifier).init());
   }
@@ -146,22 +61,19 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _breatheController.dispose();
-    _alignedController.dispose();
+    _alignController.dispose();
     _entranceController.dispose();
     _particleController.dispose();
-    _calibrateController.dispose();
     super.dispose();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     if (!mounted) return;
-    if (lifecycleState == AppLifecycleState.paused ||
-        lifecycleState == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
       _breatheController.stop();
       _particleController.stop();
-      _calibrateController.stop();
-    } else if (lifecycleState == AppLifecycleState.resumed) {
+    } else if (state == AppLifecycleState.resumed) {
       if (!_breatheController.isAnimating) _breatheController.repeat(reverse: true);
       if (!_particleController.isAnimating) _particleController.repeat();
     }
@@ -169,30 +81,43 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(qiblaProvider);
+    final qiblaState = ref.watch(qiblaProvider);
 
     return Scaffold(
+      backgroundColor: QiblaColors.background,
       body: Stack(
         children: [
           AnimatedBuilder(
             animation: _particleController,
             builder: (_, __) => CustomPaint(
-              painter: _QiblaBgPainter(
-                _particleController.value * math.pi * 4,
-                _particles,
-              ),
+              painter: _BgPainter(_particleController.value * math.pi * 4),
               size: Size.infinite,
             ),
           ),
+
           SafeArea(
             child: Column(
               children: [
-                _buildAppBar(state),
-                Expanded(child: _buildBody(state)),
+                _buildAppBar(qiblaState),
+                Expanded(
+                  child: _buildBody(qiblaState),
+                ),
               ],
             ),
           ),
-          if (state.status == QiblaStatus.ready) _buildControlDock(state),
+
+          if (qiblaState.status == QiblaStatus.ready)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SafeArea(
+                child: GlassBottomNav(
+                  selectedIndex: _selectedNav,
+                  onTap: (i) => setState(() => _selectedNav = i),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -201,132 +126,72 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
   Widget _buildAppBar(QiblaData state) {
     final isReady = state.status == QiblaStatus.ready;
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 6, 16, 4),
+      margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: AppTheme.borderGold, width: 0.5),
-        boxShadow: [
-          BoxShadow(
-              color: AppTheme.shadowDark,
-              blurRadius: 30,
-              offset: const Offset(0, 8),
-              spreadRadius: -4),
-          BoxShadow(color: AppTheme.shadowGold, blurRadius: 20),
-        ],
+        color: QiblaColors.surface.withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: QiblaColors.gold.withValues(alpha: 0.08),
+          width: 0.5,
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.bgCard.withValues(alpha: 0.5),
-                  AppTheme.bgSecondary.withValues(alpha: 0.3),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: Row(
+      child: Row(
+        children: [
+          _GlassBtn(
+            icon: Icons.arrow_back_rounded,
+            onTap: () => Navigator.pop(context),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                _glassBtn(Icons.arrow_back_rounded, () => Navigator.pop(context)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text('القبلة',
-                              style: GoogleFonts.notoKufiArabic(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppTheme.textPrimary)),
-                          const SizedBox(width: 8),
-                          Container(
-                            width: 7,
-                            height: 7,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isReady ? Colors.greenAccent : Colors.redAccent,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: (isReady
-                                          ? Colors.greenAccent
-                                          : Colors.redAccent)
-                                      .withValues(alpha: 0.5),
-                                  blurRadius: 6,
-                                ),
-                              ],
-                            ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'القبلة',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: QiblaColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isReady ? QiblaColors.success : QiblaColors.danger,
+                        boxShadow: [
+                          BoxShadow(
+                            color: (isReady ? QiblaColors.success : QiblaColors.danger)
+                                .withValues(alpha: 0.5),
+                            blurRadius: 6,
                           ),
                         ],
                       ),
-                      const SizedBox(height: 1),
-                      Row(
-                        children: [
-                          Text('اتجاه الكعبة المشرفة',
-                              style: GoogleFonts.notoKufiArabic(
-                                  fontSize: 10, color: AppTheme.textMuted)),
-                          const Spacer(),
-                          if (state.city != null && state.country != null)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                    color: AppTheme.borderGold, width: 0.3),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.location_on_rounded,
-                                      size: 8, color: AppTheme.goldPrimary),
-                                  const SizedBox(width: 3),
-                                  Text('${state.city}, ${state.country}',
-                                      style: GoogleFonts.notoKufiArabic(
-                                          fontSize: 8,
-                                          color: AppTheme.goldPrimary)),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
+                    ),
+                  ],
+                ),
+                if (state.city != null && state.country != null)
+                  Text(
+                    '${state.city}, ${state.country}',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: QiblaColors.textSecondary,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                _glassBtn(
-                  isReady ? Icons.navigation_rounded : Icons.gps_off_rounded,
-                  null,
-                  accentColor: isReady ? null : Colors.redAccent,
-                ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _glassBtn(IconData icon, VoidCallback? onTap, {Color? accentColor}) {
-    final c = accentColor ?? AppTheme.goldPrimary;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: c.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: c.withValues(alpha: 0.2), width: 0.5),
-        ),
-        child: Icon(icon, color: c, size: 20),
+          _GlassBtn(
+            icon: Icons.settings_rounded,
+            onTap: null,
+          ),
+        ],
       ),
     );
   }
@@ -335,101 +200,92 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
     switch (state.status) {
       case QiblaStatus.loading:
         return _buildLoading();
-      case QiblaStatus.noSensor:
-        return QiblaErrorState(
-          status: QiblaStatus.noSensor,
-          onRetry: () => ref.read(qiblaProvider.notifier).init(),
-        );
-      case QiblaStatus.noPermission:
-        return QiblaErrorState(
-          status: state.status,
-          onRetry: () => ref.read(qiblaProvider.notifier).init(),
-        );
-      case QiblaStatus.permanentlyDenied:
-        return QiblaErrorState(
-          status: state.status,
-          onRetry: () => Geolocator.openAppSettings(),
-        );
-      case QiblaStatus.noGps:
-        return QiblaErrorState(
-          status: QiblaStatus.noGps,
-          onRetry: () => ref.read(qiblaProvider.notifier).init(),
-        );
-      case QiblaStatus.error:
-        return QiblaErrorState(
-          status: QiblaStatus.error,
-          errorMessage: state.errorMessage,
-          onRetry: () => ref.read(qiblaProvider.notifier).init(),
-        );
       case QiblaStatus.ready:
         return _buildReady(state);
+      default:
+        return QiblaErrorState(
+          status: state.status,
+          onRetry: state.status == QiblaStatus.permanentlyDenied
+              ? () => Geolocator.openAppSettings()
+              : () => ref.read(qiblaProvider.notifier).init(),
+          errorMessage: state.errorMessage,
+        );
     }
   }
 
   Widget _buildLoading() {
-    final w = MediaQuery.sizeOf(context).width;
-    return Center(
-      child: AnimatedBuilder(
-        animation: _breatheController,
-        builder: (_, __) {
-          final b = _breatheController.value;
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return AnimatedBuilder(
+      animation: _breatheController,
+      builder: (_, __) {
+        final b = _breatheController.value;
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 80,
-                height: 80,
+                width: 72,
+                height: 72,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: AppTheme.goldGradient,
+                  gradient: QiblaColors.goldGradient,
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.goldPrimary
-                          .withValues(alpha: 0.2 + b * 0.3),
-                      blurRadius: 30 + b * 20,
+                      color: QiblaColors.gold.withValues(alpha: 0.15 + b * 0.2),
+                      blurRadius: 24 + b * 16,
                       spreadRadius: 2 + b * 4,
                     ),
                   ],
                 ),
-                child: Center(
+                child: const Center(
                   child: SizedBox(
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     child: CircularProgressIndicator(
                       strokeWidth: 3,
-                      color: AppTheme.bgPrimary,
-                      backgroundColor: AppTheme.bgPrimary.withValues(alpha: 0.15),
+                      color: QiblaColors.background,
+                      backgroundColor: Colors.white24,
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: w < 360 ? 18 : 24),
-              Text('جاري تحديد اتجاه القبلة...',
-                  style: GoogleFonts.notoKufiArabic(
-                      fontSize: 14, color: AppTheme.textMuted)),
-              const SizedBox(height: 8),
-              Text('يتم قياس الموقع والبوصلة',
-                  style: GoogleFonts.notoKufiArabic(
-                      fontSize: 11,
-                      color: AppTheme.textMuted.withValues(alpha: 0.6))),
+              const SizedBox(height: 24),
+              const Text(
+                'جاري تحديد اتجاه القبلة...',
+                style: TextStyle(fontSize: 14, color: QiblaColors.textSecondary),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'يتم قياس الموقع والبوصلة',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: QiblaColors.textSecondary.withValues(alpha: 0.5),
+                ),
+              ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildReady(QiblaData state) {
-    final heading = state.heading;
-    final offset = state.offset;
     final isAligned = state.isAligned;
 
-    if (isAligned && !_alignedController.isAnimating) {
-      _alignedController.repeat(reverse: true);
+    if (isAligned && !_alignController.isAnimating) {
+      _alignController.repeat(reverse: true);
       HapticFeedback.heavyImpact();
-    } else if (!isAligned && _alignedController.isAnimating) {
-      _alignedController.stop();
-      _alignedController.reset();
+      _lastHapticDegree = -999;
+    } else if (!isAligned && _alignController.isAnimating) {
+      _alignController.stop();
+      _alignController.reset();
+    }
+
+    if (!isAligned) {
+      final degree = state.angularDifference.round();
+      if (degree <= 30 && degree % 5 == 0 && degree != _lastHapticDegree) {
+        _lastHapticDegree = degree;
+        HapticFeedback.lightImpact();
+      }
     }
 
     return AnimatedBuilder(
@@ -438,214 +294,466 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
         return Opacity(
           opacity: _entranceController.value,
           child: Transform.translate(
-            offset: Offset(0, 30 * (1 - _entranceController.value)),
+            offset: Offset(0, 20 * (1 - _entranceController.value)),
             child: child,
           ),
         );
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 130),
         child: Column(
           children: [
-            _buildCompassSection(state, heading, isAligned),
-            const SizedBox(height: 20),
-            AlignmentIndicator(
+            const SizedBox(height: 8),
+            _buildCompassSection(state),
+            const SizedBox(height: 24),
+            _buildAlignmentStatus(state),
+            const SizedBox(height: 16),
+            HelpCard(
+              alignmentProgress: state.alignmentProgress,
               isAligned: isAligned,
-              offset: offset,
-              pulseAnimation: _alignedController,
             ),
             const SizedBox(height: 16),
-            QiblaInfoPanel(
-              city: state.city,
-              country: state.country,
-              qiblahAngle: offset,
-              cardinal: _cardinalFromAngle(offset),
-              hasLocation: state.latitude != null,
-            ),
+            StatusCard(state: state),
+            const SizedBox(height: 16),
+            _buildBottomActionButtons(state),
+            const SizedBox(height: 24),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCompassSection(QiblaData state, double heading, bool isAligned) {
+  Widget _buildCompassSection(QiblaData state) {
+    final compassSize = MediaQuery.of(context).size.width * 0.67;
+
     return AnimatedBuilder(
-      animation: Listenable.merge([_breatheController, _alignedController]),
+      animation: Listenable.merge([_breatheController, _alignController]),
       builder: (_, __) {
         final b = _breatheController.value;
-        final a = isAligned ? _alignedController.value : 0.0;
-        final compassSize = MediaQuery.of(context).size.width * 0.60;
+        final a = state.isAligned ? _alignController.value : 0.0;
+        final glowI = state.isAligned ? 0.5 + a * 0.5 : b * 0.15;
 
         return Center(
-          child: SizedBox(
-            width: compassSize + 60,
-            height: compassSize + 60,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                if (isAligned)
-                  for (int i = 0; i < 3; i++)
-                    Container(
-                      width: compassSize + 50 + i * 24,
-                      height: compassSize + 50 + i * 24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.greenAccent.withValues(
-                              alpha: (0.15 - i * 0.04) * (1.0 - a * 0.4)),
-                          width: 2.0 - i * 0.5,
-                        ),
-                        boxShadow: i == 0
-                            ? [
-                                BoxShadow(
-                                  color: Colors.greenAccent.withValues(
-                                      alpha: 0.1 * (1.0 - a * 0.3)),
-                                  blurRadius: 40 + a * 30,
-                                  spreadRadius: 4 + a * 6,
-                                ),
-                              ]
-                            : null,
-                      ),
-                    ),
-
-                // Kaaba icon above compass
-                Positioned(
-                  top: 0,
-                  child: KaabaIcon(
-                    isAligned: isAligned,
-                    breatheValue: b,
-                    size: compassSize * 0.22,
-                  ),
-                ),
-
-                // Compass dial
-                CompassDial(
-                  heading: heading,
-                  qiblah: state.qiblah,
-                  isAligned: isAligned,
-                  size: compassSize,
-                ),
-              ],
-            ),
+          child: QiblaCompass(
+            heading: state.heading,
+            qiblahBearing: state.offset,
+            remainingAngle: state.angularDifference,
+            isAligned: state.isAligned,
+            alignmentProgress: state.alignmentProgress,
+            glowIntensity: glowI,
+            size: compassSize,
           ),
         );
       },
     );
   }
 
-  Widget _buildControlDock(QiblaData state) {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: AppTheme.borderGold, width: 0.5),
-          boxShadow: [
-            BoxShadow(
-                color: AppTheme.shadowDark,
-                blurRadius: 40,
-                offset: const Offset(0, 12),
-                spreadRadius: -8),
-            BoxShadow(color: AppTheme.shadowGold, blurRadius: 20),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+  Widget _buildAlignmentStatus(QiblaData state) {
+    final isAligned = state.isAligned;
+    final remaining = state.angularDifference.round();
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 350),
+      child: isAligned
+          ? Container(
+              key: const ValueKey('aligned'),
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppTheme.bgCard.withValues(alpha: 0.6),
-                    AppTheme.bgSecondary.withValues(alpha: 0.4),
+                    QiblaColors.success.withValues(alpha: 0.12),
+                    QiblaColors.success.withValues(alpha: 0.03),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: QiblaColors.success.withValues(alpha: 0.3),
+                  width: 0.8,
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check_circle_rounded, color: QiblaColors.success, size: 22),
+                  SizedBox(width: 10),
+                  Text(
+                    'القبلة صحيحة',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: QiblaColors.success,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Container(
+              key: const ValueKey('offset'),
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              decoration: BoxDecoration(
+                color: QiblaColors.card.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: QiblaColors.gold.withValues(alpha: 0.12),
+                  width: 0.5,
+                ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _dockBtn(Icons.my_location_rounded, 'الموقع',
-                      () => ref.read(qiblaProvider.notifier).init()),
-                  _dockBtn(Icons.sensors_rounded, 'البوصلة', () {
-                    HapticFeedback.mediumImpact();
-                    ref.read(qiblaProvider.notifier).init();
-                  }),
-                  _dockBtn(Icons.map_rounded, 'الخريطة', _openMaps),
-                  _dockBtn(
-                    state.status == QiblaStatus.ready
-                        ? Icons.check_circle_rounded
-                        : Icons.error_outline_rounded,
-                    state.status == QiblaStatus.ready
-                        ? 'GPS متصل'
-                        : 'GPS غير متصل',
-                    null,
-                    isStatic: true,
-                    accent: state.status == QiblaStatus.ready
-                        ? Colors.greenAccent
-                        : Colors.redAccent,
+                  Icon(
+                    Icons.navigation_rounded,
+                    color: QiblaColors.gold.withValues(alpha: 0.7),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'تبقى $remaining°',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: QiblaColors.gold,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'للوصول إلى اتجاه القبلة',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: QiblaColors.textSecondary.withValues(alpha: 0.7),
+                    ),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildBottomActionButtons(QiblaData state) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: QiblaColors.surface.withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: QiblaColors.gold.withValues(alpha: 0.08),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _BottomActionBtn(
+            icon: Icons.refresh_rounded,
+            tooltip: 'تحديث الموقع',
+            onTap: () {
+              ref.read(qiblaProvider.notifier).init();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('جاري إعادة تحديد موقعك الجغرافي والاتجاه...')),
+              );
+            },
+          ),
+          _BottomActionBtn(
+            icon: Icons.copy_rounded,
+            tooltip: 'نسخ بيانات القبلة',
+            onTap: () {
+              final text = 'بيانات اتجاه القبلة:\n'
+                  '- اتجاه القبلة (السمت): ${state.qiblah.toStringAsFixed(1)}°\n'
+                  '- زاوية الهاتف الحالية: ${state.heading.round()}°\n'
+                  '- الموقع: ${state.city ?? ''}, ${state.country ?? ''}\n'
+                  '- الإحداثيات: ${state.latitude?.toStringAsFixed(6) ?? ''},${state.longitude?.toStringAsFixed(6) ?? ''}';
+              Clipboard.setData(ClipboardData(text: text));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('تم نسخ بيانات القبلة بالكامل')),
+              );
+            },
+          ),
+          _BottomActionBtn(
+            icon: Icons.share_rounded,
+            tooltip: 'مشاركة البيانات',
+            onTap: () {
+              final text = 'أنا أستخدم البوصلة في تطبيق الحقيبة الإسلامية لتحديد اتجاه القبلة.\n'
+                  'اتجاه القبلة في موقعي الحالي (${state.city ?? ''}) هو ${state.qiblah.toStringAsFixed(1)}° بالنسبة للشمال.';
+              Share.share(text);
+            },
+          ),
+          _BottomActionBtn(
+            icon: Icons.map_rounded,
+            tooltip: 'خرائط جوجل',
+            onTap: () async {
+              if (state.latitude != null && state.longitude != null) {
+                final url = Uri.parse('https://www.google.com/maps/search/?api=1&query=${state.latitude},${state.longitude}');
+                try {
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } else {
+                    throw 'Could not launch URL';
+                  }
+                } catch (_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('تعذر فتح الخرائط حالياً')),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('يرجى تحديد الموقع أولاً')),
+                );
+              }
+            },
+          ),
+          _BottomActionBtn(
+            icon: Icons.compass_calibration_rounded,
+            tooltip: 'معايرة البوصلة',
+            onTap: () => _showGlobalCalibration(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showGlobalCalibration(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: const BoxDecoration(
+            color: QiblaColors.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+            border: Border(
+              top: BorderSide(
+                color: QiblaColors.gold,
+                width: 0.8,
+              ),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 48,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Icon(
+                Icons.compass_calibration_rounded,
+                color: QiblaColors.gold,
+                size: 40,
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'طريقة معايرة البوصلة',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: QiblaColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'إذا شعرت أن اتجاه القبلة غير دقيق، يرجى اتباع الخطوات التالية لمعايرة بوصلة هاتفك الذكي وتصحيح انحراف الحساسات:',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: QiblaColors.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildCalibrationStep('1', 'ارفع هاتفك أمام صدرك واجعله موازياً للأرض.'),
+              _buildCalibrationStep('2', 'قم بتحريك الهاتف في الهواء برسم مسار كامل على شكل رقم ثمانية بالإنجليزية (∞) أو علامة اللانهائية عدة مرات بشكل متواصل.'),
+              _buildCalibrationStep('3', 'تجنب الوقوف بجوار الأسطح المعدنية الكبيرة أو المجالات المغناطيسية القوية (مثل أجهزة التلفزيون أو مكبرات الصوت الكبيرة) أثناء القياس.'),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: QiblaColors.gold,
+                    foregroundColor: QiblaColors.background,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'تمت المعايرة بنجاح',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _dockBtn(IconData icon, String label, VoidCallback? onTap,
-      {bool isStatic = false, Color accent = AppTheme.goldPrimary}) {
-    final c = accent;
-    final content = AnimatedBuilder(
-      animation: _breatheController,
-      builder: (_, __) {
-        final b = _breatheController.value;
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: c.withValues(alpha: 0.08 + b * 0.03),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: c.withValues(alpha: 0.2), width: 0.5),
-              ),
-              child: Icon(icon, color: c, size: 20),
+  Widget _buildCalibrationStep(String number, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: const BoxDecoration(
+              color: QiblaColors.gold,
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: 3),
-            Text(label,
-                style: GoogleFonts.notoKufiArabic(
-                    fontSize: 8, fontWeight: FontWeight.w600, color: c)),
-          ],
-        );
-      },
+            alignment: Alignment.center,
+            child: Text(
+              number,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: QiblaColors.background,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 11.5,
+                color: QiblaColors.textPrimary,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
-    if (isStatic || onTap == null) return content;
-    return GestureDetector(onTap: onTap, child: content);
   }
+}
 
-  String _cardinalFromAngle(double angle) {
-    const dirs = [
-      'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
-      'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW',
-    ];
-    final idx = ((angle + 11.25) % 360 / 22.5).floor() % 16;
-    return dirs[idx];
+class _BottomActionBtn extends StatelessWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  const _BottomActionBtn({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      textStyle: const TextStyle(fontSize: 10, color: QiblaColors.background),
+      decoration: BoxDecoration(
+        color: QiblaColors.lightGold,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: QiblaColors.gold.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: QiblaColors.gold.withValues(alpha: 0.15),
+                width: 0.5,
+              ),
+            ),
+            child: Icon(icon, color: QiblaColors.gold, size: 20),
+          ),
+        ),
+      ),
+    );
   }
+}
 
-  Future<void> _openMaps() async {
-    final uri = Uri.parse('https://www.google.com/maps/dir//Mecca+Saudi+Arabia');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+class _GlassBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  const _GlassBtn({required this.icon, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: QiblaColors.gold.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: QiblaColors.gold.withValues(alpha: 0.15),
+            width: 0.5,
+          ),
+        ),
+        child: Icon(icon, color: QiblaColors.gold, size: 18),
+      ),
+    );
+  }
+}
+
+class _BgPainter extends CustomPainter {
+  final double time;
+  _BgPainter(this.time);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final bg = Paint()
+      ..shader = const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Color(0xFF060D1A), Color(0xFF081326), Color(0xFF0B1A30)],
+      ).createShader(rect);
+    canvas.drawRect(rect, bg);
+
+    final cx = size.width / 2;
+    final cy = size.height * 0.35;
+    final glowPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          QiblaColors.gold.withValues(alpha: 0.03),
+          Colors.transparent,
+        ],
+      ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: size.width * 0.5));
+    canvas.drawCircle(Offset(cx, cy), size.width * 0.5, glowPaint);
+
+    final dotPaint = Paint()
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.0);
+    final rng = math.Random(42);
+    for (int i = 0; i < 25; i++) {
+      final dx = rng.nextDouble() * size.width;
+      final dy = rng.nextDouble() * size.height;
+      final phase = i * 0.7;
+      final alpha = (0.3 + 0.3 * math.sin(time * 0.4 + phase)).clamp(0.0, 1.0);
+      dotPaint.color = QiblaColors.gold.withValues(alpha: alpha * 0.08);
+      canvas.drawCircle(Offset(dx, dy), 1.0 + rng.nextDouble() * 1.5, dotPaint);
     }
   }
+
+  @override
+  bool shouldRepaint(_BgPainter old) => old.time != time;
 }

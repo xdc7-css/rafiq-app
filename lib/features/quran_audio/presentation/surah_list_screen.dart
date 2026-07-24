@@ -229,11 +229,19 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
   Future<void> _playSurah(int surahNumber, DownloadsState downloads) async {
     final allSurahs = List.generate(114, (i) => i + 1);
     final startIndex = allSurahs.indexOf(surahNumber);
+
+    final downloadsNotifier = ref.read(downloadsProvider.notifier);
+    final localPathMap = <int, String?>{};
+    for (final surahNum in allSurahs) {
+      localPathMap[surahNum] = await downloadsNotifier.getLocalPath(_reciter.id, surahNum);
+    }
+
     await ref.read(audioPlayerNotifierProvider.notifier).playSurahQueue(
       reciter: _reciter,
       moshaf: _moshaf,
       surahNumbers: allSurahs,
       startIndex: startIndex,
+      localPathForSurah: (surahNum) => localPathMap[surahNum],
     );
   }
 

@@ -63,7 +63,7 @@ const List<GreetingOccasion> specialOccasions = [
     greetings: [
       GreetingEntry(
         title: 'السَّقَايَةُ وَالصَّبْر',
-        subtitle: 'في اليوم السابع من محرم، اُ切断 عن الحسين وآل البيت الماء',
+        subtitle: 'في اليوم السابع من محرم، انقطع عن الحسين وآل البيت الماء',
       ),
       GreetingEntry(
         title: 'اللَّهُمَّ ارْحَمْ الْحُسَيْن',

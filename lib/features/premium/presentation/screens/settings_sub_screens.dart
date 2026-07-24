@@ -195,7 +195,7 @@ class _NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
   bool _prayerNotifs = true;
   bool _fajrAdhan = true;
-  bool _dhuhrAdhan = false;
+  bool _dhuhrAdhan = true;
   bool _asrAdhan = true;
   bool _maghribAdhan = true;
   bool _ishaAdhan = true;
@@ -869,7 +869,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       case 4:
         return 'جيد';
       case 5:
-        return 'ممتاز! أحببناه 🌟';
+        return 'ممتاز! أحببناه';
       default:
         return 'اضغط على نجمة للتقييم';
     }
@@ -924,7 +924,7 @@ class _FeedbackSuccess extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    'شكراً جزيلاً! ❤️',
+                    'شكراً جزيلاً!',
                     style: GoogleFonts.notoKufiArabic(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,

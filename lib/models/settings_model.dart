@@ -98,7 +98,7 @@ class AppSettings {
     this.widgetTextColor = 0xFFD8B56A,
     this.widgetTransparency = 0.85,
     this.widgetFontSize = 14.0,
-    this.appFontSize = 0.8,
+    this.appFontSize = 1.0,
     this.dynamicColors = true,
     this.calculationMethod = 0,
     this.madhab = 0,
@@ -225,7 +225,7 @@ class AppSettings {
       widgetTextColor: json['widgetTextColor'] ?? 0xFFD8B56A,
       widgetTransparency: (json['widgetTransparency'] ?? 0.85).toDouble(),
       widgetFontSize: (json['widgetFontSize'] ?? 14.0).toDouble(),
-      appFontSize: (json['appFontSize'] ?? 0.8).toDouble(),
+      appFontSize: _clampFontSize((json['appFontSize'] ?? 1.0).toDouble()),
       dynamicColors: json['dynamicColors'] ?? true,
       calculationMethod: json['calculationMethod'] ?? 0,
       madhab: json['madhab'] ?? 0,
@@ -279,6 +279,12 @@ class AppSettings {
       adhanSnoozeMinutes: json['adhanSnoozeMinutes'] ?? 5,
     );
   }
+
+  static const double kMinAppFontSize = 1.0;
+  static const double kMaxAppFontSize = 1.4;
+
+  static double _clampFontSize(double value) =>
+      value.clamp(kMinAppFontSize, kMaxAppFontSize);
 
   static const _validMuadhinKeys = {'adhan_maitham', 'adhan_mustafa', 'adhan_ausama'};
 
@@ -356,7 +362,7 @@ class AppSettings {
       widgetTextColor: widgetTextColor ?? this.widgetTextColor,
       widgetTransparency: widgetTransparency ?? this.widgetTransparency,
       widgetFontSize: widgetFontSize ?? this.widgetFontSize,
-      appFontSize: appFontSize ?? this.appFontSize,
+      appFontSize: appFontSize != null ? _clampFontSize(appFontSize) : this.appFontSize,
       dynamicColors: dynamicColors ?? this.dynamicColors,
       calculationMethod: calculationMethod ?? this.calculationMethod,
       madhab: madhab ?? this.madhab,

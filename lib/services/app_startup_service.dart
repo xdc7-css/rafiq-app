@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'data_service.dart';
 import 'greeting_service.dart';
+import 'oem_reliability_service.dart';
+import 'permission_analytics_service.dart';
 import '../core/utils/hijri_date.dart';
 
 class AppStartupService {
@@ -18,9 +20,13 @@ class AppStartupService {
     debugPrint('[Startup] AppStartupService.run() started');
 
     try {
-      // Fire-and-forget image precaching — don't block on it.
+      // Fire-and-forget image precache — don't block on it.
       // Images will be loaded on demand if precaching fails.
       _fireAndForgetPrecache(context);
+
+      // Initialize services that don't block startup
+      OEMReliabilityService.initialize();
+      PermissionAnalyticsService.initialize();
 
       // Warm up data (tiny JSON files, ~8KB total)
       await _warmUpData().timeout(

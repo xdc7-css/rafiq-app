@@ -58,25 +58,25 @@ class _HadithCardState extends ConsumerState<HadithCard> {
   void _copyToClipboard() {
     final h = widget.hadith;
     final buf = StringBuffer();
-    buf.writeln('══════ ❁ ══════');
+    buf.writeln('══════════════════');
     buf.writeln();
-    buf.writeln('📖 ${Ar.hadithOfDay}');
+    buf.writeln(Ar.hadithOfDay);
     buf.writeln();
     if (h.narrator.isNotEmpty) {
       buf.writeln('عن ${h.narrator}');
       buf.writeln();
     }
-    buf.writeln('❝');
+    buf.writeln('"');
     buf.writeln(h.textArabic);
-    buf.writeln('❞');
+    buf.writeln('"');
     buf.writeln();
     if (h.source.isNotEmpty) {
-      buf.writeln('📚 ${h.source}');
+      buf.writeln(h.source);
       buf.writeln();
     }
-    buf.writeln('══════ ❁ ══════');
+    buf.writeln('══════════════════');
     buf.writeln();
-    buf.writeln('🤍 رفيق');
+    buf.writeln('رفيق');
 
     Clipboard.setData(ClipboardData(text: buf.toString()));
     HapticFeedback.mediumImpact();

@@ -96,7 +96,7 @@ class _DailyShiaHadithCardState extends ConsumerState<DailyShiaHadithCard> {
             const SizedBox(height: 18),
 
             Text(
-              '❝',
+              '"',
               style: GoogleFonts.amiri(
                 fontSize: 28,
                 color: AppTheme.goldPrimary.withValues(alpha: 0.3),
@@ -121,7 +121,7 @@ class _DailyShiaHadithCardState extends ConsumerState<DailyShiaHadithCard> {
             ),
             const SizedBox(height: 4),
             Text(
-              '❞',
+              '"',
               style: GoogleFonts.amiri(
                 fontSize: 28,
                 color: AppTheme.goldPrimary.withValues(alpha: 0.3),
@@ -217,21 +217,21 @@ class _DailyShiaHadithCardState extends ConsumerState<DailyShiaHadithCard> {
 
   void _shareHadith(ShiaHadith hadith) {
     final buf = StringBuffer();
-    buf.writeln('══════ ❁ ══════');
+    buf.writeln('══════════════════');
     buf.writeln();
-    buf.writeln('📖 حديث اليوم');
+    buf.writeln('حديث اليوم');
     buf.writeln();
-    buf.writeln('❝');
+    buf.writeln('"');
     buf.writeln(hadith.text);
-    buf.writeln('❞');
+    buf.writeln('"');
     buf.writeln();
     if (hadith.sourceDisplayName.isNotEmpty) {
-      buf.writeln('📚 ${hadith.sourceDisplayName}');
+      buf.writeln(hadith.sourceDisplayName);
       buf.writeln();
     }
-    buf.writeln('══════ ❁ ══════');
+    buf.writeln('══════════════════');
     buf.writeln();
-    buf.writeln('🤍 رفيق');
+    buf.writeln('رفيق');
     Share.share(buf.toString());
     HapticFeedback.selectionClick();
   }

@@ -79,7 +79,6 @@ class AdhanScheduler {
         'adhanFajrEnabled': settings.adhanFajrEnabled,
         'adhanDhuhrEnabled': settings.adhanDhuhrEnabled,
         'adhanMaghribEnabled': settings.adhanMaghribEnabled,
-        'snoozeMinutes': settings.adhanSnoozeMinutes,
         'bootStart': settings.adhanBootStart,
         'prayerTimesJson': jsonEncode(jsonPayload),
       });
@@ -134,7 +133,6 @@ class AdhanScheduler {
         'adhanFajrEnabled': settings.adhanFajrEnabled,
         'adhanDhuhrEnabled': settings.adhanDhuhrEnabled,
         'adhanMaghribEnabled': settings.adhanMaghribEnabled,
-        'snoozeMinutes': settings.adhanSnoozeMinutes,
         'bootStart': settings.adhanBootStart,
       });
     } catch (e, st) {
@@ -148,6 +146,46 @@ class AdhanScheduler {
       await _channel.invokeMethod('requestExactAlarmPermission');
     } catch (e, st) {
       debugPrint('[AdhanScheduler] Failed to request exact alarm permission: $e\n$st');
+    }
+  }
+
+  /// Returns the device manufacturer string (lowercase), or empty on failure.
+  Future<String> getManufacturer() async {
+    if (kIsWeb) return '';
+    try {
+      final result = await _channel.invokeMethod<String>('getManufacturer');
+      return result ?? '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  /// Opens the Android battery optimization settings screen.
+  Future<bool> openBatterySettings() async {
+    if (kIsWeb) return false;
+    try {
+      final result = await _channel.invokeMethod<bool>('openBatterySettings');
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Schedules a test adhan alarm [delaySeconds] from now.
+  ///
+  /// Uses the EXACT same native pipeline as a real prayer:
+  ///   AlarmManager → BroadcastReceiver → ForegroundService → Notification → Audio
+  ///
+  /// This is a debug-only method — no-op on web or in release mode.
+  Future<void> scheduleTestAlarm(int delaySeconds) async {
+    if (kIsWeb || kReleaseMode) return;
+    try {
+      await _channel.invokeMethod('scheduleTestAlarm', {
+        'delaySeconds': delaySeconds,
+      });
+      debugPrint('[AdhanScheduler] Test alarm scheduled in ${delaySeconds}s');
+    } catch (e, st) {
+      debugPrint('[AdhanScheduler] Failed to schedule test alarm: $e\n$st');
     }
   }
 }

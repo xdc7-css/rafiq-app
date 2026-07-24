@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import '../api/aladhan_api.dart';
 import '../models/prayer_times.dart';
 import '../repositories/prayer_time_repository.dart';
 import '../services/prayer_time_service.dart';
@@ -9,8 +8,7 @@ import '../services/prayer_scheduler.dart';
 import '../services/storage_service.dart';
 import '../services/time_formatter.dart';
 import '../services/home_widget_service.dart';
-
-final aladhanApiProvider = Provider<AladhanApi>((ref) => AladhanApi());
+import 'api_providers.dart';
 
 final prayerTimeServiceProvider = Provider<PrayerTimeService>((ref) {
   final api = ref.watch(aladhanApiProvider);
@@ -326,11 +324,17 @@ class PrayerTimesNotifier extends StateNotifier<PrayerTimesState> {
     final summary = PrayerTimeService.summarize(times);
     if (_disposed) return;
 
-    state = state.copyWith(
-      currentPrayer: summary.currentPrayer,
-      nextPrayer: summary.nextPrayer,
-      timeUntilNext: summary.timeUntilNext,
-    );
+    // Only emit new state if values actually changed — avoids rebuilding
+    // every widget that watches prayerTimesProvider every single second.
+    if (summary.currentPrayer != state.currentPrayer ||
+        summary.nextPrayer != state.nextPrayer ||
+        summary.timeUntilNext != state.timeUntilNext) {
+      state = state.copyWith(
+        currentPrayer: summary.currentPrayer,
+        nextPrayer: summary.nextPrayer,
+        timeUntilNext: summary.timeUntilNext,
+      );
+    }
 
     _syncPrayerWidget(times, summary.nextPrayer, summary.nextPrayerTime);
   }

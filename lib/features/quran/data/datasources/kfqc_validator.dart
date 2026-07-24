@@ -1,23 +1,10 @@
-// ──────────────────────────────────────────────────────────────────────────────
-// KFQC Asset Validator
-//
-// Validates all 604 SVG + 604 JSON pages, surah.json, and markers.json.
-// Generates a detailed console report. Only runs in debug mode.
-//
-// Usage (call once after app startup in debug builds):
-//   await KfqcValidator.runReport();
-// ──────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'kfqc_datasource.dart';
+import 'cache/quran_cache_data_source.dart';
 
 class KfqcValidator {
-  KfqcValidator._(); // static utility class
+  KfqcValidator._();
 
-  /// Runs a full validation sweep and prints a report to the debug console.
-  ///
-  /// This method is a no-op in release mode.
   static Future<void> runReport() async {
     if (!kDebugMode) return;
     debugPrint('\n══════════════════════════════════════════════════════════════');
@@ -32,26 +19,35 @@ class KfqcValidator {
     final markersOk  = await _validateMarkersJson();
 
     stopwatch.stop();
-
     _printSummary(svgResult, jsonResult, surahOk, markersOk, stopwatch.elapsed);
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-
   static Future<_FileCheckResult> _validateSvgFiles() async {
-    debugPrint('[SVG] Checking pages 001–604...');
-    final missing  = <int>[];
+    debugPrint('[SVG] Checking pages 001–604 (cross-platform cache)...');
+    final missing = <int>[];
     var found = 0;
 
+    final cache = createQuranCacheDataSource();
+    await cache.initialize();
+
     for (int page = 1; page <= 604; page++) {
-      final path = kfqcSvgPath(page);
       try {
-        // We only check existence via AssetBundle; we do NOT decode the SVG.
-        await rootBundle.load(path);
-        found++;
+        final exists = await cache.pageExists(page);
+        if (exists) {
+          final valid = await cache.validatePage(page);
+          if (valid) {
+            found++;
+          } else {
+            missing.add(page);
+            debugPrint('  [SVG] INVALID page $page — deleted during validation');
+          }
+        } else {
+          missing.add(page);
+          debugPrint('  [SVG] MISSING page $page');
+        }
       } catch (e) {
         missing.add(page);
-        debugPrint('  [SVG] MISSING page $page — path: $path — error: $e');
+        debugPrint('  [SVG] ERROR page $page — error: $e');
       }
     }
 
@@ -59,18 +55,15 @@ class KfqcValidator {
     return _FileCheckResult(found: found, total: 604, missing: missing);
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-
   static Future<_FileCheckResult> _validateJsonFiles() async {
     debugPrint('[JSON] Checking pages 001–604...');
-    final missing  = <int>[];
-    final failed   = <int>[];
+    final missing = <int>[];
+    final failed  = <int>[];
     var found = 0;
 
     for (int page = 1; page <= 604; page++) {
       final path = kfqcJsonPath(page);
       try {
-        // Load via datasource (this also validates parse).
         final data = await KfqcDatasource.instance.loadPageData(page);
         if (data == null) {
           failed.add(page);
@@ -97,41 +90,31 @@ class KfqcValidator {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-
   static Future<bool> _validateSurahJson() async {
     debugPrint('[SURAH] Checking surah.json...');
     try {
       final entries = await KfqcDatasource.instance.loadSurahIndex();
       final ok = entries.length == 114;
-      if (ok) {
-        debugPrint('[SURAH] ✓ surah.json loaded: 114 surahs\n');
-      } else {
-        debugPrint('[SURAH] ✗ surah.json parsed only ${entries.length}/114 surahs\n');
-      }
+      debugPrint('[SURAH] ${ok ? "OK" : "FAILED"} surah.json: ${entries.length}/114 surahs\n');
       return ok;
     } catch (e, st) {
-      debugPrint('[SURAH] ✗ surah.json FAILED\n  $e\n$st\n');
+      debugPrint('[SURAH] FAILED surah.json\n  $e\n$st\n');
       return false;
     }
   }
-
-  // ─────────────────────────────────────────────────────────────────────────
 
   static Future<bool> _validateMarkersJson() async {
     debugPrint('[MARKERS] Checking markers.json...');
     try {
       final markers = await KfqcDatasource.instance.loadMarkers();
       final ok = markers.isNotEmpty;
-      debugPrint('[MARKERS] ${ok ? "✓" : "✗"} markers.json: ${markers.length} entries\n');
+      debugPrint('[MARKERS] ${ok ? "OK" : "FAILED"} markers.json: ${markers.length} entries\n');
       return ok;
     } catch (e, st) {
-      debugPrint('[MARKERS] ✗ markers.json FAILED\n  $e\n$st\n');
+      debugPrint('[MARKERS] FAILED markers.json\n  $e\n$st\n');
       return false;
     }
   }
-
-  // ─────────────────────────────────────────────────────────────────────────
 
   static void _printSummary(
     _FileCheckResult svg,
@@ -147,8 +130,8 @@ class KfqcValidator {
     debugPrint('  SVG  files missing: ${svg.missing.length}${svg.missing.isNotEmpty ? " → pages: ${svg.missing.join(", ")}" : ""}');
     debugPrint('  JSON files found  : ${json.found} / ${json.total}');
     debugPrint('  JSON files missing: ${json.missing.length}${json.missing.isNotEmpty ? " → pages: ${json.missing.join(", ")}" : ""}');
-    debugPrint('  surah.json        : ${surahOk ? "✓ OK" : "✗ FAILED"}');
-    debugPrint('  markers.json      : ${markersOk ? "✓ OK" : "✗ FAILED"}');
+    debugPrint('  surah.json        : ${surahOk ? "OK" : "FAILED"}');
+    debugPrint('  markers.json      : ${markersOk ? "OK" : "FAILED"}');
     debugPrint('  Elapsed           : ${elapsed.inMilliseconds} ms');
     debugPrint('══════════════════════════════════════════════════════════════\n');
 
@@ -158,14 +141,12 @@ class KfqcValidator {
         markersOk;
 
     if (allOk) {
-      debugPrint('  ✅  ALL KFQC ASSETS VALID — Mushaf system ready.\n');
+      debugPrint('  ALL KFQC ASSETS VALID - Mushaf system ready.\n');
     } else {
-      debugPrint('  ⚠️   SOME ASSETS FAILED — check above for details.\n');
+      debugPrint('  SOME ASSETS FAILED - check above for details.\n');
     }
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _FileCheckResult {
   final int found;

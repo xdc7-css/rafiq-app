@@ -3,10 +3,10 @@
 // Lazy-loading, in-memory cached access to the KFQC Hafs Mushaf assets.
 //
 // Asset roots:
-//   SVG  : assets/quran/quran-svg-main/mushafs/hafs/kfqc/svg/NNN.svg
-//   JSON : assets/quran/quran-svg-main/mushafs/hafs/kfqc/json/NNN.json
-//   Index: assets/quran/quran-svg-main/mushafs/hafs/kfqc/json/surah.json
-//   Marks: assets/quran/quran-svg-main/mushafs/hafs/kfqc/json/markers.json
+//   SVG  : {appDocumentsDir}/quran_cache/NNN.svg  (downloaded at first launch)
+//   JSON : assets/quran-svg/json/NNN.json          (bundled)
+//   Index: assets/quran-svg/json/surah.json        (bundled)
+//   Marks: assets/quran-svg/json/markers.json      (bundled)
 // ──────────────────────────────────────────────────────────────────────────────
 
 import 'dart:convert';
@@ -14,18 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../models/kfqc_models.dart';
 
-/// Asset base paths for the KFQC dataset.
-const String kfqcSvgBase  = 'assets/quran-svg/svg';
 const String kfqcJsonBase = 'assets/quran-svg/json';
-
-/// Returns the canonical SVG asset path for [pageNumber] (1–604).
-///
-/// Always uses the plain `NNN.svg` form; surah-boundary variants
-/// (e.g. `106-surah4.svg`) are intentionally excluded.
-String kfqcSvgPath(int pageNumber) {
-  final padded = pageNumber.toString().padLeft(3, '0');
-  return '$kfqcSvgBase/$padded.svg';
-}
 
 /// Returns the JSON asset path for [pageNumber] (1–604).
 String kfqcJsonPath(int pageNumber) {
@@ -92,11 +81,11 @@ class KfqcDatasource {
       final data = KfqcPageData(pageNumber: pageNumber, ayahs: ayahs);
       _pageCache[pageNumber] = data;
       _pageLoading.remove(pageNumber);
-      debugPrint('[KfqcDatasource] ✓ Page $pageNumber loaded: ${ayahs.length} ayahs');
+      debugPrint('[KfqcDatasource] Page $pageNumber loaded: ${ayahs.length} ayahs');
       return data;
     } catch (e, st) {
       debugPrint(
-        '[KfqcDatasource] ✗ Page $pageNumber JSON load FAILED\n'
+        '[KfqcDatasource] Page $pageNumber JSON load FAILED\n'
         '  Path     : $path\n'
         '  Exception: $e\n'
         '  Trace    :\n$st',
@@ -133,11 +122,11 @@ class KfqcDatasource {
         ..sort((a, b) => a.number.compareTo(b.number));
       _surahIndex = entries;
       _surahLoading = null;
-      debugPrint('[KfqcDatasource] ✓ surah.json loaded: ${entries.length} surahs');
+      debugPrint('[KfqcDatasource] surah.json loaded: ${entries.length} surahs');
       return entries;
     } catch (e, st) {
       debugPrint(
-        '[KfqcDatasource] ✗ surah.json load FAILED\n'
+        '[KfqcDatasource] surah.json load FAILED\n'
         '  Path     : $path\n'
         '  Exception: $e\n'
         '  Trace    :\n$st',
@@ -174,11 +163,11 @@ class KfqcDatasource {
           .toList();
       _markers = markers;
       _markersLoading = null;
-      debugPrint('[KfqcDatasource] ✓ markers.json loaded: ${markers.length} markers');
+      debugPrint('[KfqcDatasource] markers.json loaded: ${markers.length} markers');
       return markers;
     } catch (e, st) {
       debugPrint(
-        '[KfqcDatasource] ✗ markers.json load FAILED\n'
+        '[KfqcDatasource] markers.json load FAILED\n'
         '  Path     : $path\n'
         '  Exception: $e\n'
         '  Trace    :\n$st',

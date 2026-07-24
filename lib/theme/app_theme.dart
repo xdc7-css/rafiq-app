@@ -178,6 +178,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     final base = ThemeData.dark();
     return base.copyWith(
+      splashFactory: InkRipple.splashFactory,
       colorScheme: ColorScheme.fromSeed(
         seedColor: goldPrimary,
         brightness: Brightness.dark,

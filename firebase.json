@@ -6,20 +6,52 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "cleanUrls": true,
-    "trailingSlash": false,
     "headers": [
       {
-        "source": "**/*.@(css|js|png|jpg|jpeg|gif|svg|webp|ico|json|txt)",
+        "source": "/index.html",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
+            "value": "no-cache, no-store, must-revalidate"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
           }
         ]
       },
       {
-        "source": "/index.html",
+        "source": "/flutter_bootstrap.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/flutter_service_worker.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          },
+          {
+            "key": "Pragma",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/version.json",
         "headers": [
           {
             "key": "Cache-Control",
@@ -33,7 +65,37 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ],
-    "compression": ["gzip", "brotli"]
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18",
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run build"
+    ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "rafiqfamily-5c8ed",
+          "appId": "1:684066491065:android:3188175f018a592af3e968",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "rafiqfamily-5c8ed",
+          "configurations": {
+            "android": "1:684066491065:android:3188175f018a592af3e968",
+            "ios": "1:684066491065:ios:41d66ca9a54ae6a3f3e968",
+            "web": "1:684066491065:web:4d1a895858361fcef3e968"
+          }
+        }
+      }
+    }
   }
 }

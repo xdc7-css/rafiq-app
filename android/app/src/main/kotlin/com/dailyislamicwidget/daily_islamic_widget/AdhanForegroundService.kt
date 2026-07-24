@@ -31,13 +31,11 @@ class AdhanForegroundService : Service() {
         const val ACTION_PLAY_ADHAN = "com.dailyislamicwidget.action.PLAY_ADHAN"
         const val ACTION_STOP_ADHAN = "com.dailyislamicwidget.action.STOP_ADHAN"
         const val ACTION_PLAY_TEST = "com.dailyislamicwidget.action.PLAY_TEST"
-        const val ACTION_SNOOZE_ADHAN = "com.dailyislamicwidget.action.SNOOZE_ADHAN"
         const val EXTRA_PRAYER_NAME = "prayer_name"
         const val EXTRA_PRAYER_INDEX = "prayer_index"
         const val EXTRA_VOLUME = "volume"
         const val EXTRA_SOUND_NAME = "sound_name"
         const val EXTRA_RAW_RES_ID = "raw_res_id"
-        const val EXTRA_SNOOZE_MINUTES = "snooze_minutes"
     }
 
     @Volatile private var mediaPlayer: MediaPlayer? = null
@@ -62,7 +60,7 @@ class AdhanForegroundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.action ?: return START_NOT_STICKY
-        Log.i(TAG, "onStartCommand: $action (flags=$flags, startId=$startId)")
+        Log.i(TAG, "[VERIFICATION] onStartCommand: action=$action, flags=$flags, startId=$startId, api=${Build.VERSION.SDK_INT}")
 
         when (action) {
             ACTION_PLAY_ADHAN -> {
@@ -73,8 +71,19 @@ class AdhanForegroundService : Service() {
                 currentRawResId = intent.getIntExtra(EXTRA_RAW_RES_ID, 0)
                 val prayerIndex = intent.getIntExtra(EXTRA_PRAYER_INDEX, -1)
 
+                Log.i(TAG, "[VERIFICATION] PLAY_ADHAN: prayer=$currentPrayerName, volume=$currentVolume, sound=$currentSoundName, rawResId=$currentRawResId, prayerIndex=$prayerIndex")
                 showForegroundNotification(currentPrayerName)
                 playAdhan(currentRawResId, currentVolume, currentPrayerName, prayerIndex)
+
+                // START_REDELIVER_INTENT: If the system kills this service during
+                // adhan playback (Doze, low memory, OEM process trimming), the
+                // service is restarted with the original intent so playback resumes.
+                // This is critical — adhan is a time-sensitive religious notification
+                // that must not be silently dropped.
+                // Note: stopSelf() in onPlaybackCompleted() prevents restart after
+                // normal completion.
+                Log.i(TAG, "[VERIFICATION] RESTART_POLICY: START_REDELIVER_INTENT (adhan playback)")
+                return START_REDELIVER_INTENT
             }
 
             ACTION_PLAY_TEST -> {
@@ -85,20 +94,21 @@ class AdhanForegroundService : Service() {
 
                 showForegroundNotification("اختبار الأذان")
                 playAdhan(currentRawResId, currentVolume, "اختبار الأذان", -1)
+
+                // START_NOT_STICKY: Test playback is non-critical.
+                // If the system kills it, no recovery is needed.
+                Log.i(TAG, "[VERIFICATION] RESTART_POLICY: START_NOT_STICKY (test playback)")
+                return START_NOT_STICKY
             }
 
             ACTION_STOP_ADHAN -> {
                 stopPlayback()
                 dismissForeground()
                 stopSelf()
-            }
 
-            ACTION_SNOOZE_ADHAN -> {
-                val snoozeMinutes = intent.getIntExtra(EXTRA_SNOOZE_MINUTES, getSnoozeMinutes())
-                stopPlayback()
-                scheduleSnooze(snoozeMinutes)
-                dismissForeground()
-                stopSelf()
+                // START_NOT_STICKY: Explicit stop must never auto-restart.
+                Log.i(TAG, "[VERIFICATION] RESTART_POLICY: START_NOT_STICKY (explicit stop)")
+                return START_NOT_STICKY
             }
         }
 
@@ -121,13 +131,6 @@ class AdhanForegroundService : Service() {
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
 
-    private fun getSnoozeMinutes(): Int {
-        return try {
-            getSharedPreferences("adhan_schedule", MODE_PRIVATE)
-                .getInt("snooze_minutes", 5)
-        } catch (e: Exception) { 5 }
-    }
-
     private fun dismissForeground() {
         if (isForeground) {
             try {
@@ -148,7 +151,9 @@ class AdhanForegroundService : Service() {
         }
 
         if (!requestAudioFocus()) {
-            Log.w(TAG, "Audio focus denied, playing anyway")
+            Log.w(TAG, "[VERIFICATION] AUDIO_FOCUS_DENIED — playing anyway")
+        } else {
+            Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_GRANTED")
         }
 
         acquireWakeLock()
@@ -157,40 +162,42 @@ class AdhanForegroundService : Service() {
             val resolvedResId = if (rawResId != 0) {
                 rawResId
             } else {
-                Log.w(TAG, "rawResId is 0, falling back to mapping lookup")
+                Log.w(TAG, "[VERIFICATION] rawResId is 0, falling back to mapping lookup")
                 AdhanAudioMapping.resolveRawResourceId(applicationContext, currentSoundName)
             }
 
             val uri = Uri.parse("android.resource://$packageName/$resolvedResId")
+            Log.i(TAG, "[VERIFICATION] MEDIA_PLAYER_SETUP: uri=$uri, resId=$resolvedResId, volume=$volume")
 
             mediaPlayer = MediaPlayer().apply {
                 setAudioAttributes(
                     AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_ALARM)
                         .build()
                 )
+                Log.i(TAG, "[VERIFICATION] AUDIO_ATTRIBUTES_APPLIED: contentType=CONTENT_TYPE_SONIFICATION, usage=USAGE_ALARM")
 
                 setDataSource(applicationContext, uri)
                 setVolume(volume.coerceIn(0.0f, 1.0f), volume.coerceIn(0.0f, 1.0f))
                 setLooping(false)
 
                 setOnPreparedListener { mp ->
-                    Log.i(TAG, "MediaPlayer prepared, starting playback")
+                    Log.i(TAG, "[VERIFICATION] MEDIA_PLAYER_PREPARED — starting playback for $prayerName")
                     this@AdhanForegroundService.isPlaying = true
                     mp.start()
+                    Log.i(TAG, "[VERIFICATION] PLAYBACK_STARTED for $prayerName (isPlaying=${mp.isPlaying})")
                     updateNotificationPlaybackState(true)
                 }
 
                 setOnCompletionListener(OnCompletionListener {
-                    Log.i(TAG, "Playback completed for $prayerName")
+                    Log.i(TAG, "[VERIFICATION] PLAYBACK_COMPLETED for $prayerName")
                     this@AdhanForegroundService.isPlaying = false
                     onPlaybackCompleted(prayerIndex)
                 })
 
                 setOnErrorListener { _, what, extra ->
-                    Log.e(TAG, "MediaPlayer error: what=$what, extra=$extra")
+                    Log.e(TAG, "[VERIFICATION] MEDIA_PLAYER_ERROR: what=$what, extra=$extra for $prayerName")
                     this@AdhanForegroundService.isPlaying = false
                     releaseResources()
                     dismissForeground()
@@ -201,10 +208,10 @@ class AdhanForegroundService : Service() {
                 prepareAsync()
             }
 
-            Log.i(TAG, "Playing adhan: ${AdhanAudioMapping.getDisplayName(currentSoundName)} (res=$resolvedResId) at volume $volume for $prayerName")
+            Log.i(TAG, "[VERIFICATION] PREPARE_ASYNC called for $prayerName")
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to play adhan", e)
+            Log.e(TAG, "[VERIFICATION] PLAY_ADHAN_FAILED for $prayerName: ${e.message}", e)
             isPlaying = false
             showErrorNotification(prayerName)
             releaseResources()
@@ -220,6 +227,7 @@ class AdhanForegroundService : Service() {
     }
 
     private fun stopPlayback() {
+        Log.i(TAG, "[VERIFICATION] STOP_PLAYBACK called (isPlaying=$isPlaying)")
         isPlaying = false
         try {
             mediaPlayer?.let { player ->
@@ -250,7 +258,7 @@ class AdhanForegroundService : Service() {
     // ─── Audio Focus ───────────────────────────────────────────────────────────
 
     private val audioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
-        Log.i(TAG, "Audio focus changed: $focusChange")
+        Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_CHANGED: focusChange=$focusChange")
         when (focusChange) {
             AudioManager.AUDIOFOCUS_LOSS -> {
                 stopPlayback()
@@ -289,8 +297,8 @@ class AdhanForegroundService : Service() {
                 val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
                     setAudioAttributes(
                         AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_ALARM)
                             .build()
                     )
                     setOnAudioFocusChangeListener(audioFocusListener)
@@ -299,14 +307,16 @@ class AdhanForegroundService : Service() {
                 }
                 audioFocusRequest = focusRequest
                 val result = audioManager?.requestAudioFocus(focusRequest)
+                Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_REQUEST_API26: result=$result (GRANTED=${AudioManager.AUDIOFOCUS_REQUEST_GRANTED})")
                 result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             } else {
                 @Suppress("DEPRECATION")
                 val result = audioManager?.requestAudioFocus(
                     audioFocusListener,
-                    AudioManager.STREAM_MUSIC,
+                    AudioManager.STREAM_ALARM,
                     AudioManager.AUDIOFOCUS_GAIN
                 )
+                Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_REQUEST_LEGACY: result=$result (GRANTED=${AudioManager.AUDIOFOCUS_REQUEST_GRANTED})")
                 result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             }
         } catch (e: Exception) {
@@ -343,7 +353,7 @@ class AdhanForegroundService : Service() {
                 "$packageName:adhan_playback"
             ).apply {
                 acquire(10 * 60 * 1000L)
-                Log.i(TAG, "Wake lock acquired")
+                Log.i(TAG, "[VERIFICATION] SERVICE_WAKELOCK_ACQUIRED (tag=$packageName:adhan_playback, timeout=10min)")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to acquire wake lock", e)
@@ -355,7 +365,9 @@ class AdhanForegroundService : Service() {
             wakeLock?.let {
                 if (it.isHeld) {
                     it.release()
-                    Log.i(TAG, "Wake lock released")
+                    Log.i(TAG, "[VERIFICATION] SERVICE_WAKELOCK_RELEASED")
+                } else {
+                    Log.w(TAG, "[VERIFICATION] SERVICE_WAKELOCK_NOT_HELD on release")
                 }
             }
         } catch (e: Exception) {
@@ -419,18 +431,6 @@ class AdhanForegroundService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val snoozeMinutes = getSnoozeMinutes()
-        val snoozeIntent = Intent(this, AdhanForegroundService::class.java).apply {
-            action = ACTION_SNOOZE_ADHAN
-            putExtra(EXTRA_SNOOZE_MINUTES, snoozeMinutes)
-        }
-        val snoozePendingIntent = PendingIntent.getService(
-            this,
-            NOTIFICATION_ID + 2,
-            snoozeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(this, CHANNEL_ID)
         } else {
@@ -439,8 +439,8 @@ class AdhanForegroundService : Service() {
         }
 
         val notification = builder
-            .setContentTitle("🕌 حان الآن موعد الأذان")
-            .setContentText("صلاة $prayerName")
+            .setContentTitle("حان وقت صلاة $prayerName")
+            .setContentText("حيّ على الصلاة • حيّ على الفلاح")
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentIntent(openAppPendingIntent)
             .setOngoing(true)
@@ -449,25 +449,14 @@ class AdhanForegroundService : Service() {
             .setAutoCancel(false)
             .addAction(
                 android.R.drawable.ic_media_pause,
-                "إيقاف",
+                "إيقاف الأذان",
                 stopPendingIntent
-            )
-            .addAction(
-                android.R.drawable.ic_media_next,
-                "غفوة $snoozeMinutes دقائق",
-                snoozePendingIntent
-            )
-            .setStyle(
-                android.app.Notification.BigTextStyle().bigText(
-                    "جاري تشغيل أذان صلاة $prayerName\n" +
-                    "اضغط 'إيقاف' لإيقاف الصوت أو 'غفوة' لتأجيل $snoozeMinutes دقائق"
-                )
             )
             .build()
 
         startForeground(NOTIFICATION_ID, notification)
         isForeground = true
-        Log.i(TAG, "Foreground notification shown for: $prayerName")
+        Log.i(TAG, "[VERIFICATION] FOREGROUND_NOTIFICATION_SHOWN for: $prayerName (notificationId=$NOTIFICATION_ID)")
     }
 
     private fun updateNotificationPlaybackState(isPlaying: Boolean) {
@@ -492,88 +481,4 @@ class AdhanForegroundService : Service() {
         notificationManager?.notify(NOTIFICATION_ID + 1, notification)
     }
 
-    // ─── Snooze ────────────────────────────────────────────────────────────────
-
-    private fun scheduleSnooze(minutes: Int) {
-        try {
-            val alarmManager = getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
-            val triggerTime = System.currentTimeMillis() + minutes * 60 * 1000L
-
-            val intent = Intent(this, AdhanAlarmReceiver::class.java).apply {
-                action = AdhanAlarmReceiver.ACTION_ADHAN_ALARM
-                putExtra(EXTRA_PRAYER_NAME, currentPrayerName)
-                putExtra(EXTRA_PRAYER_INDEX, 0)
-                putExtra(EXTRA_VOLUME, currentVolume)
-                putExtra(EXTRA_SOUND_NAME, currentSoundName)
-                putExtra(EXTRA_RAW_RES_ID, currentRawResId)
-            }
-
-            val code = 5000 + Math.abs(currentPrayerName.hashCode() % 1000)
-            val pendingIntent = PendingIntent.getBroadcast(
-                this,
-                code,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (alarmManager.canScheduleExactAlarms()) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        android.app.AlarmManager.RTC_WAKEUP,
-                        triggerTime,
-                        pendingIntent
-                    )
-                } else {
-                    alarmManager.setAndAllowWhileIdle(
-                        android.app.AlarmManager.RTC_WAKEUP,
-                        triggerTime,
-                        pendingIntent
-                    )
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    android.app.AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-            } else {
-                alarmManager.setExact(
-                    android.app.AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    pendingIntent
-                )
-            }
-
-            Log.i(TAG, "Snooze scheduled for $minutes minutes")
-        } catch (e: SecurityException) {
-            Log.w(TAG, "Cannot schedule exact alarm (permission revoked), using inexact")
-            try {
-                val alarmManager = getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
-                val triggerTime = System.currentTimeMillis() + minutes * 60 * 1000L
-                val intent = Intent(this, AdhanAlarmReceiver::class.java).apply {
-                    action = AdhanAlarmReceiver.ACTION_ADHAN_ALARM
-                    putExtra(EXTRA_PRAYER_NAME, currentPrayerName)
-                    putExtra(EXTRA_PRAYER_INDEX, 0)
-                    putExtra(EXTRA_VOLUME, currentVolume)
-                    putExtra(EXTRA_SOUND_NAME, currentSoundName)
-                    putExtra(EXTRA_RAW_RES_ID, currentRawResId)
-                }
-                val fallbackPendingIntent = PendingIntent.getBroadcast(
-                    this,
-                    5000 + Math.abs(currentPrayerName.hashCode() % 1000),
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                alarmManager.set(
-                    android.app.AlarmManager.RTC_WAKEUP,
-                    triggerTime,
-                    fallbackPendingIntent
-                )
-            } catch (e2: Exception) {
-                Log.e(TAG, "Failed to schedule inexact snooze", e2)
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to schedule snooze", e)
-        }
-    }
 }

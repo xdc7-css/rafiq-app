@@ -7,11 +7,14 @@ import io.flutter.embedding.engine.FlutterEngine
 class MainActivity : FlutterActivity() {
 
     private lateinit var adhanPlugin: AdhanPlugin
+    private lateinit var hapticPlugin: HapticPlugin
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         adhanPlugin = AdhanPlugin(this)
         adhanPlugin.setup(flutterEngine)
+        hapticPlugin = HapticPlugin(this)
+        hapticPlugin.setup(flutterEngine)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

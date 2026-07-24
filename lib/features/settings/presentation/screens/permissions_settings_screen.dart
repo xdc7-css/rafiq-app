@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../models/permission_models.dart';
+import '../../../../services/permission_request_controller.dart';
 import '../../../../services/permission_service.dart';
 import '../../../../theme/app_theme.dart';
+import '../../../../widgets/oem_guidance_card.dart';
+import '../../../../widgets/permission_status_row.dart';
 
 class PermissionsSettingsScreen extends ConsumerStatefulWidget {
   const PermissionsSettingsScreen({super.key});
@@ -15,30 +18,34 @@ class PermissionsSettingsScreen extends ConsumerStatefulWidget {
 
 class _PermissionsSettingsScreenState
     extends ConsumerState<PermissionsSettingsScreen> {
-  bool _notificationsGranted = false;
-  bool _exactAlarmGranted = false;
-  bool _batteryOptimized = false;
-  bool _autoStartSupported = false;
+  /// Platform-filtered settings permissions (built once)
+  late final List<PermissionDefinition> _permissions;
+
+  /// Informational-only items (e.g. auto-start on Android)
+  late final List<PermissionDefinition> _infoItems;
+
+  late final PermissionRequestController _controller;
 
   @override
   void initState() {
     super.initState();
+    final all = PermissionRegistry.settingsPermissions();
+    _permissions = all.where((p) => !p.isInformational).toList();
+    _infoItems = all.where((p) => p.isInformational).toList();
+    _controller = PermissionRequestController(_permissions);
     _checkPermissions();
   }
 
   Future<void> _checkPermissions() async {
-    final notifications = await PermissionService.checkNotificationPermission();
-    final exactAlarm = await PermissionService.checkExactAlarmPermission();
-    final battery = await PermissionService.checkBatteryOptimizationExemption();
-    final autoStart = PermissionService.supportsAutoStart;
-
+    await _controller.checkInitialPermissions();
     if (!mounted) return;
-    setState(() {
-      _notificationsGranted = notifications;
-      _exactAlarmGranted = exactAlarm;
-      _batteryOptimized = battery;
-      _autoStartSupported = autoStart;
-    });
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,68 +54,52 @@ class _PermissionsSettingsScreenState
       backgroundColor: AppTheme.bgPrimary,
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            _buildAppBar(),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 100),
-                child: Column(
-                  children: [
-                    _buildPermissionCard(
-                      icon: Icons.notifications_active_rounded,
-                      title: 'إشعارات الصلاة',
-                      description: 'تذكير بأوقات الصلاة وتشغيل الأذان',
-                      isGranted: _notificationsGranted,
-                      onGrant: () async {
-                        await PermissionService.requestNotificationPermission();
-                        await _checkPermissions();
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    if (!kIsWeb) ...[
-                      _buildPermissionCard(
-                        icon: Icons.alarm_rounded,
-                        title: 'الأذان الدقيق',
-                        description: 'تشغيل الأذان في الوقت الدقيق',
-                        isGranted: _exactAlarmGranted,
-                        onGrant: () async {
-                          await PermissionService.requestExactAlarmPermission();
-                          await _checkPermissions();
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      _buildPermissionCard(
-                        icon: Icons.battery_charging_full_rounded,
-                        title: 'إلغاء تحسين البطارية',
-                        description: 'منع Android من إيقاف الأذان في الخلفية',
-                        isGranted: _batteryOptimized,
-                        onGrant: () async {
-                          await PermissionService.requestBatteryOptimizationExemption();
-                          await _checkPermissions();
-                        },
-                      ),
-                      if (_autoStartSupported) ...[
+        child: ListenableBuilder(
+          listenable: _controller,
+          builder: (context, _) {
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                _buildAppBar(),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16, bottom: 100),
+                    child: Column(
+                      children: [
+                        ..._permissions.map((item) => [
+                              PermissionStatusRow(
+                                item: item,
+                                status: _controller.status(item.key),
+                                compact: false,
+                                onTap: () async {
+                                  await _controller.retryPermission(item.key);
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                            ]).expand((e) => e),
+                        ..._infoItems.map((item) => [
+                              PermissionStatusRow(
+                                item: item,
+                                status: PermissionUIStatus.granted,
+                                compact: false,
+                                onTap: () async {
+                                  if (item.key == PermissionKey.foreground) {
+                                    await PermissionService.openAutoStartSettings();
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                            ]).expand((e) => e),
+                        _buildInfoCard(),
                         const SizedBox(height: 16),
-                        _buildPermissionCard(
-                          icon: Icons.power_rounded,
-                          title: 'التشغيل التلقائي',
-                          description: 'تشغيل التطبيق تلقائياً بعد إعادة تشغيل الجهاز',
-                          isGranted: true,
-                          onGrant: () async {
-                            await PermissionService.openAutoStartSettings();
-                          },
-                        ),
+                        const OEMGuidanceCard(),
                       ],
-                    ],
-                    const SizedBox(height: 24),
-                    _buildInfoCard(),
-                  ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
@@ -152,135 +143,6 @@ class _PermissionsSettingsScreenState
     );
   }
 
-  Widget _buildPermissionCard({
-    required IconData icon,
-    required String title,
-    required String description,
-    required bool isGranted,
-    required VoidCallback onGrant,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.bgCard.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isGranted
-              ? const Color(0xFF2ECC71).withValues(alpha: 0.2)
-              : AppTheme.goldPrimary.withValues(alpha: 0.12),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.goldPrimary.withValues(alpha: 0.15),
-                      AppTheme.goldPrimary.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(icon, size: 24, color: AppTheme.goldPrimary),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.notoKufiArabic(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppTheme.textMuted,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Icon(
-                isGranted
-                    ? Icons.check_circle_rounded
-                    : Icons.cancel_rounded,
-                size: 20,
-                color: isGranted
-                    ? const Color(0xFF2ECC71)
-                    : Colors.orange,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isGranted ? '✓ مفعل' : '⚠ غير مفعل',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: isGranted
-                      ? const Color(0xFF2ECC71)
-                      : Colors.orange,
-                ),
-              ),
-              const Spacer(),
-              if (!isGranted)
-                ElevatedButton(
-                  onPressed: onGrant,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.goldPrimary,
-                    foregroundColor: AppTheme.bgPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    'تفعيل',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              if (isGranted)
-                TextButton(
-                  onPressed: onGrant,
-                  child: Text(
-                    'تعديل',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppTheme.goldPrimary.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildInfoCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -288,9 +150,7 @@ class _PermissionsSettingsScreenState
       decoration: BoxDecoration(
         color: AppTheme.goldPrimary.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppTheme.goldPrimary.withValues(alpha: 0.1),
-        ),
+        border: Border.all(color: AppTheme.goldPrimary.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [

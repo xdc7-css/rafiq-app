@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../../theme/ds_components.dart';
-import '../../data/models/shia_hadith_models.dart';
-import '../providers/hadith_providers.dart';
 
-class TasbihHadithPopup extends ConsumerStatefulWidget {
+class TasbihHadithPopup extends StatefulWidget {
   final VoidCallback? onDismiss;
+  final String? memorialName;
+  final VoidCallback? onDedicate;
 
-  const TasbihHadithPopup({super.key, this.onDismiss});
+  const TasbihHadithPopup({super.key, this.onDismiss, this.memorialName, this.onDedicate});
 
-  static void show(BuildContext context, {VoidCallback? onDismiss}) {
+  static void show(BuildContext context, {VoidCallback? onDismiss, String? memorialName, VoidCallback? onDedicate}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => TasbihHadithPopup(onDismiss: onDismiss),
+      builder: (_) => TasbihHadithPopup(onDismiss: onDismiss, memorialName: memorialName, onDedicate: onDedicate),
     );
   }
 
   @override
-  ConsumerState<TasbihHadithPopup> createState() => _TasbihHadithPopupState();
+  State<TasbihHadithPopup> createState() => _TasbihHadithPopupState();
 }
 
-class _TasbihHadithPopupState extends ConsumerState<TasbihHadithPopup>
+class _TasbihHadithPopupState extends State<TasbihHadithPopup>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnim;
@@ -55,8 +54,6 @@ class _TasbihHadithPopupState extends ConsumerState<TasbihHadithPopup>
 
   @override
   Widget build(BuildContext context) {
-    final hadithAsync = ref.watch(tasbihCompletionHadithProvider);
-
     return FadeTransition(
       opacity: _fadeAnim,
       child: SlideTransition(
@@ -115,44 +112,77 @@ class _TasbihHadithPopupState extends ConsumerState<TasbihHadithPopup>
                   ),
                 ),
                 child: Icon(
-                  Icons.auto_stories_rounded,
+                  Icons.favorite_rounded,
                   color: AppTheme.goldPrimary,
                   size: 30,
                 ),
               ),
               const SizedBox(height: 16),
-              Text(
-                'أحسنت! تقبّل الله طاعتكم',
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.goldPrimary,
+              ShaderMask(
+                shaderCallback: (bounds) => AppTheme.goldGradient.createShader(bounds),
+                child: Text(
+                  'اذكروا أمواتكم بالرحمة',
+                  style: GoogleFonts.notoKufiArabic(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 6),
               Text(
-                'حديث عن الذكر والعبادة',
+                'اهدِ ثواب هذا العمل لمن تحب،\nوأكثروا لهم من الدعاء والرحمة.',
                 style: GoogleFonts.notoKufiArabic(
                   fontSize: 12,
                   color: AppTheme.textMuted,
+                  height: 1.6,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: hadithAsync.when(
-                  data: (hadith) => _buildHadithContent(hadith),
-                  loading: () => const SizedBox(
-                    height: 100,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppTheme.goldPrimary,
-                        strokeWidth: 2,
+              if (widget.memorialName != null) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppTheme.goldPrimary.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: AppTheme.goldPrimary.withValues(alpha: 0.12),
+                        width: 0.5,
                       ),
                     ),
+                    child: Text(
+                      'المرحوم: ${widget.memorialName}',
+                      style: GoogleFonts.notoKufiArabic(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.goldPrimary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  error: (_, __) => const SizedBox.shrink(),
+                ),
+              ],
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: AppTheme.goldDivider(),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'اللهم اغفر له وارحمه، واجعل ما أُهدي إليه نورًا ورحمة.',
+                  style: GoogleFonts.amiri(
+                    fontSize: 15,
+                    color: AppTheme.textSecondary,
+                    height: 1.8,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(height: 20),
@@ -171,10 +201,14 @@ class _TasbihHadithPopupState extends ConsumerState<TasbihHadithPopup>
                     const SizedBox(width: 12),
                     Expanded(
                       child: GoldButton(
-                        label: 'إغلاق',
+                        label: widget.onDedicate != null ? 'إهداء هذا التسبيح' : 'إغلاق',
                         onTap: () {
                           Navigator.of(context).pop();
-                          widget.onDismiss?.call();
+                          if (widget.onDedicate != null) {
+                            widget.onDedicate!();
+                          } else {
+                            widget.onDismiss?.call();
+                          }
                         },
                         height: 48,
                       ),
@@ -189,113 +223,24 @@ class _TasbihHadithPopupState extends ConsumerState<TasbihHadithPopup>
     );
   }
 
-  Widget _buildHadithContent(ShiaHadith hadith) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.goldPrimary.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppTheme.goldPrimary.withValues(alpha: 0.1),
-          width: 0.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            '❝',
-            style: GoogleFonts.amiri(
-              fontSize: 24,
-              color: AppTheme.goldPrimary.withValues(alpha: 0.3),
-            ),
-          ),
-          Text(
-            hadith.text,
-            style: GoogleFonts.amiri(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textPrimary,
-              height: 1.8,
-            ),
-            textAlign: TextAlign.justify,
-            textDirection: TextDirection.rtl,
-          ),
-          Text(
-            '❞',
-            style: GoogleFonts.amiri(
-              fontSize: 24,
-              color: AppTheme.goldPrimary.withValues(alpha: 0.3),
-            ),
-            textAlign: TextAlign.end,
-          ),
-          if (hadith.sourceDisplayName.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            AppTheme.goldDivider(width: 32),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                if (hadith.narrator != null && hadith.narrator!.isNotEmpty) ...[
-                  Expanded(
-                    child: Text(
-                      'عن ${hadith.narrator}',
-                      style: GoogleFonts.notoKufiArabic(
-                        fontSize: 11,
-                        color: AppTheme.goldPrimary.withValues(alpha: 0.8),
-                      ),
-                    ),
-                  ),
-                ],
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: AppTheme.goldPrimary.withValues(alpha: 0.12),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Text(
-                    hadith.sourceDisplayName,
-                    style: GoogleFonts.notoKufiArabic(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.goldPrimary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
   void _share() {
-    final hadithAsync = ref.read(tasbihCompletionHadithProvider);
-    hadithAsync.whenData((hadith) {
-      final buf = StringBuffer();
-      buf.writeln('══════ ❁ ══════');
+    final buf = StringBuffer();
+    buf.writeln('══════════════════');
+    buf.writeln();
+    buf.writeln('اذكروا أمواتكم بالرحمة');
+    buf.writeln();
+    buf.writeln('اهدِ ثواب هذا العمل لمن تحب، وأكثروا لهم من الدعاء والرحمة.');
+    buf.writeln();
+    if (widget.memorialName != null) {
+      buf.writeln('المرحوم: ${widget.memorialName}');
       buf.writeln();
-      buf.writeln('📿 حديث بعد التسبيح');
-      buf.writeln();
-      buf.writeln('❝');
-      buf.writeln(hadith.text);
-      buf.writeln('❞');
-      buf.writeln();
-      if (hadith.sourceDisplayName.isNotEmpty) {
-        buf.writeln('📚 ${hadith.sourceDisplayName}');
-      }
-      buf.writeln();
-      buf.writeln('══════ ❁ ══════');
-      buf.writeln();
-      buf.writeln('🤍 رفيق');
-      Share.share(buf.toString());
-    });
+    }
+    buf.writeln('اللهم اغفر له وارحمه، واجعل ما أُهدي إليه نورًا ورحمة.');
+    buf.writeln();
+    buf.writeln('══════════════════');
+    buf.writeln();
+    buf.writeln('رفيق');
+    Share.share(buf.toString());
     HapticFeedback.selectionClick();
   }
 }

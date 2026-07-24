@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 import '../../core/arabic_strings.dart';
 import '../../models/khatmah_model.dart';
 
@@ -10,15 +10,15 @@ import '../../providers/daily_provider.dart';
 import '../../providers/khatmah_provider.dart';
 import '../../providers/prayer_time_providers.dart';
 import '../../providers/settings_provider.dart';
-import '../../providers/tasbeeh_al_zahra_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/ds_components.dart';
 import '../../widgets/hadith_card.dart';
 import '../../widgets/star_background.dart';
 import '../../widgets/tasbih_hero_card.dart';
 import '../../widgets/verse_card.dart';
-import '../../services/permission_service.dart';
+import '../../widgets/mercy_register_hero_card.dart';
 import '../../services/greeting_service.dart';
+import '../../widgets/permission_status_card.dart';
 import '../../core/utils/hijri_date.dart';
 import '../prayer_times/widgets/premium_hero_section.dart';
 import '../hadith_shia/presentation/widgets/daily_shia_hadith_card.dart';
@@ -75,83 +75,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAndRequestPermissions();
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> _checkAndRequestPermissions() async {
-    final hasNotification = await PermissionService.checkNotificationPermission();
-    final hasExactAlarm = await PermissionService.checkExactAlarmPermission();
-
-    if (!hasNotification || !hasExactAlarm) {
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-              backgroundColor: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF0F1B2E)
-                  : Colors.white,
-              title: Row(
-                children: [
-                  const Icon(Icons.notifications_active_rounded, color: AppTheme.goldPrimary),
-                  const SizedBox(width: 12),
-                  Text(
-                    'أذونات التنبيهات والأذان',
-                    style: GoogleFonts.notoKufiArabic(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-              content: Text(
-                'لكي يتمكن التطبيق من تنبيهك بالصلاة وتشغيل صوت الأذان في الوقت المحدد بدقة، يرجى منح إذن الإشعارات وإذن المنبهات الدقيقة.',
-                style: GoogleFonts.tajawal(
-                  fontSize: 14,
-                  height: 1.5,
-                  color: AppTheme.textMuted,
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    'لاحقاً',
-                    style: GoogleFonts.tajawal(fontWeight: FontWeight.bold, color: Colors.redAccent),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await PermissionService.requestNotificationPermission();
-                    await PermissionService.requestExactAlarmPermission();
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.goldPrimary),
-                  child: Text('منح الإذن', style: GoogleFonts.tajawal(color: Colors.white)),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final prayerState = ref.watch(prayerTimesProvider);
@@ -198,6 +121,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   SizedBox(height: gap),
 
+                  const PermissionStatusCard(),
+                  SizedBox(height: gap),
+
                   _buildSectionHeader('الصلاة القادمة', 'اعرف موعد الصلاة التالية'),
                   SizedBox(height: smallGap),
                   if (times != null)
@@ -240,9 +166,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   _buildDeferredQuranSection(isDark),
                   SizedBox(height: gap),
 
-                  _buildSectionHeader('تسبيح الزهراء'),
+                  _buildSectionHeader('إهداء الثواب'),
                   SizedBox(height: smallGap),
-                  _buildDeferredTasbihSection(isDark),
+                  const MercyRegisterHeroCard(),
                   SizedBox(height: gap),
                   _buildSectionHeader('المناسبات الإسلامية'),
                   SizedBox(height: smallGap),
@@ -395,10 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return _buildQuranSection(khatmah, isDark);
   }
 
-  Widget _buildDeferredTasbihSection(bool isDark) {
-    final tasbihZahra = ref.watch(tasbeehAlZahraProvider);
-    return _buildTasbihSection(tasbihZahra, isDark);
-  }
+
 
   // ═══════════════════════════════════════════════
   // Quran Section
@@ -525,69 +448,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // ═══════════════════════════════════════════════
-  // Tasbih Section
-  // ═══════════════════════════════════════════════
 
-  Widget _buildTasbihSection(TasbeehAlZahraState tasbihState, bool isDark) {
-    final progress = tasbihState.isCompleted
-        ? 1.0
-        : (tasbihState.totalCount / 100.0).clamp(0.0, 1.0);
-    final w = MediaQuery.sizeOf(context).width;
-    final cardPad = w < 360 ? 14.0 : 18.0;
-    final circSize = w < 360 ? 64.0 : 80.0;
-
-    return GlassCard(
-      radius: 28,
-      padding: EdgeInsets.all(cardPad),
-      onTap: () => context.push('/tasbeeh'),
-      child: Row(
-        children: [
-          GoldCircularProgress(
-            value: progress,
-            size: circSize,
-            strokeWidth: 5,
-            centerText: '${tasbihState.totalCount}',
-            subtitle: '/ 100',
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'تسبيحة الزهراء (ع)',
-                  style: GoogleFonts.notoKufiArabic(
-                    fontSize: w < 360 ? 13 : 15,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  tasbihState.isCompleted
-                      ? 'مكتملة اليوم ✓'
-                      : '${tasbihState.stageName} — ${tasbihState.nameArabic}',
-                  style: GoogleFonts.notoKufiArabic(
-                    fontSize: 11,
-                    color: AppTheme.textMuted,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                GoldBadge(
-                  text: '${tasbihState.count} / ${tasbihState.target}',
-                  icon: Icons.repeat_rounded,
-                  fontSize: 10,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ═══════════════════════════════════════════════
   // Events Section
@@ -727,8 +588,8 @@ class _HomeHeader extends StatelessWidget {
     final btnSize = w < 360 ? 34.0 : 40.0;
     return Row(
       children: [
-        SvgPicture.asset(
-          'assets/images/logo.svg',
+        VectorGraphic(
+          loader: AssetBytesLoader('assets/images/logo.svg.vec'),
           width: logoSize,
           height: logoSize,
           fit: BoxFit.contain,

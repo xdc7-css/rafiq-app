@@ -25,5 +25,34 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    // PWA auto-update: poll for new service worker deployments.
+    // Flutter's flutter_bootstrap.js handles the initial registration on page load.
+    // This script handles long-lived sessions (installed PWAs, open tabs).
+    // The built-in flutter_service_worker.js calls skipWaiting() on install and
+    // unregisters + navigates all clients on activate, so we only need to trigger update checks.
+    if ('serviceWorker' in navigator) {
+      var _swUpdateCheckCount = 0;
+      var _swUpdateInterval = setInterval(function() {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          if (!reg) return;
+          _swUpdateCheckCount++;
+          reg.update().then(function() {
+            if (reg.installing) {
+              reg.installing.addEventListener('statechange', function(w) {
+                if (w.target.state === 'activated') {
+                  clearInterval(_swUpdateInterval);
+                }
+              });
+            }
+          }).catch(function() {});
+          // Stop polling after 24 hours (4320 checks at 60s intervals)
+          if (_swUpdateCheckCount >= 4320) {
+            clearInterval(_swUpdateInterval);
+          }
+        }).catch(function() {});
+      }, 60000);
+    }
+  </script>
 </body>
 </html>

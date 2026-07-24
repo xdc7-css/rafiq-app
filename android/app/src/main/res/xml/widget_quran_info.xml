@@ -12,5 +12,4 @@
     android:widgetCategory="home_screen"
     android:previewLayout="@layout/widget_quran_2x3"
     android:label="القرآن الكريم"
-    android:description="@string/widget_quran_desc"
-    android:screenOrientation="unspecified" />
+    android:description="@string/widget_quran_desc" />

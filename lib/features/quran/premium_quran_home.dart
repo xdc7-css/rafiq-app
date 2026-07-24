@@ -532,9 +532,6 @@ class _PremiumQuranHomePageState extends ConsumerState<PremiumQuranHomePage> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final cardWidth = (constraints.maxWidth - 12) / 2;
-        final contentMaxWidth = cardWidth * 0.42;
-
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: GridView.builder(
@@ -544,7 +541,7 @@ class _PremiumQuranHomePageState extends ConsumerState<PremiumQuranHomePage> {
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 1.35,
+              childAspectRatio: 0.88,
             ),
             itemCount: actions.length,
             itemBuilder: (context, index) {
@@ -603,54 +600,51 @@ class _PremiumQuranHomePageState extends ConsumerState<PremiumQuranHomePage> {
                           splashColor: AppTheme.luxuryGold.withValues(alpha: 0.15),
                           child: Padding(
                             padding: const EdgeInsets.all(18),
-                            child: SizedBox(
-                              width: contentMaxWidth,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 48,
-                                    height: 48,
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.luxuryGold.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.luxuryGold.withValues(
+                                      alpha: 0.1,
                                     ),
-                                    child: Icon(
-                                      act.icon,
-                                      color: AppTheme.luxuryGold,
-                                      size: 24,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Icon(
+                                    act.icon,
+                                    color: AppTheme.luxuryGold,
+                                    size: 24,
+                                  ),
+                                ),
+                                const Gap(12),
+                                Text(
+                                  act.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.notoKufiArabic(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.warmWhite,
+                                  ),
+                                ),
+                                const Gap(6),
+                                Text(
+                                  act.subtitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.notoKufiArabic(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppTheme.warmWhite.withValues(
+                                      alpha: 0.7,
                                     ),
                                   ),
-                                  const Gap(12),
-                                  Text(
-                                    act.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.notoKufiArabic(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTheme.warmWhite,
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Text(
-                                    act.subtitle,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.notoKufiArabic(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppTheme.warmWhite.withValues(
-                                        alpha: 0.7,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -711,54 +705,51 @@ class _PremiumQuranHomePageState extends ConsumerState<PremiumQuranHomePage> {
                           splashColor: AppTheme.luxuryGold.withValues(alpha: 0.15),
                           child: Padding(
                             padding: const EdgeInsets.all(18),
-                            child: SizedBox(
-                              width: contentMaxWidth,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 48,
-                                    height: 48,
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.luxuryGold.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 48,
+                                  height: 48,
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.luxuryGold.withValues(
+                                      alpha: 0.1,
                                     ),
-                                    child: Icon(
-                                      act.icon,
-                                      color: AppTheme.luxuryGold,
-                                      size: 24,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Icon(
+                                    act.icon,
+                                    color: AppTheme.luxuryGold,
+                                    size: 24,
+                                  ),
+                                ),
+                                const Gap(12),
+                                Text(
+                                  act.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.notoKufiArabic(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.warmWhite,
+                                  ),
+                                ),
+                                const Gap(6),
+                                Text(
+                                  act.subtitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.notoKufiArabic(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppTheme.warmWhite.withValues(
+                                      alpha: 0.7,
                                     ),
                                   ),
-                                  const Gap(12),
-                                  Text(
-                                    act.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.notoKufiArabic(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTheme.warmWhite,
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Text(
-                                    act.subtitle,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.notoKufiArabic(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppTheme.warmWhite.withValues(
-                                        alpha: 0.7,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

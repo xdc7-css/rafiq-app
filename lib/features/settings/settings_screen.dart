@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,6 +59,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(top: 16, bottom: bottomPad),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       _buildAppearanceSection(ref, settings),
                       SizedBox(height: gap),
@@ -75,9 +77,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       SizedBox(height: gap),
                       _buildShiaRemindersSection(ref, settings),
                       SizedBox(height: gap),
-                      _buildOccasionsSection(ref, settings),
-                      SizedBox(height: gap),
-                      _buildVisitSection(ref, settings),
+                      _buildOccasionsAndVisitSection(ref, settings),
                       SizedBox(height: gap),
                       _buildLanguageSection(ref, settings),
                       SizedBox(height: gap),
@@ -111,7 +111,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final barH = w < 360 ? 52.0 : 60.0;
     final circleSize = w < 360 ? 38.0 : 44.0;
     return SliverAppBar(
-      expandedHeight: 100,
+      expandedHeight: 120,
       floating: true,
       pinned: true,
       backgroundColor: Colors.transparent,
@@ -198,7 +198,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Widget _buildAppearanceSection(
       WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'المظهر',
       icon: Icons.palette_outlined,
       children: [
@@ -217,7 +217,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               child: Slider(
                 value: settings.appFontSize,
-                min: 0.8,
+                min: 1.0,
                 max: 1.4,
                 onChanged: (v) =>
                     ref.read(settingsNotifierProvider.notifier).updateAppFontSize(v),
@@ -246,7 +246,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 2. Time & Date ───
 
   Widget _buildTimeDateSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'الوقت والتاريخ',
       icon: Icons.access_time_filled_rounded,
       children: [
@@ -284,9 +284,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 3. Notifications ───
 
   Widget _buildNotificationSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'الإشعارات',
       icon: Icons.notifications_none_rounded,
+      initiallyExpanded: false,
       children: [
         SettingsTile(
           icon: Icons.access_time_rounded,
@@ -356,7 +357,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── Permissions ───
 
   Widget _buildPermissionsSection(WidgetRef ref, BuildContext context) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'صلاحيات التطبيق',
       icon: Icons.security_rounded,
       children: [
@@ -379,9 +380,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 3. Adhan ───
 
   Widget _buildAdhanSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'الأذان',
       icon: Icons.record_voice_over_rounded,
+      initiallyExpanded: false,
       children: [
         SettingsTile(
           icon: Icons.volume_up_rounded,
@@ -493,6 +495,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ref.read(settingsNotifierProvider.notifier).toggleAdhanBootStart(),
           ),
           SettingsTile(
+            icon: Icons.shield_rounded,
+            title: 'تحسين موثوقية الأذان',
+            subtitle: 'خطوات لضمان عمل الأذان على جهازك',
+            onTap: () => context.push('/settings/adhan-reliability'),
+            trailing: Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppTheme.textMuted.withValues(alpha: 0.3),
+              size: 14,
+            ),
+          ),
+          SettingsTile(
+            icon: Icons.health_and_safety_rounded,
+            title: 'تشخيص الأذان',
+            subtitle: 'فحص جاهزية الأذان على جهازك',
+            onTap: () => context.push('/settings/adhan-health'),
+            trailing: Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppTheme.textMuted.withValues(alpha: 0.3),
+              size: 14,
+            ),
+          ),
+          SettingsTile(
             icon: Icons.timer_outlined,
             title: 'مدة الغفوة',
             subtitle: '${settings.adhanSnoozeMinutes} دقائق',
@@ -565,7 +589,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 4. Prayer ───
 
   Widget _buildPrayerSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'إعدادات الصلاة',
       icon: Icons.mosque_outlined,
       children: [
@@ -614,7 +638,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 5. Tasbeeh ───
 
   Widget _buildTasbeehSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'التسبيح',
       icon: Icons.fingerprint_rounded,
       children: [
@@ -687,7 +711,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 6. Shia Worship Reminders ───
 
   Widget _buildShiaRemindersSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'تذكيرات عبادات شيعية',
       icon: Icons.auto_awesome,
       children: [
@@ -896,10 +920,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  // ─── 7. Occasions ───
+  // ─── 7. Occasions & Visit Settings (merged) ───
 
-  Widget _buildOccasionsSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+  Widget _buildOccasionsAndVisitSection(WidgetRef ref, AppSettings settings) {
+    return SettingsAccordionSection(
       title: 'المناسبات والزيارات',
       icon: Icons.celebration_outlined,
       children: [
@@ -956,19 +980,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onTap: () => ref
               .read(settingsNotifierProvider.notifier)
               .toggleOccasionBlessedNights(),
-          showDivider: false,
         ),
-      ],
-    );
-  }
-
-  // ─── 8. Visit Settings ───
-
-  Widget _buildVisitSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
-      title: 'إعدادات الزيارة',
-      icon: Icons.bookmark_border_rounded,
-      children: [
+        // ── Visit Settings (nested) ──
+        Divider(
+          height: 1,
+          color: AppTheme.goldPrimary.withValues(alpha: 0.06),
+          indent: 70,
+          endIndent: 20,
+        ),
         SettingsTile(
           icon: Icons.history_rounded,
           title: 'حفظ آخر قراءة',
@@ -1015,7 +1034,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 9. Language & Quran ───
 
   Widget _buildLanguageSection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'اللغة والمصحف',
       icon: Icons.language_rounded,
       children: [
@@ -1060,7 +1079,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 10. Privacy & Data ───
 
   Widget _buildPrivacySection(WidgetRef ref, AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'الخصوصية والأمان',
       icon: Icons.security_rounded,
       children: [
@@ -1105,7 +1124,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // ─── 11. Support & About ───
 
   Widget _buildSupportSection(AppSettings settings) {
-    return SettingsSectionCard(
+    return SettingsAccordionSection(
       title: 'الدعم والمساعدة',
       icon: Icons.help_outline_rounded,
       children: [
@@ -1185,6 +1204,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           showDivider: false,
         ),
+        if (kDebugMode) ...[
+          const SizedBox(height: 8),
+          SettingsTile(
+            icon: Icons.science_outlined,
+            title: 'Adhan Test Mode',
+            subtitle: 'Debug — test adhan pipeline (15s / 30s / 60s)',
+            onTap: () => context.push('/settings/adhan-test'),
+            trailing: Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: AppTheme.textMuted.withValues(alpha: 0.3),
+              size: 14,
+            ),
+            showDivider: false,
+          ),
+        ],
       ],
     );
   }
@@ -1628,8 +1662,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   void _shareApp() {
     Share.share(
-      '━━━━━━━━━━━━━━━━━━\n'
-      '📖 رَفِيقْ\n'
+      '------------------\n'
+      'رَفِيقْ\n'
       'رفيقك الإسلامي اليومي\n\n'
       'تطبيق يجمع بين:\n'
       '• القرآن الكريم\n'
@@ -1639,11 +1673,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       '• التسبيح\n'
       '• الأدعية\n\n'
       'حمّل التطبيق من هنا:\n\n'
-      '🌐 الموقع الرسمي\n'
+      'الموقع الرسمي\n'
       'https://rafiqart.tech\n\n'
-      '📦 GitHub Releases\n'
+      'GitHub Releases\n'
       'https://github.com/xdc7-css/rafiq-app/releases/latest\n\n'
-      '━━━━━━━━━━━━━━━━━━',
+      '------------------',
     );
   }
 

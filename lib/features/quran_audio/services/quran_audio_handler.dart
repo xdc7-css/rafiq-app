@@ -145,11 +145,15 @@ class QuranAudioHandler extends BaseAudioHandler
 
     _indexSub = _player.currentIndexStream.listen((idx) {
       if (idx != null && idx < queue.value.length) {
-        mediaItem.add(queue.value[idx]);
+        final item = queue.value[idx];
+        final surahNum = item.extras?['surahNumber'] as int? ?? 0;
+        debugPrint('[QuranAudioHandler] CURRENT SURAH: $surahNum');
+        mediaItem.add(item);
       }
     });
 
     _processingSub = _player.processingStateStream.listen((state) async {
+      debugPrint('[QuranAudioHandler] PROCESSING STATE: $state');
       if (state == ProcessingState.completed) {
         playbackState.add(playbackState.value.copyWith(
           processingState: AudioProcessingState.completed,
@@ -238,6 +242,7 @@ class QuranAudioHandler extends BaseAudioHandler
     required int surahNumber,
     String? localPath,
   }) async {
+    debugPrint('[QuranAudioHandler] SET SURAH: reciter=${reciter.id} surah=$surahNumber localPath=$localPath');
     _currentReciter = reciter;
     _currentMoshaf = moshaf;
 
@@ -262,13 +267,18 @@ class QuranAudioHandler extends BaseAudioHandler
       ),
     ];
 
-    mediaItem.add(item);
-    queue.add([item]);
-
+    debugPrint('[QuranAudioHandler] STOP before setSurah');
+    await _player.stop();
+    debugPrint('[QuranAudioHandler] SET AUDIO SOURCE: $url');
     await _player.setAudioSource(
       AudioSource.uri(Uri.parse(url)),
       preload: true,
     );
+    debugPrint('[QuranAudioHandler] SEEK zero before play');
+    await _player.seek(Duration.zero);
+    mediaItem.add(item);
+    queue.add([item]);
+    debugPrint('[QuranAudioHandler] PLAY after setSurah');
     await _player.play();
   }
 
@@ -277,7 +287,9 @@ class QuranAudioHandler extends BaseAudioHandler
     required Moshaf moshaf,
     required List<int> surahNumbers,
     required int startIndex,
+    String? Function(int surahNumber)? localPathForSurah,
   }) async {
+    debugPrint('[QuranAudioHandler] SET QUEUE: reciter=${reciter.id} startSurah=${surahNumbers[startIndex]} localPaths=${localPathForSurah != null}');
     _currentReciter = reciter;
     _currentMoshaf = moshaf;
 
@@ -298,25 +310,40 @@ class QuranAudioHandler extends BaseAudioHandler
               surahNumber: num,
               surahName: surahName(num),
               audioUrl: moshaf.audioUrl(num),
+              localPath: localPathForSurah?.call(num),
             ))
         .toList();
 
-    final audioSources = surahNumbers
-        .map((num) => AudioSource.uri(Uri.parse(moshaf.audioUrl(num))))
-        .toList();
+    final audioSources = surahNumbers.map((num) {
+      final localPath = localPathForSurah?.call(num);
+      final url = localPath ?? moshaf.audioUrl(num);
+      return AudioSource.uri(Uri.parse(url));
+    }).toList();
 
-    queue.add(items);
+    debugPrint('[QuranAudioHandler] STOP before setQueue');
+    await _player.stop();
+    debugPrint('[QuranAudioHandler] SET AUDIO SOURCE (queue)');
     await _player.setAudioSource(
       ConcatenatingAudioSource(children: audioSources),
       preload: true,
       initialIndex: startIndex,
     );
-    mediaItem.add(items[startIndex]);
+    final targetItem = items[startIndex];
+    final targetSurahNum = surahNumbers[startIndex];
+    final targetLocalPath = localPathForSurah?.call(targetSurahNum);
+    if (targetLocalPath != null) {
+      debugPrint('[QuranAudioHandler] SEEK zero before play (downloaded start)');
+      await _player.seek(Duration.zero);
+    }
+    mediaItem.add(targetItem);
+    debugPrint('[QuranAudioHandler] PLAY after setQueue');
     await _player.play();
   }
 
   Future<void> restoreFromState(PersistedPlaybackState state) async {
     if (state.queue.isEmpty) return;
+
+    debugPrint('[QuranAudioHandler] RESTORE POSITION: surah=${state.currentSurahNumber} reciter=${state.reciterName} positionMs=${state.positionMs}');
 
     final sourceItems = state.queue.map((q) {
       final url = q.localPath ?? q.audioUrl;
@@ -342,6 +369,8 @@ class QuranAudioHandler extends BaseAudioHandler
     queue.add(mediaItems);
 
     final source = ConcatenatingAudioSource(children: sourceItems);
+    debugPrint('[QuranAudioHandler] SET AUDIO SOURCE (restore) with position=${state.position}');
+    await _player.stop();
     await _player.setAudioSource(
       source,
       preload: true,
@@ -355,6 +384,7 @@ class QuranAudioHandler extends BaseAudioHandler
     await _player.setLoopMode(loopModes[loopIdx]);
 
     mediaItem.add(mediaItems[state.currentIndex]);
+    debugPrint('[QuranAudioHandler] PLAY after restore');
     await _player.play();
   }
 
@@ -466,13 +496,20 @@ class QuranAudioHandler extends BaseAudioHandler
   // ─── Overrides ───
 
   @override
-  Future<void> play() async => _player.play();
+  Future<void> play() async {
+    debugPrint('[QuranAudioHandler] PLAY');
+    await _player.play();
+  }
 
   @override
-  Future<void> pause() async => _player.pause();
+  Future<void> pause() async {
+    debugPrint('[QuranAudioHandler] PAUSE');
+    await _player.pause();
+  }
 
   @override
   Future<void> stop() async {
+    debugPrint('[QuranAudioHandler] STOP');
     await _player.stop();
     playbackState.add(playbackState.value.copyWith(
       processingState: AudioProcessingState.idle,
@@ -480,8 +517,31 @@ class QuranAudioHandler extends BaseAudioHandler
     ));
   }
 
+  Future<void> closePlayback() async {
+    debugPrint('[QuranAudioHandler] CLOSE PLAYBACK');
+    await _player.stop();
+    await _player.seek(Duration.zero);
+    _currentReciter = null;
+    _currentMoshaf = null;
+    _persistableQueue = [];
+    _mediaItemCache.clear();
+    mediaItem.add(null);
+    queue.add([]);
+    playbackState.add(playbackState.value.copyWith(
+      processingState: AudioProcessingState.idle,
+      playing: false,
+      updatePosition: Duration.zero,
+      bufferedPosition: Duration.zero,
+      queueIndex: null,
+      controls: [],
+    ));
+  }
+
   @override
-  Future<void> seek(Duration position) async => _player.seek(position);
+  Future<void> seek(Duration position) async {
+    debugPrint('[QuranAudioHandler] SEEK: ${position.inMilliseconds}ms');
+    await _player.seek(position);
+  }
 
   @override
   Future<void> skipToNext() async {

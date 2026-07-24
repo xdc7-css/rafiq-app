@@ -76,7 +76,7 @@ class PrayerNotificationService {
 
       await _plugin.zonedSchedule(
         id,
-        '🕌 وقت صلاة $arabic',
+        'وقت صلاة $arabic',
         'حان الآن موعد صلاة $arabic',
         scheduledDate,
         NotificationHelper.getPrayerNotificationDetails(),

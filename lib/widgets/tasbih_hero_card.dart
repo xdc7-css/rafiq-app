@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/tasbeeh_al_zahra_provider.dart';
 import '../providers/tasbeeh_stats_provider.dart';
+import '../services/haptic_service.dart';
 import '../theme/app_theme.dart';
 
 class TasbihHeroCard extends ConsumerStatefulWidget {
@@ -50,12 +50,12 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
     final before = ref.read(tasbeehAlZahraProvider);
     if (before.isCompleted) return;
 
-    HapticFeedback.lightImpact();
+    HapticService.instance.lightTap();
     ref.read(tasbihStatsProvider.notifier).recordTap();
 
     final result = notifier.increment();
     if (result['sessionFinished'] == true) {
-      HapticFeedback.heavyImpact();
+      HapticService.instance.strongTap();
       _celebrateController.forward(from: 0);
       _autoResetTimer?.cancel();
       _autoResetTimer = Timer(const Duration(seconds: 3), () {
@@ -493,7 +493,7 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
                     const SizedBox(height: 6),
                     ShaderMask(
                       shaderCallback: (b) => AppTheme.goldGradient.createShader(b),
-                      child: Text('✨ تقبل الله ✨',
+                      child: Text('تقبل الله',
                           style: GoogleFonts.notoKufiArabic(
                               fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                     ),
@@ -512,7 +512,7 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
   }
 
   void _showQuickSettings() {
-    HapticFeedback.mediumImpact();
+    HapticService.instance.mediumTap();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(

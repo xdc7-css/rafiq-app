@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    name: 🚀 Build Release
+    name: Build Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -58,7 +58,7 @@ jobs:
         with:
           name: "رَفيِقْ v${{ steps.version.outputs.VERSION }}"
           body: |
-            ## ✨ Release v${{ steps.version.outputs.VERSION }}
+            ## Release v${{ steps.version.outputs.VERSION }}
 
             ### 📱 Downloads
             - Android APK

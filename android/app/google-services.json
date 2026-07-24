@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "684066491065",
+    "project_id": "rafiqfamily-5c8ed",
+    "storage_bucket": "rafiqfamily-5c8ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684066491065:android:3188175f018a592af3e968",
+        "android_client_info": {
+          "package_name": "com.dailyislamicwidget.daily_islamic_widget"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7GKu5fhm1uN-3NiOmHbDbGU2FUr_L0Bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

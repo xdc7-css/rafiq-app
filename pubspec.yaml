@@ -1,7 +1,7 @@
 name: daily_islamic_widget
 description: A beautiful Islamic companion application with daily widgets, Quran, Hadith, and more.
 publish_to: 'none'
-version: 2.3.0+1
+version: 3.5.0+26
 
 environment:
   sdk: ^3.12.1
@@ -26,8 +26,8 @@ dependencies:
   hive_flutter: ^1.1.0
 
   # Database (Offline First)
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
+  isar_community: ^3.1.0+1
+  isar_community_flutter_libs: ^3.1.0+1
 
   # Connectivity
   connectivity_plus: ^6.0.3
@@ -54,6 +54,7 @@ dependencies:
 
   # UI
   google_fonts: ^6.2.1
+  vector_graphics: ^1.1.0
   flutter_svg: ^2.0.16
   flutter_animate: ^4.5.2
   shimmer: ^3.0.0
@@ -77,6 +78,11 @@ dependencies:
   http: ^1.2.2
   dio: ^5.9.2
 
+  # Firebase
+  firebase_core: ^3.6.0
+  cloud_firestore: ^5.4.0
+  firebase_auth: ^5.3.0
+
   # UUID
   uuid: ^4.5.1
 
@@ -91,6 +97,7 @@ dependencies:
   # Zoom / Photo View
   photo_view: ^0.15.0
   scrollable_positioned_list: ^0.3.8
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -98,7 +105,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   build_runner: ^2.4.13
   flutter_launcher_icons: ^0.14.3
-  isar_generator: ^3.1.0+1
+  isar_community_generator: ^3.1.0+1
   vector_graphics_compiler: ^1.0.0
 
 flutter_launcher_icons:
@@ -124,9 +131,7 @@ flutter:
     - assets/data/imams/
     - assets/data/imams/quotes/
     - assets/data/quran/
-    - assets/quran-svg/svg/
     - assets/quran-svg/json/
-    - assets/data/hadith/
     - assets/data/fatwa/
     - assets/data/prayer/
     - assets/data/tafsir/
@@ -139,6 +144,9 @@ flutter:
     - shorebird.yaml
 
   fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Variable.ttf
     - family: NotoNaskhArabic
       fonts:
         - asset: assets/fonts/NotoNaskhArabic-Regular.ttf

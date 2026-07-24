@@ -8,13 +8,13 @@
 
 ---
 
-## 📋 Before You Start
+## Before You Start
 
 1. Read the [Code of Conduct](CODE_OF_CONDUCT.md)
 2. Check existing [issues](https://github.com/Daily-Islamic-Widget/rafeeq/issues) and [pull requests](https://github.com/Daily-Islamic-Widget/rafeeq/pulls)
 3. For large changes, open an issue first to discuss your approach
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # 1. Fork the repository
@@ -42,7 +42,7 @@ git push origin feature/amazing-feature
 # 9. Open a Pull Request
 ```
 
-## 🔀 Branch Strategy
+## Branch Strategy
 
 | Branch | Purpose |
 |--------|---------|
@@ -52,7 +52,7 @@ git push origin feature/amazing-feature
 | `fix/*` | Bug fixes |
 | `hotfix/*` | Critical production fixes |
 
-## 📝 Commit Convention
+## Commit Convention
 
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -79,7 +79,7 @@ perf: optimize SVG rendering performance
 rtl: improve Arabic text line breaking
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 We use **Feature-First Clean Architecture**:
 
@@ -98,7 +98,7 @@ lib/features/<feature>/
     └── widgets/
 ```
 
-## 🎨 Code Style
+## Code Style
 
 - Follow [Effective Dart](https://dart.dev/effective-dart) guidelines
 - Use `flutter format .` before committing
@@ -106,7 +106,7 @@ lib/features/<feature>/
 - RTL text handling must be tested with Arabic content
 - Widget tests required for new UI components
 
-## 🌍 Localization
+## Localization
 
 When adding new user-facing strings:
 1. Add to `lib/core/arabic_strings.dart` for Arabic
@@ -114,7 +114,7 @@ When adding new user-facing strings:
 3. Test with both `ar` and `en` locales
 4. Verify RTL layout works correctly
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -127,7 +127,7 @@ flutter test --coverage
 flutter test test/widget_test.dart
 ```
 
-## 📱 Platform-Specific Guidelines
+## Platform-Specific Guidelines
 
 ### Android
 - Min SDK: 21
@@ -145,7 +145,7 @@ flutter test test/widget_test.dart
 - Verify CanvasKit renderer performance
 - Test keyboard navigation
 
-## 🤝 Pull Request Process
+## Pull Request Process
 
 1. **Update documentation** if you changed APIs or added features
 2. **Add tests** for new functionality

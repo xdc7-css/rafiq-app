@@ -269,7 +269,7 @@ class Ar {
   static const String distanceToMakkah = 'المسافة إلى مكة';
   static const String faceMosqueForPrayer = 'توجه نحو أيقونة المسجد للصلاة';
   static const String qiblaFromNorth = 'القبلة: %@° من الشمال';
-  static const String facingQibla = 'أنت تتجه إلى القبلة ✓';
+  static const String facingQibla = 'أنت تتجه إلى القبلة';
   static const String rotateLeft = 'استدر لليسار';
   static const String rotateRight = 'استدر لليمين';
   static const String degreesRemaining = '°%@ متبقية';
@@ -315,7 +315,6 @@ class Ar {
   static const String bgColor = 'لون الخلفية';
   static const String textColor = 'لون النص';
   static const String transparency = 'الشفافية';
-  static const String font_Size = 'حجم الخط';
   static const String saveSettings = 'حفظ الإعدادات';
   static const String widgetSettingsSaved = 'تم حفظ إعدادات الودجت';
 

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/settings_model.dart';
+import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
 
 /// Floating glass navbar — logo, nav, theme toggle, notifications, profile.
@@ -28,6 +30,8 @@ class PremiumNavbar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.sizeOf(context).width;
     final isCompact = width < 900;
+    final settings = ref.watch(settingsNotifierProvider);
+    final isDark = settings.themeMode != ThemeModeOption.light;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -38,29 +42,39 @@ class PremiumNavbar extends ConsumerWidget {
           padding: EdgeInsets.symmetric(horizontal: isCompact ? 12 : 20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                AppTheme.bgCard.withValues(alpha: 0.75),
-                AppTheme.bgSurface.withValues(alpha: 0.55),
-              ],
+              colors: isDark
+                  ? [
+                      AppTheme.bgCard.withValues(alpha: 0.75),
+                      AppTheme.bgSurface.withValues(alpha: 0.55),
+                    ]
+                  : [
+                      AppTheme.lightBgCard.withValues(alpha: 0.85),
+                      AppTheme.lightBgCard.withValues(alpha: 0.7),
+                    ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: AppTheme.borderSubtle,
+              color: isDark
+                  ? AppTheme.borderSubtle
+                  : AppTheme.goldPrimary.withValues(alpha: 0.12),
               width: 0.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.bgPrimary.withValues(alpha: 0.4),
+                color: isDark
+                    ? AppTheme.bgPrimary.withValues(alpha: 0.4)
+                    : Colors.black.withValues(alpha: 0.06),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
-              BoxShadow(
-                color: AppTheme.glowGold,
-                blurRadius: 32,
-                spreadRadius: -8,
-              ),
+              if (isDark)
+                BoxShadow(
+                  color: AppTheme.glowGold,
+                  blurRadius: 32,
+                  spreadRadius: -8,
+                ),
             ],
           ),
           child: Row(
@@ -91,7 +105,20 @@ class PremiumNavbar extends ConsumerWidget {
                 ),
               ] else
                 const Spacer(),
-              const SizedBox(width: 0),
+              _IconAction(
+                icon: isDark
+                    ? Icons.light_mode_rounded
+                    : Icons.dark_mode_rounded,
+                tooltip: 'تبديل المظهر',
+                onTap: () {
+                  ref
+                      .read(settingsNotifierProvider.notifier)
+                      .updateThemeMode(
+                        isDark ? ThemeModeOption.light : ThemeModeOption.dark,
+                      );
+                },
+              ),
+              const SizedBox(width: 6),
               _IconAction(
                 icon: Icons.notifications_none_rounded,
                 tooltip: 'الإشعارات',
@@ -99,9 +126,14 @@ class PremiumNavbar extends ConsumerWidget {
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('الإشعارات قريباً', style: GoogleFonts.notoKufiArabic()),
+                      content: Text(
+                        'الإشعارات قريباً',
+                        style: GoogleFonts.notoKufiArabic(),
+                      ),
                       behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                   );
                 },
@@ -115,15 +147,18 @@ class PremiumNavbar extends ConsumerWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: AppTheme.goldGradient,
-                    border: Border.all(color: AppTheme.goldSoft.withValues(alpha: 0.4)),
+                    border: Border.all(
+                      color: AppTheme.goldSoft.withValues(alpha: 0.4),
+                    ),
                     boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.glowGold,
-                        blurRadius: 12,
-                      ),
+                      BoxShadow(color: AppTheme.glowGold, blurRadius: 12),
                     ],
                   ),
-                  child: Icon(Icons.person_rounded, color: AppTheme.bgPrimary, size: 20),
+                  child: Icon(
+                    Icons.person_rounded,
+                    color: AppTheme.bgPrimary,
+                    size: 20,
+                  ),
                 ),
               ),
             ],
@@ -176,6 +211,7 @@ class _NavPillState extends State<_NavPill> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
@@ -189,11 +225,13 @@ class _NavPillState extends State<_NavPill> {
             color: widget.selected
                 ? AppTheme.goldPrimary.withValues(alpha: 0.15)
                 : _hovered
-                    ? AppTheme.goldPrimary.withValues(alpha: 0.06)
-                    : Colors.transparent,
+                ? AppTheme.goldPrimary.withValues(alpha: 0.06)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(14),
             border: widget.selected
-                ? Border.all(color: AppTheme.goldPrimary.withValues(alpha: 0.25))
+                ? Border.all(
+                    color: AppTheme.goldPrimary.withValues(alpha: 0.25),
+                  )
                 : null,
             boxShadow: widget.selected
                 ? [BoxShadow(color: AppTheme.glowGold, blurRadius: 16)]
@@ -205,15 +243,23 @@ class _NavPillState extends State<_NavPill> {
               Icon(
                 widget.icon,
                 size: 16,
-                color: widget.selected ? AppTheme.goldPrimary : AppTheme.textMuted,
+                color: widget.selected
+                    ? AppTheme.goldPrimary
+                    : (isDark ? AppTheme.textMuted : AppTheme.lightTextMuted),
               ),
               const SizedBox(width: 6),
               Text(
                 widget.label,
                 style: GoogleFonts.notoKufiArabic(
                   fontSize: 12,
-                  fontWeight: widget.selected ? FontWeight.w700 : FontWeight.w500,
-                  color: widget.selected ? AppTheme.goldPrimary : AppTheme.textSecondary,
+                  fontWeight: widget.selected
+                      ? FontWeight.w700
+                      : FontWeight.w500,
+                  color: widget.selected
+                      ? AppTheme.goldPrimary
+                      : (isDark
+                            ? AppTheme.textSecondary
+                            : AppTheme.lightTextSecondary),
                 ),
               ),
             ],
@@ -246,6 +292,7 @@ class _IconActionState extends State<_IconAction> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Tooltip(
       message: widget.tooltip,
       child: MouseRegion(
@@ -260,14 +307,26 @@ class _IconActionState extends State<_IconAction> {
             decoration: BoxDecoration(
               color: _hovered
                   ? AppTheme.goldPrimary.withValues(alpha: 0.1)
-                  : AppTheme.bgSurface.withValues(alpha: 0.4),
+                  : isDark
+                  ? AppTheme.bgSurface.withValues(alpha: 0.4)
+                  : AppTheme.lightBgCard.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppTheme.borderSubtle),
+              border: Border.all(
+                color: isDark
+                    ? AppTheme.borderSubtle
+                    : AppTheme.goldPrimary.withValues(alpha: 0.1),
+              ),
             ),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Icon(widget.icon, size: 20, color: AppTheme.textSecondary),
+                Icon(
+                  widget.icon,
+                  size: 20,
+                  color: isDark
+                      ? AppTheme.textSecondary
+                      : AppTheme.lightTextSecondary,
+                ),
                 if (widget.badge)
                   Positioned(
                     top: 8,
@@ -278,7 +337,9 @@ class _IconActionState extends State<_IconAction> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppTheme.goldPrimary,
-                        boxShadow: [BoxShadow(color: AppTheme.glowGold, blurRadius: 6)],
+                        boxShadow: [
+                          BoxShadow(color: AppTheme.glowGold, blurRadius: 6),
+                        ],
                       ),
                     ),
                   ),

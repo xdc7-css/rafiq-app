@@ -41,7 +41,7 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
   // ── Appearance ──
 
   void updateAppFontSize(double value) {
-    state = state.copyWith(appFontSize: value);
+    state = state.copyWith(appFontSize: value.clamp(AppSettings.kMinAppFontSize, AppSettings.kMaxAppFontSize));
     _saveSettings();
   }
 

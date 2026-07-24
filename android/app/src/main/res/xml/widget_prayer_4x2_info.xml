@@ -13,5 +13,4 @@
     android:previewLayout="@layout/widget_prayer_4x2"
     android:label="أوقات الصلاة"
     android:description="@string/widget_prayer_desc"
-    android:previewImage="@drawable/ic_launcher_foreground"
-    android:screenOrientation="unspecified" />
+    android:previewImage="@drawable/ic_launcher_foreground" />

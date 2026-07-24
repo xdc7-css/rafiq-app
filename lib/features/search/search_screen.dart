@@ -1,6 +1,7 @@
 import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gap/gap.dart';
 import '../../core/arabic_strings.dart';
@@ -9,7 +10,6 @@ import '../../models/api_models.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/star_background.dart';
 import '../quran/data/models/quran_index.dart';
-import '../quran/presentation/svg_mushaf/svg_mushaf_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -67,12 +67,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }
 
     if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SvgMushafScreen(initialPage: targetPage),
-      ),
-    );
+    context.push('/mushaf?page=$targetPage');
   }
 
   @override

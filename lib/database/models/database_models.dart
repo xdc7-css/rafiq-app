@@ -420,3 +420,113 @@ class SearchHistoryEntry {
     resultCount: json['resultCount'] as int? ?? 0,
   );
 }
+
+class MemorialEntry {
+  String memorialId;
+  String deceasedName;
+  String deceasedNameArabic;
+  int dateOfDeathMs;
+  String description;
+  int prayerCount;
+  int duaCount;
+  int khatmahCount;
+  int tasbeehCount;
+  int createdAtMs;
+  int updatedAtMs;
+  String userId;
+  bool isPublic;
+  int typeIndex;
+  int surahNumber;
+  String duaText;
+  String photoUrl;
+  String searchName;
+  String searchNameArabic;
+  MemorialEntry({
+    required this.memorialId,
+    this.deceasedName = '',
+    this.deceasedNameArabic = '',
+    this.dateOfDeathMs = 0,
+    this.description = '',
+    this.prayerCount = 0,
+    this.duaCount = 0,
+    this.khatmahCount = 0,
+    this.tasbeehCount = 0,
+    this.createdAtMs = 0,
+    this.updatedAtMs = 0,
+    this.userId = '',
+    this.isPublic = true,
+    this.typeIndex = 0,
+    this.surahNumber = 0,
+    this.duaText = '',
+    this.photoUrl = '',
+    this.searchName = '',
+    this.searchNameArabic = '',
+  });
+  Map<String, dynamic> toJson() => {
+    'memorialId': memorialId, 'deceasedName': deceasedName,
+    'deceasedNameArabic': deceasedNameArabic, 'dateOfDeathMs': dateOfDeathMs,
+    'description': description, 'prayerCount': prayerCount,
+    'duaCount': duaCount, 'khatmahCount': khatmahCount, 'tasbeehCount': tasbeehCount,
+    'createdAtMs': createdAtMs, 'updatedAtMs': updatedAtMs,
+    'userId': userId, 'isPublic': isPublic, 'typeIndex': typeIndex,
+    'surahNumber': surahNumber, 'duaText': duaText, 'photoUrl': photoUrl,
+    'searchName': searchName, 'searchNameArabic': searchNameArabic,
+  };
+  factory MemorialEntry.fromJson(Map<String, dynamic> json) => MemorialEntry(
+    memorialId: json['memorialId'] as String? ?? '',
+    deceasedName: json['deceasedName'] as String? ?? '',
+    deceasedNameArabic: json['deceasedNameArabic'] as String? ?? '',
+    dateOfDeathMs: json['dateOfDeathMs'] as int? ?? 0,
+    description: json['description'] as String? ?? '',
+    prayerCount: json['prayerCount'] as int? ?? 0,
+    duaCount: json['duaCount'] as int? ?? 0,
+    khatmahCount: json['khatmahCount'] as int? ?? 0,
+    tasbeehCount: json['tasbeehCount'] as int? ?? 0,
+    createdAtMs: json['createdAtMs'] as int? ?? 0,
+    updatedAtMs: json['updatedAtMs'] as int? ?? 0,
+    userId: json['userId'] as String? ?? '',
+    isPublic: json['isPublic'] as bool? ?? true,
+    typeIndex: json['typeIndex'] as int? ?? 0,
+    surahNumber: json['surahNumber'] as int? ?? 0,
+    duaText: json['duaText'] as String? ?? '',
+    photoUrl: json['photoUrl'] as String? ?? '',
+    searchName: json['searchName'] as String? ?? '',
+    searchNameArabic: json['searchNameArabic'] as String? ?? '',
+  );
+}
+
+class RewardEntry {
+  String rewardId;
+  String memorialId;
+  String userId;
+  int typeIndex;
+  int count;
+  int createdAtMs;
+  int points;
+  String note;
+  RewardEntry({
+    required this.rewardId,
+    required this.memorialId,
+    this.userId = '',
+    this.typeIndex = 0,
+    this.count = 1,
+    this.createdAtMs = 0,
+    this.points = 1,
+    this.note = '',
+  });
+  Map<String, dynamic> toJson() => {
+    'rewardId': rewardId, 'memorialId': memorialId, 'userId': userId,
+    'typeIndex': typeIndex, 'count': count, 'createdAtMs': createdAtMs,
+    'points': points, 'note': note,
+  };
+  factory RewardEntry.fromJson(Map<String, dynamic> json) => RewardEntry(
+    rewardId: json['rewardId'] as String? ?? '',
+    memorialId: json['memorialId'] as String? ?? '',
+    userId: json['userId'] as String? ?? '',
+    typeIndex: json['typeIndex'] as int? ?? 0,
+    count: json['count'] as int? ?? 1,
+    createdAtMs: json['createdAtMs'] as int? ?? 0,
+    points: json['points'] as int? ?? 1,
+    note: json['note'] as String? ?? '',
+  );
+}

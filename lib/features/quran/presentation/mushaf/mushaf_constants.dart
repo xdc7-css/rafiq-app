@@ -27,6 +27,9 @@ class MushafMetrics {
   static const double minMarkerSize = 18;
   static const double toolbarAutoHideSeconds = 4;
 
+  static const double markerSize = baseMarkerSize;
+  static const double verseFontSize = baseVerseFontSize;
+
   static double responsiveFontSize(BoxConstraints constraints) {
     final width = constraints.maxWidth;
     final ratio = (width / 440).clamp(0.65, 1.15);

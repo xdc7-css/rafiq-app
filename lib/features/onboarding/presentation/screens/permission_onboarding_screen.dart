@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../../models/permission_models.dart';
 import '../../../../providers/settings_provider.dart';
+import '../../../../services/permission_request_controller.dart';
 import '../../../../theme/app_theme.dart';
+import '../../../../widgets/permission_status_row.dart';
 import '../providers/onboarding_provider.dart';
 
 class PermissionOnboardingScreen extends ConsumerStatefulWidget {
@@ -17,45 +20,43 @@ class PermissionOnboardingScreen extends ConsumerStatefulWidget {
 class _PermissionOnboardingScreenState
     extends ConsumerState<PermissionOnboardingScreen>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _fadeController;
+  late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
+  late final Animation<Offset> _slideAnimation;
+
+  final ScrollController _scrollController = ScrollController();
+  int _lastActiveIndex = -1;
+
+  /// Platform-filtered permission list (built once per screen lifecycle)
+  late final List<PermissionDefinition> _permissions;
 
   @override
   void initState() {
     super.initState();
-    _fadeController = AnimationController(
+    _permissions = PermissionRegistry.onboardingPermissions();
+    _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 450),
     );
-    _fadeAnimation = CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    );
-    _fadeController.forward();
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.04),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    _controller.forward();
   }
 
   @override
   void dispose() {
-    _fadeController.dispose();
+    _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  void _next() {
-    final state = ref.read(onboardingProvider);
-    if (state.isLastStep) {
-      _finish();
-      return;
-    }
-    _fadeController.reverse().then((_) {
-      ref.read(onboardingProvider.notifier).next();
-      _fadeController.forward();
-    });
-  }
-
-  void _previous() {
-    _fadeController.reverse().then((_) {
-      ref.read(onboardingProvider.notifier).previous();
-      _fadeController.forward();
+  void _goToScreen(int screen) {
+    _controller.reverse().then((_) {
+      ref.read(onboardingProvider.notifier).goToScreen(screen);
+      _controller.forward();
     });
   }
 
@@ -65,693 +66,401 @@ class _PermissionOnboardingScreenState
     context.go('/home');
   }
 
+  void _scrollToActive(int index) {
+    if (!_scrollController.hasClients || index < 0) return;
+    _scrollController.animateTo(
+      index * 92.0,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
     final state = ref.watch(onboardingProvider);
+    final controller = state.controller;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final idx = controller.activeIndex;
+      if (idx != _lastActiveIndex) {
+        _lastActiveIndex = idx;
+        if (idx >= 0) _scrollToActive(idx);
+      }
+    });
 
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.premiumNavyGradient),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildTopBar(state),
-              _buildProgressIndicator(state),
-              Expanded(
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: w < 360 ? 16 : 20),
-                    child: _buildStepContent(state),
-                  ),
-                ),
-              ),
-              _buildBottomBar(state),
-            ],
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: state.isWelcome
+                  ? _buildWelcomeScreen(w)
+                  : state.isPermissions
+                      ? _buildPermissionsScreen(w, state, controller)
+                      : _buildFinishedScreen(w, state, controller),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTopBar(OnboardingState state) {
-    if (state.step == OnboardingStep.welcome) return const SizedBox.shrink();
+  // ═══════════════════════════════════════════════════════════════════
+  // SCREEN 1 — Welcome
+  // ═══════════════════════════════════════════════════════════════════
+
+  Widget _buildWelcomeScreen(double w) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
-      child: Row(
+      padding: EdgeInsets.symmetric(horizontal: w < 360 ? 20 : 28),
+      child: Column(
         children: [
-          if (state.step != OnboardingStep.welcome)
-            IconButton(
-              onPressed: _previous,
-              icon: const Icon(Icons.arrow_back_ios_rounded, size: 20),
-              color: AppTheme.textMuted,
-            )
-          else
-            const SizedBox(width: 48),
-          const Spacer(),
+          const Spacer(flex: 2),
+          _buildProgressDots(0),
+          const SizedBox(height: 40),
+          Container(
+            width: 110,
+            height: 110,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: AppTheme.goldGradient,
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.goldPrimary.withValues(alpha: 0.35),
+                  blurRadius: 40,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.mosque_rounded, size: 56, color: Colors.white),
+          ),
+          const SizedBox(height: 40),
+          Text(
+            'مرحباً بك في رفيق',
+            style: GoogleFonts.cairo(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'سنقوم بإعداد التطبيق خلال أقل من دقيقة\nللحصول على أفضل تجربة.',
+            style: TextStyle(fontSize: 15, color: AppTheme.textMuted, height: 1.7),
+            textAlign: TextAlign.center,
+          ),
+          const Spacer(flex: 3),
+          _buildPrimaryButton(label: 'ابدأ الإعداد', onPressed: () => _goToScreen(1)),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // SCREEN 2 — Smart Permission Center
+  // ═══════════════════════════════════════════════════════════════════
+
+  Widget _buildPermissionsScreen(
+      double w, OnboardingState state, PermissionRequestController controller) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: w < 360 ? 16 : 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 12),
+          _buildProgressDots(1),
+          const SizedBox(height: 20),
+          Text(
+            'إعداد الأذان',
+            style: GoogleFonts.cairo(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'نحتاج هذه الصلاحيات لتشغيل الأذان في الوقت المناسب',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppTheme.textMuted.withValues(alpha: 0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          _buildCompletionIndicator(controller),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: AppTheme.glassCard(radius: 24),
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                itemCount: _permissions.length,
+                itemBuilder: (context, index) {
+                  final item = _permissions[index];
+                  final isActive = controller.activeIndex == index;
+                  final isLast = index == _permissions.length - 1;
+                  return Column(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutCubic,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: isActive ? 2 : 0,
+                        ),
+                        decoration: isActive
+                            ? BoxDecoration(
+                                color: AppTheme.goldPrimary.withValues(alpha: 0.06),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: AppTheme.goldPrimary.withValues(alpha: 0.2),
+                                  width: 1,
+                                ),
+                              )
+                            : null,
+                        child: PermissionStatusRow(
+                          item: item,
+                          status: controller.status(item.key),
+                          compact: true,
+                          onTap: item.showRetry
+                              ? () => ref
+                                  .read(onboardingProvider.notifier)
+                                  .retryPermission(item.key)
+                              : null,
+                        ),
+                      ),
+                      if (!isLast)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          child: Divider(height: 1, color: AppTheme.borderSubtle),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (controller.blockedByRoot) ...[
+            _buildBlockedNotice(),
+            const SizedBox(height: 12),
+          ],
+          _buildPrimaryButton(
+            label: controller.requesting
+                ? 'جاري التفعيل...'
+                : controller.blockedByRoot
+                    ? 'تفعيل الإشعارات'
+                    : 'متابعة',
+            onPressed: controller.requesting
+                ? null
+                : () {
+                    if (controller.blockedByRoot) {
+                      // Retry just the root permission
+                      ref.read(onboardingProvider.notifier).retryPermission(
+                            controller.blockedRoot ?? PermissionKey.notifications,
+                          );
+                    } else {
+                      ref.read(onboardingProvider.notifier).requestAllPermissions();
+                    }
+                  },
+          ),
+          const SizedBox(height: 12),
           TextButton(
             onPressed: _finish,
             child: Text(
               'تخطي',
-              style: TextStyle(
-                color: AppTheme.goldPrimary.withValues(alpha: 0.7),
-                fontSize: 14,
-              ),
+              style: TextStyle(color: AppTheme.goldPrimary.withValues(alpha: 0.6), fontSize: 14),
             ),
           ),
+          const SizedBox(height: 8),
         ],
       ),
     );
   }
 
-  Widget _buildProgressIndicator(OnboardingState state) {
-    final w = MediaQuery.sizeOf(context).width;
-    if (state.step == OnboardingStep.welcome) return const SizedBox.shrink();
+  // ═══════════════════════════════════════════════════════════════════
+  // SCREEN 3 — Finished (Navy/Gold theme)
+  // ═══════════════════════════════════════════════════════════════════
+
+  Widget _buildFinishedScreen(
+      double w, OnboardingState state, PermissionRequestController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: w < 360 ? 20 : 32, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: w < 360 ? 20 : 28),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: state.progress,
-              minHeight: 4,
-              backgroundColor: AppTheme.goldPrimary.withValues(alpha: 0.12),
-              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.goldPrimary),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${state.currentStepIndex + 1} / ${state.totalSteps}',
-            style: TextStyle(
-              color: AppTheme.textMuted.withValues(alpha: 0.5),
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStepContent(OnboardingState state) {
-    switch (state.step) {
-      case OnboardingStep.welcome:
-        return _buildWelcomeStep();
-      case OnboardingStep.notifications:
-        return _buildNotificationStep(state);
-      case OnboardingStep.exactAlarm:
-        return _buildExactAlarmStep(state);
-      case OnboardingStep.batteryOptimization:
-        return _buildBatteryStep(state);
-      case OnboardingStep.backgroundActivity:
-        return _buildBackgroundStep();
-      case OnboardingStep.autoStart:
-        return _buildAutoStartStep(state);
-      case OnboardingStep.audio:
-        return _buildAudioStep();
-      case OnboardingStep.summary:
-        return _buildSummaryStep(state);
-    }
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 1 — Welcome
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildWelcomeStep() {
-    final w = MediaQuery.sizeOf(context).width;
-    return Column(
-      children: [
-        const SizedBox(height: 48),
-        _buildIconContainer(
-          icon: Icons.mosque_rounded,
-          size: 100,
-          iconSize: 52,
-          gradient: AppTheme.goldGradient,
-        ),
-        const SizedBox(height: 40),
-        Text(
-          'مرحباً بك في رفيق',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-            fontFamily: 'Cairo',
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'لتقديم تجربة مثالية نحتاج إلى بعض الصلاحيات',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppTheme.textMuted,
-            height: 1.6,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildFeatureRow(
-          Icons.notifications_active_rounded,
-          'إشعارات دقيقة لأوقات الصلاة',
-        ),
-        const SizedBox(height: 12),
-        _buildFeatureRow(
-          Icons.volume_up_rounded,
-          'تشغيل الأذان في الوقت المحدد',
-        ),
-        const SizedBox(height: 12),
-        _buildFeatureRow(
-          Icons.phonelink_setup_rounded,
-          'عمل مستمر في الخلفية',
-        ),
-        const SizedBox(height: 12),
-        _buildFeatureRow(
-          Icons.lock_open_rounded,
-          'تشغيل الصوت على شاشة القفل',
-        ),
-        const SizedBox(height: 48),
-      ],
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 2 — Notifications
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildNotificationStep(OnboardingState state) {
-    return _buildPermissionStep(
-      icon: Icons.notifications_active_rounded,
-      title: 'إشعارات الصلاة',
-      description: 'نحتاج إذن الإشعارات لإرسال تذكير بأوقات الصلاة وتشغيل الأذان',
-      isGranted: state.notificationsGranted,
-      grantLabel: 'منح إذن الإشعارات',
-      denyLabel: 'إكمال بدون إذن',
-      onGrant: () async {
-        await ref.read(onboardingProvider.notifier).requestNotifications();
-      },
-      denyExplanation: state.notificationsGranted
-          ? null
-          : 'إشعارات الصلاة لن تعمل بدون هذا الإذن',
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 3 — Exact Alarm
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildExactAlarmStep(OnboardingState state) {
-    if (kIsWeb) return _buildWebSkipStep('الأذان الدقيق');
-    return _buildPermissionStep(
-      icon: Icons.alarm_rounded,
-      title: 'الأذان الدقيق',
-      description: 'يسمح هذا الإذن بتشغيل الأذان في الوقت الدقيق لصلاة الفجر والظهر والمغرب',
-      isGranted: state.exactAlarmGranted,
-      grantLabel: 'تفعيل الأذان الدقيق',
-      denyLabel: 'إكمال بدون تفعيل',
-      onGrant: () async {
-        await ref.read(onboardingProvider.notifier).requestExactAlarm();
-      },
-      denyExplanation: state.exactAlarmGranted
-          ? null
-          : 'قد لا يُ播放 الأذان في الوقت الدقيق',
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 4 — Battery Optimization
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildBatteryStep(OnboardingState state) {
-    if (kIsWeb) return _buildWebSkipStep('تحسين البطارية');
-    return _buildPermissionStep(
-      icon: Icons.battery_charging_full_rounded,
-      title: 'تحسين البطارية',
-      description: 'يمنع Android من إيقاف الأذان في الخلفية. هذا ضروري لتشغيل الأذان حتى إذا كان التطبيق مغلقاً',
-      isGranted: state.batteryOptimized,
-      grantLabel: 'إلغاء تحسين البطارية',
-      denyLabel: 'إكمال بدون إلغاء',
-      onGrant: () async {
-        await ref.read(onboardingProvider.notifier).requestBatteryExemption();
-      },
-      denyExplanation: state.batteryOptimized
-          ? null
-          : 'قد يتوقف الأذان في الخلفية عند تفعيل تحسين البطارية',
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 5 — Background Activity
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildBackgroundStep() {
-    if (kIsWeb) return _buildWebSkipStep('العمل في الخلفية');
-    return _buildPermissionStep(
-      icon: Icons.settings_backup_restore_rounded,
-      title: 'العمل في الخلفية',
-      description: 'بعض الشركات المصنعة مثل Xiaomi و Huawei و Oppo قد توقف الخدمات في الخلفية. تأكد من السماح للتطبيق بالعمل في الخلفية',
-      isGranted: true,
-      grantLabel: 'فتح إعدادات البطارية',
-      onGrant: () async {
-        await ref.read(onboardingProvider.notifier).openBatterySettings();
-      },
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 6 — Auto Start
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildAutoStartStep(OnboardingState state) {
-    if (kIsWeb) return _buildWebSkipStep('التشغيل التلقائي');
-    if (!state.autoStartSupported) return const SizedBox.shrink();
-    return _buildPermissionStep(
-      icon: Icons.power_rounded,
-      title: 'التشغيل التلقائي',
-      description: 'السماح للتطبيق بالتشغيل تلقائياً عند تشغيل الجهاز لضمان عمل الأذان بعد إعادة التشغيل',
-      isGranted: true,
-      grantLabel: 'فتح إعدادات التشغيل التلقائي',
-      onGrant: () async {
-        await ref.read(onboardingProvider.notifier).openAutoStart();
-      },
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 7 — Audio Confirmation
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildAudioStep() {
-    final w = MediaQuery.sizeOf(context).width;
-    return Column(
-      children: [
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildIconContainer(
-          icon: Icons.volume_up_rounded,
-          size: 90,
-          iconSize: 46,
-          gradient: AppTheme.goldGradient,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        Text(
-          'صوت الأذان',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-            fontFamily: 'Cairo',
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'سيتم تشغيل الأذان في الوقت المحدد حتى في الحالات التالية',
-          style: TextStyle(
-            fontSize: 15,
-            color: AppTheme.textMuted,
-            height: 1.6,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildFeatureRow(Icons.lock_rounded, 'عندما تكون الشاشة مقفلة'),
-        const SizedBox(height: 12),
-        _buildFeatureRow(Icons.minimize_rounded, 'عندما يكون التطبيق في الخلفية'),
-        const SizedBox(height: 12),
-        _buildFeatureRow(Icons.bedtime_rounded, 'عندما يكون الجهاز في وضع السكون'),
-        SizedBox(height: w < 360 ? 24 : 32),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppTheme.goldPrimary.withValues(alpha: 0.15),
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.check_circle_rounded,
-                color: AppTheme.goldPrimary,
-                size: 22,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'الأذان سيُ播放 بشكل موثوق في جميع الأحوال',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppTheme.goldPrimary,
-                    fontWeight: FontWeight.w600,
+          const Spacer(flex: 2),
+          _buildProgressDots(2),
+          const SizedBox(height: 40),
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.elasticOut,
+            builder: (context, value, child) =>
+                Transform.scale(scale: value, child: child),
+            child: Container(
+              width: 110,
+              height: 110,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: AppTheme.goldGradient,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.goldPrimary.withValues(alpha: 0.4),
+                    blurRadius: 40,
+                    spreadRadius: 4,
+                    offset: const Offset(0, 10),
                   ),
-                ),
+                ],
               ),
-            ],
+              child: const Icon(Icons.check_rounded, size: 56, color: Colors.white),
+            ),
           ),
-        ),
-        const SizedBox(height: 48),
-      ],
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // STEP 8 — Summary
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildSummaryStep(OnboardingState state) {
-    final w = MediaQuery.sizeOf(context).width;
-    return Column(
-      children: [
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildIconContainer(
-          icon: Icons.check_circle_rounded,
-          size: 90,
-          iconSize: 46,
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2ECC71), Color(0xFF27AE60)],
+          const SizedBox(height: 36),
+          Text(
+            'تم إعداد التطبيق بنجاح',
+            style: GoogleFonts.cairo(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+            textAlign: TextAlign.center,
           ),
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        Text(
-          'الإعداد جاهز',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-            fontFamily: 'Cairo',
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'ملخص حالة الصلاحيات',
-          style: TextStyle(
-            fontSize: 15,
-            color: AppTheme.textMuted,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildSummaryItem(
-          'إشعارات الصلاة',
-          state.notificationsGranted,
-        ),
-        const SizedBox(height: 8),
-        _buildSummaryItem(
-          'الأذان الدقيق',
-          state.exactAlarmGranted,
-        ),
-        const SizedBox(height: 8),
-        _buildSummaryItem(
-          'إلغاء تحسين البطارية',
-          state.batteryOptimized,
-        ),
-        const SizedBox(height: 8),
-        _buildSummaryItem(
-          'العمل في الخلفية',
-          true,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-      ],
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // Shared Components
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildPermissionStep({
-    required IconData icon,
-    required String title,
-    required String description,
-    required bool isGranted,
-    required String grantLabel,
-    String? denyLabel,
-    required VoidCallback onGrant,
-    String? denyExplanation,
-  }) {
-    final w = MediaQuery.sizeOf(context).width;
-    return Column(
-      children: [
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildIconContainer(
-          icon: icon,
-          size: 90,
-          iconSize: 46,
-          gradient: AppTheme.goldGradient,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-            fontFamily: 'Cairo',
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          description,
-          style: TextStyle(
-            fontSize: 15,
-            color: AppTheme.textMuted,
-            height: 1.6,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: w < 360 ? 24 : 32),
-        _buildPermissionStatus(isGranted),
-        SizedBox(height: w < 360 ? 18 : 24),
-        if (!isGranted)
-          SizedBox(
+          const SizedBox(height: 32),
+          Container(
             width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              onPressed: onGrant,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.goldPrimary,
-                foregroundColor: AppTheme.bgPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                elevation: 0,
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            decoration: AppTheme.glassCard(radius: 20),
+            child: Column(
+              children: _permissions
+                  .where((p) => !p.isInformational)
+                  .map((p) => [
+                        _buildCheckItem(
+                          p.title,
+                          controller.status(p.key) == PermissionUIStatus.granted,
+                        ),
+                        const SizedBox(height: 14),
+                      ])
+                  .expand((e) => e)
+                  .toList()
+                ..removeLast(),
+            ),
+          ),
+          const Spacer(flex: 3),
+          _buildPrimaryButton(label: 'ابدأ استخدام التطبيق', onPressed: _finish),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // Shared Components
+  // ═══════════════════════════════════════════════════════════════════
+
+  Widget _buildCompletionIndicator(PermissionRequestController controller) {
+    final granted = controller.grantedCount;
+    final total = controller.totalCount;
+    final allDone = granted == total;
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: granted.toDouble()),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, _) {
+        final displayCount = value.round();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
               child: Text(
-                grantLabel,
-                style: const TextStyle(
-                  fontSize: 16,
+                '$displayCount',
+                key: ValueKey(displayCount),
+                style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: allDone ? AppTheme.goldPrimary : AppTheme.textPrimary,
                 ),
               ),
             ),
-          ),
-        if (isGranted)
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2ECC71).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFF2ECC71).withValues(alpha: 0.3),
-              ),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: Color(0xFF2ECC71),
-                  size: 22,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'تم التفعيل بنجاح',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: const Color(0xFF2ECC71),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        if (!isGranted && denyLabel != null) ...[
-          const SizedBox(height: 12),
-          TextButton(
-            onPressed: _next,
-            child: Text(
-              denyLabel,
+            Text(
+              ' / $total',
               style: TextStyle(
-                color: AppTheme.textMuted.withValues(alpha: 0.6),
-                fontSize: 14,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textMuted.withValues(alpha: 0.5),
               ),
             ),
-          ),
-        ],
-        if (denyExplanation != null && !isGranted) ...[
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.orange.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.orange.withValues(alpha: 0.2),
+            const SizedBox(width: 8),
+            Text(
+              allDone ? 'تم التفعيل' : 'صلاحيات مفعّلة',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: allDone
+                    ? AppTheme.goldPrimary
+                    : AppTheme.textMuted.withValues(alpha: 0.6),
               ),
             ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.warning_amber_rounded,
-                  color: Colors.orange.withValues(alpha: 0.8),
-                  size: 18,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    denyExplanation,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.orange.withValues(alpha: 0.9),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-        const SizedBox(height: 48),
-      ],
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildIconContainer({
-    required IconData icon,
-    required double size,
-    required double iconSize,
-    required Gradient gradient,
-  }) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        gradient: gradient,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.goldPrimary.withValues(alpha: 0.3),
-            blurRadius: 30,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Icon(icon, size: iconSize, color: Colors.white),
-    );
-  }
-
-  Widget _buildPermissionStatus(bool isGranted) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        color: isGranted
-            ? const Color(0xFF2ECC71).withValues(alpha: 0.1)
-            : Colors.orange.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: isGranted
-              ? const Color(0xFF2ECC71).withValues(alpha: 0.3)
-              : Colors.orange.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isGranted ? Icons.check_circle_rounded : Icons.info_outline_rounded,
-            size: 18,
-            color: isGranted ? const Color(0xFF2ECC71) : Colors.orange,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            isGranted ? 'تم التفعيل' : 'لم يتم التفعيل',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: isGranted ? const Color(0xFF2ECC71) : Colors.orange,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureRow(IconData icon, String text) {
+  Widget _buildProgressDots(int current) {
     return Row(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(3, (i) {
+        final isActive = i == current;
+        final isDone = i < current;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: isDone || isActive ? 28 : 8,
+          height: 8,
           decoration: BoxDecoration(
-            color: AppTheme.goldPrimary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: isDone || isActive
+                ? AppTheme.goldPrimary
+                : AppTheme.goldPrimary.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(4),
           ),
-          child: Icon(icon, size: 20, color: AppTheme.goldPrimary),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 15,
-              color: AppTheme.textPrimary.withValues(alpha: 0.9),
-            ),
-          ),
-        ),
-      ],
+        );
+      }),
     );
   }
 
-  Widget _buildSummaryItem(String label, bool granted) {
+  Widget _buildBlockedNotice() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppTheme.bgCard.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(14),
+        color: Colors.orange.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: granted
-              ? const Color(0xFF2ECC71).withValues(alpha: 0.2)
-              : Colors.orange.withValues(alpha: 0.2),
+          color: Colors.orange.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            granted
-                ? Icons.check_circle_rounded
-                : Icons.warning_amber_rounded,
-            size: 20,
-            color: granted ? const Color(0xFF2ECC71) : Colors.orange,
-          ),
-          const SizedBox(width: 12),
+          const Icon(Icons.info_outline_rounded, size: 18, color: Colors.orange),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
-              label,
+              'إشعارات الصلاة مطلوبة لتفعيل باقي الصلاحيات',
               style: TextStyle(
-                fontSize: 15,
-                color: AppTheme.textPrimary.withValues(alpha: 0.9),
+                fontSize: 12,
+                color: Colors.orange.withValues(alpha: 0.8),
+                height: 1.4,
               ),
-            ),
-          ),
-          Text(
-            granted ? '✓' : '⚠',
-            style: TextStyle(
-              fontSize: 14,
-              color: granted ? const Color(0xFF2ECC71) : Colors.orange,
             ),
           ),
         ],
@@ -759,125 +468,60 @@ class _PermissionOnboardingScreenState
     );
   }
 
-  Widget _buildWebSkipStep(String title) {
-    return Column(
-      children: [
-        const SizedBox(height: 48),
-        Icon(
-          Icons.language_rounded,
-          size: 60,
-          color: AppTheme.goldPrimary.withValues(alpha: 0.5),
+  Widget _buildPrimaryButton({required String label, VoidCallback? onPressed}) {
+    final isEnabled = onPressed != null;
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppTheme.goldPrimary,
+          foregroundColor: AppTheme.bgPrimary,
+          disabledBackgroundColor: AppTheme.goldPrimary.withValues(alpha: 0.4),
+          disabledForegroundColor: AppTheme.bgPrimary.withValues(alpha: 0.6),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          elevation: isEnabled ? 4 : 0,
+          shadowColor: AppTheme.goldPrimary.withValues(alpha: 0.3),
         ),
-        const SizedBox(height: 24),
-        Text(
-          title,
+        child: Text(
+          label,
           style: TextStyle(
-            fontSize: 22,
+            fontSize: 17,
             fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-            fontFamily: 'Cairo',
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'هذه الصلاحيات مخصصة لنظام Android فقط',
-          style: TextStyle(
-            fontSize: 14,
-            color: AppTheme.textMuted,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 48),
-      ],
-    );
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // Bottom Bar
-  // ═══════════════════════════════════════════════════════════════════════
-
-  Widget _buildBottomBar(OnboardingState state) {
-    final w = MediaQuery.sizeOf(context).width;
-    if (state.step == OnboardingStep.welcome) {
-      return Padding(
-        padding: EdgeInsets.all(w < 360 ? 16 : 24),
-        child: SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: _next,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.goldPrimary,
-              foregroundColor: AppTheme.bgPrimary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
-              ),
-              elevation: 0,
-            ),
-            child: const Text(
-              'ابدأ الإعداد',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (state.isLastStep) {
-      return Padding(
-        padding: EdgeInsets.all(w < 360 ? 16 : 24),
-        child: SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: _finish,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.goldPrimary,
-              foregroundColor: AppTheme.bgPrimary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
-              ),
-              elevation: 0,
-            ),
-            child: const Text(
-              'دخول التطبيق',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(w < 360 ? 16 : 24, 8, w < 360 ? 16 : 24, w < 360 ? 16 : 24),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: ElevatedButton(
-          onPressed: _next,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.goldPrimary,
-            foregroundColor: AppTheme.bgPrimary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(26),
-            ),
-            elevation: 0,
-          ),
-          child: const Text(
-            'التالي',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            fontFamily: GoogleFonts.cairo().fontFamily,
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCheckItem(String label, bool granted) {
+    return Row(
+      children: [
+        Icon(
+          granted ? Icons.check_circle_rounded : Icons.cancel_rounded,
+          size: 22,
+          color: granted ? AppTheme.goldPrimary : AppTheme.textMuted.withValues(alpha: 0.4),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: granted ? AppTheme.textPrimary : AppTheme.textMuted.withValues(alpha: 0.5),
+          ),
+        ),
+        const Spacer(),
+        Text(
+           granted ? '-' : '-',
+          style: TextStyle(
+            fontSize: 14,
+            color: granted ? AppTheme.goldPrimary : AppTheme.textMuted.withValues(alpha: 0.3),
+          ),
+        ),
+      ],
     );
   }
 }

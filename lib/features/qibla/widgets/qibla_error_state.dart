@@ -1,6 +1,4 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/qibla_models.dart';
 
 class QiblaErrorState extends StatelessWidget {
@@ -17,134 +15,126 @@ class QiblaErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSensorError = status == QiblaStatus.noSensor;
-    final isPermDenied = status == QiblaStatus.permanentlyDenied;
-    final isNoPermission = status == QiblaStatus.noPermission;
-    final isNoGps = status == QiblaStatus.noGps;
+    final config = _getConfig(status);
 
-    final title = isSensorError
-        ? 'الجهاز لا يدعم بوصلة'
-        : isPermDenied
-            ? 'تم حظر صلاحية الموقع'
-            : isNoPermission
-                ? 'فعّل خدمة الموقع'
-                : isNoGps
-                    ? 'خدمة الموقع مطفأة'
-                    : 'حدث خطأ';
-
-    final subtitle = isSensorError
-        ? 'جهازك لا يحتوي على مستشعر بوصلة hardware'
-        : isPermDenied
-            ? 'تم رفض الصلاحية نهائياً — افتح إعدادات الجهاز وافعّل صلاحية الموقع يدوياً'
-            : isNoPermission
-                ? 'الرجاء منح صلاحية الموقع من إعدادات الجهاز'
-                : isNoGps
-                    ? 'خدمة الموقع مطفأة — افتحها من الإعدادات'
-                    : errorMessage ?? 'تحقق من إعدادات الجهاز وحاول مرة أخرى';
-
-    final icon = isSensorError
-        ? Icons.sensors_off_rounded
-        : isPermDenied
-            ? Icons.location_off_rounded
-            : isNoPermission
-                ? Icons.location_disabled_rounded
-                : isNoGps
-                    ? Icons.location_off_rounded
-                    : Icons.error_outline_rounded;
-
-    final color = isSensorError
-        ? Colors.amberAccent
-        : isPermDenied
-            ? Colors.redAccent
-            : isNoPermission
-                ? Colors.orangeAccent
-                : isNoGps
-                    ? Colors.cyanAccent
-                    : Colors.redAccent;
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        gradient: LinearGradient(
-          colors: [
-            QiblaColors.accentGold.withValues(alpha: 0.04),
-            Colors.transparent,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        border: Border.all(
-          color: QiblaColors.accentGold.withValues(alpha: 0.18),
-          width: 0.6,
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 72,
-                height: 72,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: config.color.withValues(alpha: 0.10),
+              ),
+              child: Icon(config.icon, color: config.color, size: 40),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              config.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: QiblaColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              config.subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 13,
+                height: 1.7,
+                color: QiblaColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 28),
+            GestureDetector(
+              onTap: onRetry,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      color.withValues(alpha: 0.08),
-                      color.withValues(alpha: 0.01),
-                    ],
-                    stops: const [0.3, 1.0],
-                  ),
+                  gradient: QiblaColors.goldGradient,
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: color, size: 38),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                title,
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: QiblaColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                subtitle,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 12,
-                  height: 1.8,
-                  color: QiblaColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: onRetry,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFD4AF37), Color(0xFFF2C94C)],
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    isPermDenied ? 'فتح الإعدادات' : 'إعادة المحاولة',
-                    style: GoogleFonts.notoKufiArabic(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: QiblaColors.compassBg,
-                    ),
+                child: Text(
+                  config.buttonText,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: QiblaColors.background,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  _ErrorConfig _getConfig(QiblaStatus status) {
+    switch (status) {
+      case QiblaStatus.noSensor:
+        return _ErrorConfig(
+          icon: Icons.sensors_off_rounded,
+          color: QiblaColors.lightGold,
+          title: 'الجهاز لا يدعم بوصلة',
+          subtitle: 'جهازك لا يحتوي على مستشعر بوصلة',
+          buttonText: 'حسناً',
+        );
+      case QiblaStatus.noPermission:
+        return _ErrorConfig(
+          icon: Icons.location_disabled_rounded,
+          color: QiblaColors.gold,
+          title: 'فعّل خدمة الموقع',
+          subtitle: 'الرجاء منح صلاحية الموقع من إعدادات الجهاز',
+          buttonText: 'إعادة المحاولة',
+        );
+      case QiblaStatus.permanentlyDenied:
+        return _ErrorConfig(
+          icon: Icons.location_off_rounded,
+          color: QiblaColors.danger,
+          title: 'تم حظر صلاحية الموقع',
+          subtitle: 'افتح إعدادات الجهاز وافعّل صلاحية الموقع يدوياً',
+          buttonText: 'فتح الإعدادات',
+        );
+      case QiblaStatus.noGps:
+        return _ErrorConfig(
+          icon: Icons.gps_off_rounded,
+          color: QiblaColors.textSecondary,
+          title: 'خدمة الموقع مطفأة',
+          subtitle: 'افتح خدمة الموقع من إعدادات الجهاز',
+          buttonText: 'إعادة المحاولة',
+        );
+      default:
+        return _ErrorConfig(
+          icon: Icons.error_outline_rounded,
+          color: QiblaColors.danger,
+          title: 'حدث خطأ',
+          subtitle: errorMessage ?? 'تحقق من إعدادات الجهاز وحاول مرة أخرى',
+          buttonText: 'إعادة المحاولة',
+        );
+    }
+  }
+}
+
+class _ErrorConfig {
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String subtitle;
+  final String buttonText;
+
+  const _ErrorConfig({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.subtitle,
+    required this.buttonText,
+  });
 }

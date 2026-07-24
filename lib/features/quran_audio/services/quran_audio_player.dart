@@ -52,12 +52,14 @@ class QuranAudioPlayer {
     required Moshaf moshaf,
     required List<int> surahNumbers,
     required int startIndex,
+    String? Function(int surahNumber)? localPathForSurah,
   }) async {
     await _handler.setQueue(
       reciter: reciter,
       moshaf: moshaf,
       surahNumbers: surahNumbers,
       startIndex: startIndex,
+      localPathForSurah: localPathForSurah,
     );
   }
 

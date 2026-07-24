@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
@@ -241,12 +242,18 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
   }
 
   bool _hasRestored = false;
+  bool _userStartedPlayback = false;
+  bool _userExplicitlyClosed = false;
 
   Future<void> _restoreOnStartup() async {
     if (_hasRestored) return;
     _hasRestored = true;
     await Future.delayed(const Duration(milliseconds: 500));
-    await restorePlayback();
+    if (!_userStartedPlayback && !_userExplicitlyClosed) {
+      await restorePlayback();
+    } else {
+      debugPrint('[AudioPlayerNotifier] SKIP restore — ${_userExplicitlyClosed ? "user explicitly closed" : "user already started playback"}');
+    }
   }
 
   void _listenToPlayer() {
@@ -359,6 +366,8 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
     required int surahNumber,
     String? localPath,
   }) async {
+    debugPrint('[AudioPlayerNotifier] PLAY SURAH: reciter=${reciter.id} surah=$surahNumber localPath=$localPath');
+    _userStartedPlayback = true;
     final name = surahName(surahNumber);
 
     state = state.copyWith(
@@ -386,6 +395,7 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
       );
       _saveRecentlyPlayed(reciter, moshaf, surahNumber, name);
     } catch (e) {
+      debugPrint('[AudioPlayerNotifier] PLAY SURAH error: $e');
       state = state.copyWith(
         hasError: true,
         errorMessage: 'تعذر تشغيل السورة',
@@ -401,9 +411,13 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
     required Moshaf moshaf,
     required List<int> surahNumbers,
     required int startIndex,
+    String? Function(int surahNumber)? localPathForSurah,
   }) async {
     final surahNum = surahNumbers[startIndex];
     final name = surahName(surahNum);
+    final localPath = localPathForSurah?.call(surahNum);
+    debugPrint('[AudioPlayerNotifier] PLAY SURAH QUEUE: reciter=${reciter.id} startSurah=$surahNum localPath=$localPath');
+    _userStartedPlayback = true;
 
     state = state.copyWith(
       currentReciter: reciter,
@@ -427,9 +441,11 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
         moshaf: moshaf,
         surahNumbers: surahNumbers,
         startIndex: startIndex,
+        localPathForSurah: localPathForSurah,
       );
       _saveRecentlyPlayed(reciter, moshaf, surahNum, name);
     } catch (e) {
+      debugPrint('[AudioPlayerNotifier] PLAY SURAH QUEUE error: $e');
       state = state.copyWith(
         hasError: true,
         errorMessage: 'تعذر تشغيل السور',
@@ -441,14 +457,18 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
   }
 
   Future<void> togglePlayPause() async {
+    debugPrint('[AudioPlayerNotifier] TOGGLE PLAY/PAUSE: isPlaying=${state.isPlaying} isPaused=${state.isPaused}');
     if (state.isPlaying) {
+      debugPrint('[AudioPlayerNotifier] -> PAUSE');
       await _player.pause();
-    } else if (state.isPaused) {
+    } else if (state.isPaused || state.isStopped || state.isBuffering) {
+      debugPrint('[AudioPlayerNotifier] -> PLAY/RESUME');
       await _player.resume();
     }
   }
 
   Future<void> stop() async {
+    debugPrint('[AudioPlayerNotifier] STOP');
     await _player.stop();
     state = state.copyWith(
       isPlaying: false,
@@ -458,6 +478,16 @@ class AudioPlayerNotifier extends StateNotifier<AudioPlayerState> {
       isBuffering: false,
     );
     await _storage.clearPlaybackState();
+  }
+
+  Future<void> close() async {
+    debugPrint('[AudioPlayerNotifier] CLOSE — fully stopping and clearing player');
+    _userExplicitlyClosed = true;
+    _sleepTimer?.cancel();
+    _persistDebounce?.cancel();
+    await _player.handler.closePlayback();
+    await _storage.clearPlaybackState();
+    state = const AudioPlayerState();
   }
 
   Future<void> seekTo(Duration position) async {

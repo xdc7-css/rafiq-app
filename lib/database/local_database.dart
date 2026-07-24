@@ -68,4 +68,15 @@ abstract class LocalDatabaseService {
   Future<List<SearchHistoryEntry>> getRecentSearches({int limit = 20});
   Future<void> addSearchHistory(String query, {int resultCount = 0});
   Future<void> clearSearchHistory();
+
+  // ── Memorials (Mercy Register) ──────────────────────────────────────
+  Future<List<MemorialEntry>> getMemorials({String? userId, int limit = 20, int offset = 0});
+  Stream<List<MemorialEntry>> watchMemorials({String? userId});
+  Future<MemorialEntry?> getMemorialById(String memorialId);
+  Future<void> putMemorial(MemorialEntry m);
+  Future<void> deleteMemorialById(String memorialId);
+
+  // ── Rewards (Mercy Register) ────────────────────────────────────────
+  Future<List<RewardEntry>> getRewardsByMemorialId(String memorialId, {int limit = 50});
+  Future<void> putReward(RewardEntry r);
 }

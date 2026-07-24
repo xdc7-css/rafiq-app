@@ -32,7 +32,11 @@ class AdhkarScreen extends ConsumerWidget {
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: SimpleGlassCard(
-              onTap: () => context.push('/adhkar/${category.id}'),
+              onTap: () {
+                final memorialId = GoRouterState.of(context).uri.queryParameters['memorialId'];
+                final qp = memorialId != null ? '?memorialId=${Uri.encodeComponent(memorialId)}' : '';
+                context.push('/adhkar/${category.id}$qp');
+              },
               child: Row(
                 children: [
                   Container(

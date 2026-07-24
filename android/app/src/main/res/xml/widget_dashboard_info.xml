@@ -12,5 +12,4 @@
     android:widgetCategory="home_screen"
     android:previewLayout="@layout/widget_dashboard_4x4"
     android:label="لوحة رفيق"
-    android:description="@string/widget_dashboard_desc"
-    android:screenOrientation="unspecified" />
+    android:description="@string/widget_dashboard_desc" />

@@ -225,7 +225,7 @@ class _WidgetSettingsScreenState extends ConsumerState<WidgetSettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  Ar.font_Size,
+                  Ar.fontSize,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -347,13 +347,6 @@ class _WidgetSettingsScreenState extends ConsumerState<WidgetSettingsScreen> {
         children: [
           Row(
             children: [
-              Text(
-                '☪',
-                style: TextStyle(
-                  fontSize: _fontSize * 0.9,
-                  color: const Color(0xFFD8B56A),
-                ),
-              ),
               const SizedBox(width: 6),
               Text(
                 'الفجر',
@@ -457,7 +450,6 @@ class _WidgetSettingsScreenState extends ConsumerState<WidgetSettingsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('☪', style: TextStyle(fontSize: _fontSize * 1.2, color: const Color(0xFFD8B56A))),
           const SizedBox(height: 4),
           Text(
             'الفجر',
@@ -670,7 +662,7 @@ class _WidgetSettingsScreenState extends ConsumerState<WidgetSettingsScreen> {
           Row(
             children: [
               Text(
-                '☪ رفيق',
+                'رفيق',
                 style: TextStyle(
                   fontSize: _fontSize * 0.9,
                   fontWeight: FontWeight.bold,
@@ -713,7 +705,8 @@ class _WidgetSettingsScreenState extends ConsumerState<WidgetSettingsScreen> {
           // Quran
           Row(
             children: [
-              Text('📖 ', style: TextStyle(fontSize: _fontSize * 0.7)),
+              Icon(Icons.menu_book_outlined, size: _fontSize * 0.7, color: _textColor),
+              const SizedBox(width: 4),
               Text(
                 'سورة البقرة - الآية ٢٥٥',
                 style: TextStyle(fontSize: _fontSize * 0.65, color: _textColor),
@@ -734,7 +727,8 @@ class _WidgetSettingsScreenState extends ConsumerState<WidgetSettingsScreen> {
           // Tasbih
           Row(
             children: [
-              Text('📿 ', style: TextStyle(fontSize: _fontSize * 0.7)),
+              Icon(Icons.auto_awesome_outlined, size: _fontSize * 0.7, color: const Color(0xFFD8B56A)),
+              const SizedBox(width: 4),
               Text(
                 'سبحان الله',
                 style: TextStyle(

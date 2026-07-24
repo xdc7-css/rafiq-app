@@ -93,7 +93,14 @@ class _WidgetStudioScreenState extends ConsumerState<WidgetStudioScreen>
         ),
         // ── Right: Controls (45%) ──
         Expanded(
-          child: _buildControlsPanel(studio),
+          child: Container(
+            color: AppTheme.bgPrimary,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              physics: const BouncingScrollPhysics(),
+              children: _buildControlChildren(studio),
+            ),
+          ),
         ),
       ],
     );
@@ -210,41 +217,45 @@ class _WidgetStudioScreenState extends ConsumerState<WidgetStudioScreen>
     );
   }
 
+  List<Widget> _buildControlChildren(WidgetStudioState studio) {
+    return [
+      // ── Widget Type ──
+      const WidgetTypeSelector(),
+      const SizedBox(height: 24),
+      // ── Size ──
+      const WidgetSizeSelector(),
+      const SizedBox(height: 24),
+      // ── Theme ──
+      const ThemeSelector(),
+      const SizedBox(height: 24),
+      // ── Appearance ──
+      const AppearanceSection(),
+      const SizedBox(height: 24),
+      // ── Typography ──
+      const TypographySection(),
+      const SizedBox(height: 24),
+      // ── Layout ──
+      const LayoutSection(),
+      const SizedBox(height: 24),
+      // ── Advanced ──
+      const AdvancedSection(),
+      const SizedBox(height: 24),
+      // ── Presets ──
+      const PresetManagement(),
+      const SizedBox(height: 24),
+      // ── Apply Button ──
+      _buildApplyButton(studio),
+      const SizedBox(height: 40),
+    ];
+  }
+
   Widget _buildControlsPanel(WidgetStudioState studio) {
     return Container(
       color: AppTheme.bgPrimary,
-      child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        physics: const BouncingScrollPhysics(),
-        children: [
-          // ── Widget Type ──
-          const WidgetTypeSelector(),
-          const SizedBox(height: 24),
-          // ── Size ──
-          const WidgetSizeSelector(),
-          const SizedBox(height: 24),
-          // ── Theme ──
-          const ThemeSelector(),
-          const SizedBox(height: 24),
-          // ── Appearance ──
-          const AppearanceSection(),
-          const SizedBox(height: 24),
-          // ── Typography ──
-          const TypographySection(),
-          const SizedBox(height: 24),
-          // ── Layout ──
-          const LayoutSection(),
-          const SizedBox(height: 24),
-          // ── Advanced ──
-          const AdvancedSection(),
-          const SizedBox(height: 24),
-          // ── Presets ──
-          const PresetManagement(),
-          const SizedBox(height: 24),
-          // ── Apply Button ──
-          _buildApplyButton(studio),
-          const SizedBox(height: 40),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _buildControlChildren(studio),
       ),
     );
   }

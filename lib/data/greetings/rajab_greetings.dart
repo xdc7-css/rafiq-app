@@ -113,7 +113,7 @@ const Map<GreetingPeriod, List<GreetingEntry>> rajabGreetings = {
     ),
     GreetingEntry(
       title: 'الدُّعَاءُ فِي رَجَبَ لَا يُرَدّ',
-      subtitle: 'الدُّعاءُ في رجب لا يُرَدّ،尤其是在 الظُّهْر',
+      subtitle: 'الدُّعاءُ في رجب لا يُرَدّ، خاصّةً في الظُّهْر',
     ),
     GreetingEntry(
       title: 'الظُّهْرُ وَشَهْرُ التَّقَرُّب',

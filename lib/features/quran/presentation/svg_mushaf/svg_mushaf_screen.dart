@@ -1,21 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/quran_index.dart';
+import '../../providers/quran_page_providers.dart';
 import '../../../bookmarks/data/models/bookmark_models.dart';
 import '../../../bookmarks/data/repository/bookmark_repository.dart';
 import '../../../quran_audio/providers/quran_audio_providers.dart';
+import '../../../mercy_register/providers/mercy_register_providers.dart';
+import '../../../mercy_register/data/models/reward.dart';
 import '../../../../theme/app_theme.dart';
+import '../../../../widgets/premium_success_notification.dart';
 import 'widgets/premium_floating_tools.dart';
 import 'widgets/reciter_selector_sheet.dart';
+import 'widgets/svg_render_helper.dart';
 
 const int _totalPages = 604;
-const String _assetBase = 'assets/quran-svg/svg';
 
 class SvgMushafScreen extends ConsumerStatefulWidget {
   final int initialPage;
@@ -34,13 +39,28 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
   int _currentPage = 1;
   bool _showChrome = true;
   Timer? _chromeTimer;
+  String? _memorialId;
+  bool _hasViewedFatiha = false;
+  bool _isSubmittingFatiha = false;
 
-  static const _bgImage = AssetImage('assets/quran/quranbackgroung/quraanbg.png');
+  static const _bgImage =
+      AssetImage('assets/quran/quranbackgroung/quraanbg.png');
   bool _bgPrecached = false;
+
+  bool _platformInfoLogged = false;
 
   @override
   void initState() {
     super.initState();
+
+    // ── Platform info (logged once) ──
+    if (!_platformInfoLogged) {
+      _platformInfoLogged = true;
+      final platform = defaultTargetPlatform;
+      debugPrint('[Platform] targetPlatform: $platform | kIsWeb: $kIsWeb');
+      debugPrint('[Platform] flutter_svg: 2.3.0 | vector_graphics: 1.2.2 | isar_community: 3.3.2');
+    }
+
     _currentPage = widget.initialPage;
     _pageController = PageController(initialPage: widget.initialPage - 1);
     _chromeController = AnimationController(
@@ -64,6 +84,12 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
     _chromeController.forward();
     _startChromeTimer();
     _saveReadingPosition();
+
+    // Initialize streamer and start background download.
+    ref.read(quranStreamerInitProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startBackgroundDownload(ref);
+    });
   }
 
   @override
@@ -122,6 +148,7 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
 
   void _jumpToPage(int page) {
     if (page < 1 || page > _totalPages) return;
+    prefetchQuranPages(ref, page);
     _pageController.animateToPage(
       page - 1,
       duration: const Duration(milliseconds: 400),
@@ -137,13 +164,27 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final audioState = ref.watch(audioPlayerNotifierProvider);
+    // Only watch hasActivePlayback to avoid rebuilding PageView on position ticks.
+    final showPlayer = ref.watch(
+      audioPlayerNotifierProvider.select((s) => s.hasActivePlayback),
+    );
+
+    _memorialId ??=
+        GoRouterState.of(context).uri.queryParameters['memorialId'];
+    if (_memorialId != null && !_hasViewedFatiha) {
+      final index = QuranIndex.instance;
+      if (index.isInitialized && index.surahs.isNotEmpty) {
+        final fatiha = index.surahs[0];
+        if (_currentPage > fatiha.endPage) {
+          _hasViewedFatiha = true;
+        }
+      }
+    }
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF071426) : Colors.grey.shade100,
       body: Stack(
-        children: [
-          // ── Background image (fixed, behind everything) ──
+          children: [
           Positioned.fill(
             child: Image(
               image: _bgImage,
@@ -156,14 +197,12 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
               },
             ),
           ),
-          // ── Subtle dark overlay for readability ──
           Positioned.fill(
             child: ColoredBox(
               color: (isDark ? const Color(0xFF071426) : Colors.black)
                   .withValues(alpha: 0.06),
             ),
           ),
-          // ── SVG PageView ──
           PageView.builder(
             controller: _pageController,
             itemCount: _totalPages,
@@ -171,21 +210,24 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
             onPageChanged: (index) {
               setState(() => _currentPage = index + 1);
               _saveReadingPosition();
+              prefetchQuranPages(ref, _currentPage);
               if (_showChrome) _startChromeTimer();
             },
             itemBuilder: (context, index) {
               final pageNum = index + 1;
-              return _SvgPage(
-                pageNumber: pageNum,
-                isDark: isDark,
-                onTap: () {
-                  _toggleChrome();
-                  if (_showChrome) _startChromeTimer();
-                },
+              return RepaintBoundary(
+                child: _StreamingSvgPage(
+                  pageNumber: pageNum,
+                  isDark: isDark,
+                  onTap: () {
+                    _toggleChrome();
+                    if (_showChrome) _startChromeTimer();
+                  },
+                ),
               );
             },
           ),
-          if (_showChrome) ...[
+            if (_showChrome) ...[
             Positioned(
               top: 0,
               left: 0,
@@ -195,7 +237,7 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
                 child: _PremiumTopBar(
                   currentPage: _currentPage,
                   pageInfo: _pageInfo,
-                  onBack: () => Navigator.of(context).pop(),
+                  onBack: () => context.go('/mercy-register'),
                   onSearch: _showSearchSheet,
                   onJumpToPage: _showPageNavigator,
                   onAudio: _showReciterSelector,
@@ -211,7 +253,7 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
                 child: _PremiumBottomBar(
                   currentPage: _currentPage,
                   pageInfo: _pageInfo,
-                  hasMiniPlayer: audioState.hasActivePlayback,
+                  hasMiniPlayer: showPlayer,
                   onPrev: () => _jumpToPage(_currentPage - 1),
                   onNext: () => _jumpToPage(_currentPage + 1),
                   onIndex: _showIndexSheet,
@@ -219,7 +261,6 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
                   onAudioToggle: () => ref
                       .read(audioPlayerNotifierProvider.notifier)
                       .togglePlayPause(),
-                  audioState: audioState,
                 ),
               ),
             ),
@@ -231,8 +272,52 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
               currentSurahNumber: _getCurrentSurahNumber(),
             ),
           ),
-        ],
-      ),
+          if (_memorialId != null && _hasViewedFatiha && !_isSubmittingFatiha)
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: MediaQuery.paddingOf(context).bottom + 88,
+              child: SafeArea(
+                top: false,
+                child: GestureDetector(
+                  onTap: _dedicateFatihaReward,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFD4AF37), Color(0xFFF5D06A)],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.goldPrimary.withValues(alpha: 0.35),
+                          blurRadius: 14,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.card_giftcard,
+                            color: Color(0xFF121F3D), size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          'إهداء ثواب القراءة',
+                          style: GoogleFonts.notoKufiArabic(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF121F3D),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
     );
   }
 
@@ -244,12 +329,49 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
     return 1;
   }
 
+  Future<void> _dedicateFatihaReward() async {
+    if (_isSubmittingFatiha || _memorialId == null) return;
+    setState(() => _isSubmittingFatiha = true);
+    try {
+      final repo = await ref.read(memorialRepositoryProvider.future);
+      final reward = Reward.create(
+        memorialId: _memorialId!,
+        type: RewardType.quranKhatmah,
+        note: 'سورة الفاتحة',
+      );
+      await repo.addReward(reward);
+      final updated = (await repo.getMemorialById(_memorialId!)).dataOrNull;
+      if (updated != null) {
+        ref.read(memorialsProvider.notifier).updateSingleMemorial(updated);
+      }
+      if (mounted) {
+        HapticFeedback.heavyImpact();
+        showPremiumSuccess(
+          context,
+          message: 'تم إهداء ثواب قراءة سورة الفاتحة إلى المرحوم، تقبل الله منكم.',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 700));
+        if (mounted) context.go('/mercy-register');
+      }
+    } catch (e) {
+      if (mounted) {
+        showPremiumSuccess(context, message: 'حدث خطأ، حاول مرة أخرى');
+        setState(() => _isSubmittingFatiha = false);
+      }
+    }
+  }
+
   void _showSearchSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const _SearchSheet(),
+      builder: (_) => _SearchSheet(
+        onPageSelected: (page) {
+          Navigator.pop(context);
+          _jumpToPage(page);
+        },
+      ),
     );
   }
 
@@ -309,23 +431,31 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
   }
 }
 
-// ─── SVG Page (unchanged rendering) ──────────────────────────────────────────
+// ─── Streaming SVG Page (with AutomaticKeepAliveClientMixin) ─────────────────
 
-class _SvgPage extends StatefulWidget {
+class _StreamingSvgPage extends ConsumerStatefulWidget {
   final int pageNumber;
   final bool isDark;
   final VoidCallback? onTap;
 
-  const _SvgPage({required this.pageNumber, required this.isDark, this.onTap});
+  const _StreamingSvgPage({
+    required this.pageNumber,
+    required this.isDark,
+    this.onTap,
+  });
 
   @override
-  State<_SvgPage> createState() => _SvgPageState();
+  ConsumerState<_StreamingSvgPage> createState() => _StreamingSvgPageState();
 }
 
-class _SvgPageState extends State<_SvgPage> {
+class _StreamingSvgPageState extends ConsumerState<_StreamingSvgPage>
+    with AutomaticKeepAliveClientMixin {
   final TransformationController _transformationController =
       TransformationController();
   bool _isZoomed = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -339,26 +469,20 @@ class _SvgPageState extends State<_SvgPage> {
       _isZoomed = false;
     } else {
       final tapPosition = details.localPosition;
-      // ignore: deprecated_member_use
       final matrix = Matrix4.identity()
         ..translate(tapPosition.dx, tapPosition.dy)
-        // ignore: deprecated_member_use
         ..scale(2.5)
-        // ignore: deprecated_member_use
         ..translate(-tapPosition.dx, -tapPosition.dy);
       _transformationController.value = matrix;
       _isZoomed = true;
     }
   }
 
-  String get _assetPath {
-    final padded = widget.pageNumber.toString().padLeft(3, '0');
-    return '$_assetBase/$padded.svg';
-  }
-
   @override
   Widget build(BuildContext context) {
-    final path = _assetPath;
+    super.build(context);
+    // Each page watches only its own provider — no parent rebuild needed.
+    final svgAsync = ref.watch(quranPageSvgProvider(widget.pageNumber));
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -377,63 +501,116 @@ class _SvgPageState extends State<_SvgPage> {
                 scale: 0.86,
                 child: AspectRatio(
                   aspectRatio: 0.685,
-                  child: SvgPicture.asset(
-                    path,
-                    fit: BoxFit.contain,
-                    placeholderBuilder: (context) => Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: 32,
-                            height: 32,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppTheme.goldPrimary.withValues(alpha: 0.5),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'صفحة ${widget.pageNumber}',
-                            style: GoogleFonts.notoKufiArabic(
-                              fontSize: 12,
-                              color: Colors.white.withValues(alpha: 0.3),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.red.withValues(alpha: 0.05),
-                        padding: const EdgeInsets.all(16),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.error_outline_rounded,
-                                size: 32,
-                                color: Colors.white.withValues(alpha: 0.3),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'خطأ في تحميل الصفحة',
-                                style: GoogleFonts.notoKufiArabic(
-                                  fontSize: 12,
-                                  color: Colors.white.withValues(alpha: 0.4),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  child: _buildSvgWidget(svgAsync),
                 ),
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSvgWidget(AsyncValue<String?> svgAsync) {
+    return svgAsync.when(
+      data: (content) {
+        if (content == null) {
+          debugPrint('[SvgRender] Page ${widget.pageNumber}: content is NULL → error widget');
+          return _buildErrorWidget();
+        }
+
+        // ── File validation logging ──
+        final isEmpty = content.isEmpty;
+        final hasSvgOpen = content.contains('<svg');
+        final hasSvgClose = content.contains('</svg>');
+        final hasXmlDecl = content.contains('<?xml');
+        debugPrint('[SvgRender] Page ${widget.pageNumber}: '
+            'len=${content.length} empty=$isEmpty hasSvgOpen=$hasSvgOpen '
+            'hasSvgClose=$hasSvgClose hasXmlDecl=$hasXmlDecl');
+
+        if (isEmpty || !hasSvgOpen) {
+          debugPrint('[SvgRender] Page ${widget.pageNumber}: INVALID content — '
+              'empty=$isEmpty hasSvgOpen=$hasSvgOpen');
+          return _buildErrorWidget();
+        }
+
+        // ── Widget info logging ──
+        final first100 = content.length > 100 ? content.substring(0, 100) : content;
+        debugPrint('[SvgRender] Page ${widget.pageNumber}: '
+            'widget=SvgPicture.string() strLen=${content.length} '
+            'startsXml=$hasXmlDecl startsSvg=$hasSvgOpen');
+        debugPrint('[SvgRender] Page ${widget.pageNumber} first100: $first100');
+
+        return buildSvgWidget(
+          svgContent: content,
+          fit: BoxFit.contain,
+          placeholderBuilder: (context) => _buildPlaceholder(),
+          errorBuilder: (context, error, stackTrace) {
+            debugPrint('[SvgRender] Page ${widget.pageNumber} EXCEPTION: '
+                'runtimeType=${error.runtimeType} message=$error');
+            debugPrint('[SvgRender] Page ${widget.pageNumber} StackTrace:\n$stackTrace');
+            return _buildErrorWidget();
+          },
+        );
+      },
+      loading: () => _buildPlaceholder(),
+      error: (err, stackTrace) {
+        debugPrint('[SvgRender] Page ${widget.pageNumber} AsyncValue.error: '
+            'runtimeType=${err.runtimeType} message=$err');
+        debugPrint('[SvgRender] Page ${widget.pageNumber} StackTrace:\n$stackTrace');
+        return _buildErrorWidget();
+      },
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 32,
+            height: 32,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppTheme.goldPrimary.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'صفحة ${widget.pageNumber}',
+            style: GoogleFonts.notoKufiArabic(
+              fontSize: 12,
+              color: Colors.white.withValues(alpha: 0.3),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Container(
+      color: Colors.red.withValues(alpha: 0.05),
+      padding: const EdgeInsets.all(16),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.error_outline_rounded,
+              size: 32,
+              color: Colors.white.withValues(alpha: 0.3),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'خطأ في تحميل الصفحة',
+              style: GoogleFonts.notoKufiArabic(
+                fontSize: 12,
+                color: Colors.white.withValues(alpha: 0.4),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -515,7 +692,8 @@ class _PremiumTopBar extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: AppTheme.goldPrimary.withValues(alpha: 0.12),
+                            color:
+                                AppTheme.goldPrimary.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -585,7 +763,7 @@ class _PremiumTopBar extends StatelessWidget {
 
 // ─── Premium Bottom Bar ──────────────────────────────────────────────────────
 
-class _PremiumBottomBar extends StatelessWidget {
+class _PremiumBottomBar extends ConsumerWidget {
   final int currentPage;
   final PageInfo? pageInfo;
   final bool hasMiniPlayer;
@@ -594,7 +772,6 @@ class _PremiumBottomBar extends StatelessWidget {
   final VoidCallback onIndex;
   final VoidCallback onBookmarks;
   final VoidCallback onAudioToggle;
-  final AudioPlayerState audioState;
 
   const _PremiumBottomBar({
     required this.currentPage,
@@ -605,16 +782,16 @@ class _PremiumBottomBar extends StatelessWidget {
     required this.onIndex,
     required this.onBookmarks,
     required this.onAudioToggle,
-    required this.audioState,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final audioState = ref.watch(audioPlayerNotifierProvider);
     final bottom = MediaQuery.paddingOf(context).bottom;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (hasMiniPlayer) _buildMiniPlayer(),
+        if (hasMiniPlayer) _buildMiniPlayer(audioState),
         Container(
           margin: EdgeInsets.only(bottom: bottom),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -671,7 +848,7 @@ class _PremiumBottomBar extends StatelessWidget {
     );
   }
 
-  Widget _buildMiniPlayer() {
+  Widget _buildMiniPlayer(AudioPlayerState audioState) {
     final elapsed = audioState.position;
     final total = audioState.duration;
     final progress = total.inMilliseconds > 0
@@ -832,9 +1009,8 @@ class _GlassIconButton extends StatelessWidget {
           color: Colors.white.withValues(alpha: enabled ? 0.08 : 0.03),
           shape: BoxShape.circle,
           border: Border.all(
-            color: AppTheme.goldPrimary.withValues(
-              alpha: enabled ? 0.25 : 0.08,
-            ),
+            color: AppTheme.goldPrimary
+                .withValues(alpha: enabled ? 0.25 : 0.08),
           ),
           boxShadow: enabled
               ? [
@@ -895,7 +1071,9 @@ class _PageIndicatorBadge extends StatelessWidget {
 // ─── Search Sheet ────────────────────────────────────────────────────────────
 
 class _SearchSheet extends StatefulWidget {
-  const _SearchSheet();
+  final ValueChanged<int> onPageSelected;
+
+  const _SearchSheet({required this.onPageSelected});
 
   @override
   State<_SearchSheet> createState() => _SearchSheetState();
@@ -1017,7 +1195,8 @@ class _SearchSheetState extends State<_SearchSheet> {
               if (_searching)
                 const Padding(
                   padding: EdgeInsets.all(24),
-                  child: CircularProgressIndicator(color: AppTheme.goldPrimary),
+                  child: CircularProgressIndicator(
+                      color: AppTheme.goldPrimary),
                 )
               else
                 Expanded(
@@ -1030,8 +1209,9 @@ class _SearchSheetState extends State<_SearchSheet> {
                       return _SearchResultTile(
                         ayah: ayah,
                         onTap: () {
-                          Navigator.pop(context);
-                          context.push('/mushaf?page=${ayah['page'] as int? ?? 1}');
+                          final page =
+                              ayah['page'] as int? ?? 1;
+                          widget.onPageSelected(page);
                         },
                       );
                     },
@@ -1064,9 +1244,8 @@ class _SearchResultTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-        ),
+        border:
+            Border.all(color: AppTheme.goldPrimary.withValues(alpha: 0.08)),
       ),
       child: Material(
         color: Colors.transparent,
@@ -1211,17 +1390,8 @@ class _PageNavigatorSheetState extends State<_PageNavigatorSheet> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(
-                              color: AppTheme.goldPrimary.withValues(
-                                alpha: 0.3,
-                              ),
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(
-                              color: AppTheme.goldPrimary.withValues(
-                                alpha: 0.3,
-                              ),
+                              color: AppTheme.goldPrimary
+                                  .withValues(alpha: 0.3),
                             ),
                           ),
                           suffixText: '/ $_totalPages',
@@ -1236,9 +1406,7 @@ class _PageNavigatorSheetState extends State<_PageNavigatorSheet> {
                     GestureDetector(
                       onTap: () {
                         final page = int.tryParse(_controller.text);
-                        if (page != null &&
-                            page >= 1 &&
-                            page <= _totalPages) {
+                        if (page != null && page >= 1 && page <= _totalPages) {
                           widget.onPageSelected(page);
                         }
                       },
@@ -1491,9 +1659,8 @@ class _IndexTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-        ),
+        border:
+            Border.all(color: AppTheme.goldPrimary.withValues(alpha: 0.08)),
       ),
       child: Material(
         color: Colors.transparent,
@@ -1630,8 +1797,7 @@ class _BookmarksSheetState extends State<_BookmarksSheet> {
                 child: _loading
                     ? const Center(
                         child: CircularProgressIndicator(
-                          color: AppTheme.goldPrimary,
-                        ),
+                            color: AppTheme.goldPrimary),
                       )
                     : _bookmarks.isEmpty
                         ? Center(
@@ -1656,27 +1822,27 @@ class _BookmarksSheetState extends State<_BookmarksSheet> {
                           )
                         : ListView.builder(
                             controller: scrollController,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16),
                             itemCount: _bookmarks.length,
                             itemBuilder: (context, i) {
                               final bm = _bookmarks[i];
                               return Container(
                                 margin: const EdgeInsets.only(bottom: 8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.05),
+                                  color:
+                                      Colors.white.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
-                                    color: AppTheme.goldPrimary.withValues(
-                                      alpha: 0.08,
-                                    ),
+                                    color: AppTheme.goldPrimary
+                                        .withValues(alpha: 0.08),
                                   ),
                                 ),
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () => widget.onPageSelected(
-                                      bm['page'] as int? ?? 1,
-                                    ),
+                                        bm['page'] as int? ?? 1),
                                     borderRadius: BorderRadius.circular(14),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12),
@@ -1703,9 +1869,10 @@ class _BookmarksSheetState extends State<_BookmarksSheet> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  bm['title'] as String? ?? '',
-                                                  style:
-                                                      GoogleFonts.notoKufiArabic(
+                                                  bm['title'] as String? ??
+                                                      '',
+                                                  style: GoogleFonts
+                                                      .notoKufiArabic(
                                                     color: Colors.white,
                                                     fontSize: 13,
                                                     fontWeight: FontWeight.w600,
@@ -1724,8 +1891,7 @@ class _BookmarksSheetState extends State<_BookmarksSheet> {
                                           Icon(
                                             Icons.chevron_left_rounded,
                                             color: Colors.white.withValues(
-                                              alpha: 0.3,
-                                            ),
+                                                alpha: 0.3),
                                           ),
                                         ],
                                       ),

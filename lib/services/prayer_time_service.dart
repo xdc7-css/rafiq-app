@@ -27,15 +27,6 @@ class PrayerTimeService {
     final now = DateTime.now();
     final cacheKey = _cacheKeyFor(latitude, longitude, now);
 
-    final cached = await _loadFromCache(cacheKey);
-    if (cached != null) {
-      final cacheDate = DateTime(cached.date.year, cached.date.month, cached.date.day);
-      final today = DateTime(now.year, now.month, now.day);
-      if (cacheDate == today) {
-        return cached;
-      }
-    }
-
     final data = await _api.fetchTimings(
       latitude: latitude,
       longitude: longitude,

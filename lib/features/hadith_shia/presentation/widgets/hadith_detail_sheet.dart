@@ -149,7 +149,7 @@ class HadithDetailSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            '❝',
+                            '"',
                             style: GoogleFonts.amiri(
                               fontSize: 32,
                               color: AppTheme.goldPrimary.withValues(alpha: 0.3),
@@ -167,7 +167,7 @@ class HadithDetailSheet extends StatelessWidget {
                             textDirection: TextDirection.rtl,
                           ),
                           Text(
-                            '❞',
+                            '"',
                             style: GoogleFonts.amiri(
                               fontSize: 32,
                               color: AppTheme.goldPrimary.withValues(alpha: 0.3),
@@ -239,22 +239,22 @@ class HadithDetailSheet extends StatelessWidget {
 
   void _share(BuildContext context) {
     final buf = StringBuffer();
-    buf.writeln('══════ ❁ ══════');
+    buf.writeln('══════════════════');
     buf.writeln();
-    buf.writeln('📖 ${hadith.sourceDisplayName}');
-    buf.writeln('🔢 حديث رقم ${hadith.number}');
+    buf.writeln(hadith.sourceDisplayName);
+    buf.writeln('حديث رقم ${hadith.number}');
     buf.writeln();
-    buf.writeln('❝');
+    buf.writeln('"');
     buf.writeln(hadith.text);
-    buf.writeln('❞');
+    buf.writeln('"');
     buf.writeln();
     if (hadith.narrator != null && hadith.narrator!.isNotEmpty) {
       buf.writeln('عن ${hadith.narrator}');
       buf.writeln();
     }
-    buf.writeln('══════ ❁ ══════');
+    buf.writeln('══════════════════');
     buf.writeln();
-    buf.writeln('🤍 رفيق');
+    buf.writeln('رفيق');
     Share.share(buf.toString());
     HapticFeedback.selectionClick();
   }

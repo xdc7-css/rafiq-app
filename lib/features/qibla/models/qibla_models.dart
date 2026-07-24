@@ -40,6 +40,15 @@ class QiblaData {
     return angularDiff < 3.0;
   }
 
+  double get angularDifference {
+    final diff = (heading - offset).abs() % 360;
+    return diff > 180 ? 360 - diff : diff;
+  }
+
+  double get alignmentProgress {
+    return (1.0 - (angularDifference / 90.0)).clamp(0.0, 1.0);
+  }
+
   QiblaData copyWith({
     QiblaStatus? status,
     double? heading,
@@ -68,23 +77,35 @@ class QiblaData {
 class QiblaColors {
   QiblaColors._();
 
-  static const Color primary = Color(0xFF1E2A78);
-  static const Color secondary = Color(0xFF3E5FE0);
-  static const Color accentGold = Color(0xFFD4AF37);
-  static const Color background = Color(0xFFF8F5EF);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color textPrimary = Color(0xFF1F2937);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color success = Color(0xFF2E7D32);
+  static const Color background = Color(0xFF081326);
+  static const Color surface = Color(0xFF11264E);
+  static const Color card = Color(0xFF172D4A);
+  static const Color gold = Color(0xFFD8A83A);
+  static const Color lightGold = Color(0xFFF3CF72);
+  static const Color success = Color(0xFF43D17B);
+  static const Color danger = Color(0xFFF45B69);
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textSecondary = Color(0xFFB7C2D0);
 
-  // Compass-specific dark palette (luxury brass aesthetic)
-  static const Color compassBg = Color(0xFF0B1730);
-  static const Color compassBgDeep = Color(0xFF060D1A);
-  static const Color compassBgMid = Color(0xFF0F1E38);
-  static const Color compassDial = Color(0xFF0A1428);
-  static const Color goldLight = Color(0xFFF7E08B);
-  static const Color goldDark = Color(0xFF6E5315);
+  static const Color goldDark = Color(0xFF8B6914);
   static const Color goldDeep = Color(0xFF4A3A0F);
-  static const Color brassHighlight = Color(0xFFC9A84C);
-  static const Color brassShadow = Color(0xFF3D2E0A);
+  static const Color compassFace = Color(0xFF0A1628);
+  static const Color compassRing = Color(0xFF1A2F4D);
+
+  static Color get cardBorder => gold.withValues(alpha: 0.15);
+  static Color get surfaceBorder => gold.withValues(alpha: 0.10);
+  static Color get glowGold => gold.withValues(alpha: 0.25);
+  static Color get glowSuccess => success.withValues(alpha: 0.30);
+
+  static const LinearGradient goldGradient = LinearGradient(
+    colors: [gold, lightGold],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient successGradient = LinearGradient(
+    colors: [success, Color(0xFF2ECC71)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

@@ -98,7 +98,7 @@ class PremiumSwitch extends StatelessWidget {
   }
 }
 
-// ─── Premium Settings Section Card ───
+// ─── Premium Settings Section Card (static, non-collapsible) ───
 class SettingsSectionCard extends StatelessWidget {
   final String title;
   final IconData icon;
@@ -161,6 +161,141 @@ class SettingsSectionCard extends StatelessWidget {
             endIndent: 20,
           ),
           ...children,
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Collapsible Accordion Section ───
+class SettingsAccordionSection extends StatefulWidget {
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
+  final bool initiallyExpanded;
+
+  const SettingsAccordionSection({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.children,
+    this.initiallyExpanded = false,
+  });
+
+  @override
+  State<SettingsAccordionSection> createState() =>
+      _SettingsAccordionSectionState();
+}
+
+class _SettingsAccordionSectionState extends State<SettingsAccordionSection>
+    with SingleTickerProviderStateMixin {
+  late bool _expanded;
+  late AnimationController _controller;
+  late Animation<double> _iconRotation;
+
+  @override
+  void initState() {
+    super.initState();
+    _expanded = widget.initiallyExpanded;
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+      value: _expanded ? 1.0 : 0.0,
+    );
+    _iconRotation = Tween<double>(begin: 0.0, end: 0.5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _toggle() {
+    setState(() => _expanded = !_expanded);
+    if (_expanded) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCard(
+      radius: 24,
+      padding: EdgeInsets.zero,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: _toggle,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 12, 4),
+              child: Row(
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppTheme.goldPrimary.withValues(alpha: 0.15),
+                          AppTheme.goldPrimary.withValues(alpha: 0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      size: 16,
+                      color: AppTheme.goldPrimary,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      style: GoogleFonts.notoKufiArabic(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.goldPrimary,
+                      ),
+                    ),
+                  ),
+                  AnimatedBuilder(
+                    animation: _controller,
+                    builder: (_, __) => Transform.rotate(
+                      angle: _iconRotation.value * 3.14159,
+                      child: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 20,
+                        color: AppTheme.goldPrimary.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(
+            height: 1,
+            color: AppTheme.goldPrimary.withValues(alpha: 0.08),
+            indent: 20,
+            endIndent: 20,
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: _expanded ? widget.children : [],
+            ),
+          ),
         ],
       ),
     );

@@ -1,20 +1,12 @@
 import 'dart:io';
-import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
-  final file = File('assets/quran/svg/001.svg');
-  final svgString = await file.readAsString();
-  print('SVG loaded: ${svgString.length} chars');
-  print('First 200 chars: ${svgString.substring(0, 200)}');
-
-  try {
-    final svg = SvgParser().parse(svgString);
-    print('Parse SUCCESS');
-    print('Root element: ${svg.name}');
-    print('Children: ${svg.children.length}');
-  } catch (e, s) {
-    print('Parse FAILED');
-    print('Exception: $e');
-    print('Stack: $s');
+  final file = File('assets/quran-svg/svg/001.svg');
+  if (await file.exists()) {
+    final bytes = await file.readAsBytes();
+    print('VEC loaded: ${bytes.length} bytes');
+    print('First 20 bytes (hex): ${bytes.take(20).map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}');
+  } else {
+    print('File not found: ${file.path}');
   }
 }
