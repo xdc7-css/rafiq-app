@@ -76,7 +76,7 @@ dependencies:
 
   # HTTP
   http: ^1.2.2
-  dio: ^5.9.2
+  dio: ^5.10.0
 
   # Firebase
   firebase_core: ^3.6.0
