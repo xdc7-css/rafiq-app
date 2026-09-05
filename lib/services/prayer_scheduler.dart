@@ -6,20 +6,13 @@ import 'adhan_scheduler.dart';
 import 'prayer_notification_service.dart';
 import 'storage_service.dart';
 
-/// PrayerScheduler — coordinates automatic daily rescheduling.
+/// PrayerScheduler — Coordinates automatic daily rescheduling and 48-hour alarm arming.
 ///
-/// Strategy (battery-friendly):
-///   • Does NOT run a continuous background service or timer.
-///   • Reschedules once per day at startup and whenever location changes.
-///   • A single midnight Timer fires inside the app to trigger the next
-///     day's schedule; if the app is closed, the OS boots the app at the
-///     first notification alarm (via BOOT_COMPLETED receiver), then
-///     scheduleForToday() is called again from main().
-///
-/// Usage:
-///   1. Call [PrayerScheduler.scheduleForToday] whenever prayer times are loaded.
-///   2. Call [PrayerScheduler.onLocationChanged] after city/GPS changes.
-///   3. Call [PrayerScheduler.dispose] on app shutdown.
+/// Strategy:
+///   • Schedules today's remaining prayers AND tomorrow's full prayers (48h rolling window)
+///     directly in the OS AlarmManager.
+///   • OS AlarmManager owns the wakeup schedule completely — zero reliance on keeping Dart isolates alive.
+///   • Reschedules immediately upon location change, settings change, or app resume.
 class PrayerScheduler {
   PrayerScheduler._();
   static final PrayerScheduler instance = PrayerScheduler._();
@@ -28,15 +21,12 @@ class PrayerScheduler {
   PrayerTimes? _lastScheduledTimes;
   int _lastScheduledDay = -1;
 
-  /// Schedule notifications for [prayerTimes].
-  ///
-  /// No-op if already scheduled for the same day and same location,
-  /// preventing duplicate reschedules.
+  /// Schedule notifications and exact alarms for [prayerTimes].
   Future<void> scheduleForToday(PrayerTimes prayerTimes, {bool force = false}) async {
     final now = DateTime.now();
     final todayKey = now.day + now.month * 100 + now.year * 10000;
 
-    // Skip if already scheduled for today with the same coordinates.
+    // Skip if already scheduled for today with the same coordinates unless forced
     if (!force &&
         _lastScheduledDay == todayKey &&
         _lastScheduledTimes != null &&
@@ -45,38 +35,43 @@ class PrayerScheduler {
       return;
     }
 
-    debugPrint('[PrayerScheduler] Scheduling for day=$todayKey (force=$force)');
+    debugPrint('[PrayerScheduler] Scheduling 48-hour rolling window for day=$todayKey (force=$force)');
 
     await PrayerNotificationService.scheduleForToday(prayerTimes);
 
-    // Route adhan alarms through native Android AlarmManager/ForegroundService
-    // so they play even when the Flutter engine is not running.
-    await AdhanScheduler.instance.schedulePrayers(prayerTimes);
+    // Route adhan alarms through native Android AlarmManager with 48h rolling window
+    final result = await AdhanScheduler.instance.schedulePrayers(prayerTimes);
+    debugPrint('[PrayerScheduler] Adhan scheduling result: $result');
 
     _lastScheduledDay = todayKey;
     _lastScheduledTimes = prayerTimes;
 
-    // Persist the last scheduled day for boot-receiver recovery.
+    // Persist the last scheduled day for boot-receiver recovery
     await StorageService.saveLastScheduledDay(todayKey);
 
-    // Arm a midnight timer to auto-reschedule for tomorrow.
+    // Arm midnight maintenance
     _armMidnightTimer(prayerTimes);
   }
 
   /// Call this whenever the user changes city or GPS location.
-  ///
-  /// Cancels all existing notifications and reschedules with new times.
   Future<void> onLocationChanged(PrayerTimes newPrayerTimes) async {
     debugPrint('[PrayerScheduler] Location changed, forcing reschedule');
-    _lastScheduledDay = -1; // Force reschedule even on same day.
+    _lastScheduledDay = -1;
     _midnightTimer?.cancel();
     _midnightTimer = null;
-    await scheduleForToday(newPrayerTimes);
+    await scheduleForToday(newPrayerTimes, force: true);
   }
 
-  /// Cancel all scheduled notifications.
+  /// Call this whenever adhan audio, volume, or enabled states change.
+  Future<void> onSettingsChanged(PrayerTimes prayerTimes) async {
+    debugPrint('[PrayerScheduler] Settings changed, forcing reschedule');
+    await AdhanScheduler.instance.updateSettings();
+    await scheduleForToday(prayerTimes, force: true);
+  }
+
+  /// Cancel all scheduled notifications and alarms.
   Future<void> cancelAll() async {
-    debugPrint('[PrayerScheduler] Cancelling all');
+    debugPrint('[PrayerScheduler] Cancelling all scheduled alarms');
     _midnightTimer?.cancel();
     _midnightTimer = null;
     _lastScheduledDay = -1;
@@ -104,24 +99,17 @@ class PrayerScheduler {
     );
     final delay = midnight.difference(now);
 
-    debugPrint('[PrayerScheduler] Midnight timer armed (${delay.inMinutes} min)');
+    debugPrint('[PrayerScheduler] In-app midnight timer armed (${delay.inMinutes} min)');
 
     _midnightTimer = Timer(delay, () {
-      debugPrint('[PrayerScheduler] Midnight crossed, cancelling stale notifications');
-      // Tomorrow has begun — cancel stale banner notifications.
-      // Adhan alarms were already set by AlarmManager and will fire at the
-      // correct times. New alarms for tomorrow will be set when the user
-      // opens the app (PrayerTimesNotifier._checkDayChange detects this).
+      debugPrint('[PrayerScheduler] Midnight reached, refreshing active notifications');
       PrayerNotificationService.cancelAll();
     });
   }
 
   bool _isSameLocation(PrayerTimes a, PrayerTimes b) {
-    // Compare lat/lng rounded to 3 decimal places (~111m precision).
-    final latSame =
-        (a.latitude - b.latitude).abs() < 0.001;
-    final lngSame =
-        (a.longitude - b.longitude).abs() < 0.001;
+    final latSame = (a.latitude - b.latitude).abs() < 0.001;
+    final lngSame = (a.longitude - b.longitude).abs() < 0.001;
     return latSame && lngSame;
   }
 }

@@ -140,6 +140,7 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen>
         children: [
           _GlassBtn(
             icon: Icons.arrow_back_rounded,
+            label: 'رجوع إلى الصفحة الرئيسية',
             onTap: () => Navigator.pop(context),
           ),
           const SizedBox(width: 6),
@@ -691,25 +692,35 @@ class _BottomActionBtn extends StatelessWidget {
 class _GlassBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
-
-  const _GlassBtn({required this.icon, this.onTap});
+  final String? label;
+  const _GlassBtn({required this.icon, this.onTap, this.label});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          color: QiblaColors.gold.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: QiblaColors.gold.withValues(alpha: 0.15),
-            width: 0.5,
+    return Semantics(
+      button: true,
+      label: label ?? 'زر',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Container(
+          width: 48,
+          height: 48,
+          alignment: Alignment.center,
+          child: Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: QiblaColors.gold.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: QiblaColors.gold.withValues(alpha: 0.15),
+                width: 0.5,
+              ),
+            ),
+            child: Icon(icon, color: QiblaColors.gold, size: 18),
           ),
         ),
-        child: Icon(icon, color: QiblaColors.gold, size: 18),
       ),
     );
   }

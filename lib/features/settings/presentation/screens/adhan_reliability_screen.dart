@@ -105,15 +105,15 @@ class _AdhanReliabilityScreenState extends State<AdhanReliabilityScreen> {
     final diag = _diagnostics;
     if (diag == null) return const SizedBox.shrink();
 
-    final isOptimized = diag.isIgnoringBatteryOptimizations;
-    final color = isOptimized ? Colors.orange : Colors.green;
-    final icon = isOptimized
-        ? Icons.battery_alert_rounded
-        : Icons.battery_std_rounded;
-    final title = isOptimized ? 'البطارية مقيدة' : 'البطارية مُثبّتة';
-    final subtitle = isOptimized
-        ? 'نظام البطارية يقيد التطبيق — قد لا يعمل الأذان'
-        : 'التطبيق غير مقيد by البطارية — يعمل بشكل طبيعي';
+    final isExempted = diag.isIgnoringBatteryOptimizations;
+    final color = isExempted ? Colors.green : Colors.orange;
+    final icon = isExempted
+        ? Icons.battery_std_rounded
+        : Icons.battery_alert_rounded;
+    final title = isExempted ? 'البطارية غير مقيدة' : 'البطارية مقيدة';
+    final subtitle = isExempted
+        ? 'التطبيق مستثنى من قيود توفير الطاقة — الأذان يعمل بكفاءة'
+        : 'نظام توفير الطاقة يقيد التطبيق — قد يتأخر الأذان في وضع الخمول';
 
     return Container(
       padding: const EdgeInsets.all(16),

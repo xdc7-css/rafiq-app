@@ -495,7 +495,7 @@ class _FeaturedVerseCard extends StatelessWidget {
       entranceDelay: entranceDelay,
       accentColor: AppTheme.goldPrimary,
       backgroundImage: const DecorationImage(
-        image: AssetImage('assets/images/ziaratbg.png'),
+        image: AssetImage('assets/images/ziaratbg.webp'),
         fit: BoxFit.cover,
       ),
       gradient: LinearGradient(
@@ -844,7 +844,7 @@ class _DuaCompactTile extends StatelessWidget {
       entranceDelay: entranceDelay,
       accentColor: accent,
       backgroundImage: const DecorationImage(
-        image: AssetImage('assets/images/adyabg.png'),
+        image: AssetImage('assets/images/adyabg.webp'),
         fit: BoxFit.cover,
         alignment: Alignment.centerLeft,
       ),
@@ -963,7 +963,7 @@ class _SahifaEditorialTile extends StatelessWidget {
       entranceDelay: entranceDelay,
       accentColor: accent,
       backgroundImage: const DecorationImage(
-        image: AssetImage('assets/images/sahifasjadiabg.png'),
+        image: AssetImage('assets/images/sahifasjadiabg.webp'),
         fit: BoxFit.cover,
         alignment: Alignment.centerLeft,
       ),
@@ -1248,7 +1248,7 @@ class _OccasionsTimelineTile extends StatelessWidget {
       entranceDelay: entranceDelay,
       accentColor: accent,
       backgroundImage: const DecorationImage(
-        image: AssetImage('assets/images/munasabatbg.png'),
+        image: AssetImage('assets/images/munasabatbg.webp'),
         fit: BoxFit.cover,
         alignment: Alignment.centerLeft,
       ),

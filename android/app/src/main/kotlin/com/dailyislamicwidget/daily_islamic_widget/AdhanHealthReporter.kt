@@ -241,18 +241,20 @@ object AdhanHealthReporter {
     }
 
     private fun checkNextPrayerScheduled(context: Context): Map<String, Any> {
+        val verification = AdhanPlugin(context).verifyActiveAlarms()
+        val verifiedCount = verification["verifiedCount"] as? Int ?: 0
         val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val nextAlarm = am.nextAlarmClock?.triggerTime
-        val scheduled = nextAlarm != null && nextAlarm > System.currentTimeMillis()
-        Log.i(TAG, "[HEALTH] next_prayer_scheduled=$scheduled (nextAlarm=$nextAlarm)")
+        val scheduled = verifiedCount > 0 || (nextAlarm != null && nextAlarm > System.currentTimeMillis())
+        Log.i(TAG, "[HEALTH] next_prayer_scheduled=$scheduled (verifiedCount=$verifiedCount, nextAlarm=$nextAlarm)")
         return buildCheck(
             id = "next_prayer_scheduled",
             section = "scheduling",
-            title = "الصلاة القادمة مجدولة",
+            title = "المنبهات مجدولة ومحققة في النظام",
             status = if (scheduled) STATUS_HEALTHY else STATUS_WARNING,
             value = scheduled,
-            description = if (scheduled) "هناك منبّه مجدول للصلاة القادمة" else "لا يوجد منبّه مجدول",
-            recommendation = if (scheduled) "" else "أعد فتح التطبيق لإعادة جدولة الأذان",
+            description = if (scheduled) "تم التحقق من وجود $verifiedCount منبه أذان مسجل في AlarmManager" else "لا توجد منبهات مسجلة في نظام أندرويد",
+            recommendation = if (scheduled) "" else "أعد فتح التطبيق لإعادة جدولة الأذان والتحقق من الصلاحيات",
         )
     }
 

@@ -18,9 +18,16 @@
     public <init>(android.content.Context, androidx.work.WorkerParameters);
 }
 -keep class androidx.work.impl.** { *; }
--keepattributes *Annotation*
+
+# ─── Isar Database & Native Libs ───
+-keep class io.isar.** { *; }
+
+# ─── Just Audio & Audio Service ───
+-keep class com.ryanheise.just_audio.** { *; }
+-keep class com.ryanheise.audioservice.** { *; }
 
 # ─── Prevent R8 from stripping interfaces / annotations ───
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes InnerClasses
+

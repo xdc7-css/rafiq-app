@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -89,6 +90,14 @@ class _PrayerTimesScreenState extends ConsumerState<PrayerTimesScreen>
       ),
       centerTitle: true,
       actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: _GlassIconButton(
+            icon: Icons.health_and_safety_outlined,
+            onTap: () => context.push('/settings/adhan-diagnostics'),
+            isDark: isDark,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(right: 12),
           child: _GlassIconButton(

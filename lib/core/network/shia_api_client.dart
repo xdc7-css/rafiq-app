@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../config/debug_flags.dart';
-import '../errors/exceptions.dart';
 import 'api_cache_service.dart';
 
 class ShiaApiClient {
@@ -147,33 +146,6 @@ class ShiaApiClient {
       debugPrint(
           '[RapidAPI Error] Unexpected exception in searchHadiths($bookId, $query): $e');
       return <Map<String, dynamic>>[];
-    }
-  }
-
-  Exception _handleDioError(DioException e) {
-    switch (e.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return NetworkException(message: 'انتهت مهلة الاتصال بالخادم');
-      case DioExceptionType.connectionError:
-        return NetworkException(message: 'لا يوجد اتصال بالإنترنت');
-      case DioExceptionType.badResponse:
-        final statusCode = e.response?.statusCode;
-        if (statusCode == 401 || statusCode == 403) {
-          return ServerException(
-              message: 'غير مصرح أو الاشتراك غير مفعّل',
-              statusCode: statusCode);
-        }
-        if (statusCode == 429) {
-          return ServerException(
-              message: 'طلبات كثيرة جداً، يرجى الانتظار قليلاً',
-              statusCode: statusCode);
-        }
-        return ServerException(
-            message: 'خطأ في الخادم', statusCode: statusCode);
-      default:
-        return NetworkException(message: 'خطأ غير متوقع في الاتصال');
     }
   }
 }

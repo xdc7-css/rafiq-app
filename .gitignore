@@ -1,77 +1,125 @@
-# Miscellaneous
+# ==============================================================================
+# Rafeeq (رَفِيقْ) — Comprehensive .gitignore
+# Professional Git Ignore Policy for Flutter / Android / iOS / Web / AI Tooling
+# ==============================================================================
+
+# ── 1. Operating System & System Metadata ──
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── 2. Miscellaneous & Temporary Files ──
 *.class
 *.log
 *.pyc
 *.swp
+*.swo
+*~
 *.tmp
 *.temp
 *.orig
 *.rej
-.DS_Store
-.AppleDouble
-.LSOverride
-.atom/
-.build/
-.buildlog/
+*.bak
+*.backup
 .history
-.svn/
-.swiftpm/
 migrate_working_dir/
 
-# IDE and editor settings
+# ── 3. Crash Dumps & Debug Logs ──
+hs_err_pid*.log
+replay_pid*.log
+flutter_*.log
+flutter_*.txt
+*.stackdump
+
+# ── 4. IDE & Editor Artifacts ──
 .idea/
 .vscode/
+*.iml
+*.iws
+*.ipr
 *.code-workspace
+.atom/
+.settings/
+.project
+.classpath
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# ── 5. Flutter / Dart / Pub ──
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.pub-cache/
+.packages
 .pub/
+.pub-cache/
 build/
 coverage/
+**/doc/api/
 *.symbols
-
-# Generated app artifacts
 app.*.symbols
 app.*.map.json
 *.dart.js
 *.info.json
 
-# Android build artifacts
+# ── 6. Android Platform & Gradle ──
 android/.gradle/
+android/.kotlin/
+.kotlin/
 android/app/build/
 android/build/
 android/.idea/
+android/*.iml
+android/local.properties
+local.properties
+android/captures/
+.gradle/
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
 
-# iOS/macOS build artifacts
+# ── 7. iOS / macOS Ephemeral & CocoaPods ──
 ios/Pods/
+ios/.symlinks/
 ios/Flutter/Flutter.framework/
 ios/Flutter/Flutter.podspec
+ios/Flutter/.last_build_id
+ios/Flutter/ephemeral/
 macos/Pods/
+macos/.symlinks/
 macos/Build/
 macos/Flutter/ephemeral/
+*.xcworkspace
+*.xcuserdata
 
-# Linux/Windows build artifacts
+# ── 8. Linux / Windows Ephemeral ──
 linux/build/
 linux/flutter/ephemeral/
 windows/build/
 windows/flutter/ephemeral/
 
-# Firebase and local generated output
+# ── 9. Firebase & Cloud Tools ──
 .firebase/
 .firebaserc.local
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
-# Node and package manager artifacts
+# ── 10. Node.js / Functions ──
 node_modules/
 .npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Local environment and secrets
+# ── 11. Security, Keys & Secrets ──
 .env
 .env.*
+!.env.example
 *.jks
 *.keystore
 *.p12
@@ -81,25 +129,30 @@ node_modules/
 *.key
 *.crt
 *.csr
+*credentials*.json
+*service-account*.json
 
-# Android Studio outputs
-/android/app/debug
-/android/app/profile
-/android/app/release
-
-# Local toolchain and SDK
+# ── 12. Local Toolchain & Version Managers ──
 .fvm/
 
-# Temporary and backup files
-*.bak
-*.backup
-*.tmp
+# ── 13. AI Development Artifacts & Agent State ──
+.agents/
+.opencode/
+.claude/
+skills-lock.json
+*.ai.log
 
-# Release artifacts (attach to GitHub Release, don't commit)
+# ── 14. Release Binaries (Attach to GitHub Releases) ──
 *.apk
+*.aab
 *.zip
+*.ipa
 
-# Keep source assets and platform folders tracked
+# ── 15. Scratch & Ad-hoc Testing Scripts ──
+test_svg_*.dart
+test_*.scratch.dart
+
+# ── 16. Keep Source Assets and Required Config Tracked ──
 !android/
 !ios/
 !lib/
@@ -113,3 +166,5 @@ node_modules/
 !pubspec.lock
 !firebase.json
 !shorebird.yaml
+!.env.example
+

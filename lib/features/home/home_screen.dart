@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import '../../core/arabic_strings.dart';
 import '../../models/khatmah_model.dart';
 
@@ -12,6 +11,7 @@ import '../../providers/prayer_time_providers.dart';
 import '../../providers/settings_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/ds_components.dart';
+import '../../widgets/adaptive_page_container.dart';
 import '../../widgets/hadith_card.dart';
 import '../../widgets/star_background.dart';
 import '../../widgets/tasbih_hero_card.dart';
@@ -30,18 +30,19 @@ class _QuickAction {
   const _QuickAction(this.label, this.icon, this.route);
 }
 
+// Ordered by importance — most prominent feature first
 const _quickActions = [
+  _QuickAction('القرآن', Icons.auto_stories_rounded, '/quran'),
   _QuickAction('أوقات الصلاة', Icons.access_time_rounded, '/prayer-times'),
   _QuickAction('القبلة', Icons.explore_rounded, '/qibla'),
-  _QuickAction('القرآن', Icons.auto_stories_rounded, '/quran'),
   _QuickAction('التسبيح', Icons.repeat_rounded, '/tasbeeh'),
   _QuickAction('أذكار الصباح', Icons.wb_sunny_rounded, '/adhkar/morning'),
   _QuickAction('أذكار المساء', Icons.nights_stay_rounded, '/adhkar/evening'),
   _QuickAction('الأدعية', Icons.self_improvement_rounded, '/ziyarat'),
   _QuickAction('كتب الحديث', Icons.menu_book_rounded, '/books'),
   _QuickAction('المفضلة', Icons.favorite_rounded, '/favorites'),
-  _QuickAction('بحث الأحاديث', Icons.search_rounded, '/hadith-search'),
   _QuickAction('التنزيلات', Icons.download_rounded, '/audio-library'),
+  _QuickAction('بحث الأحاديث', Icons.search_rounded, '/hadith-search'),
   _QuickAction('المزيد', Icons.apps_rounded, '/more'),
 ];
 
@@ -81,8 +82,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final locale = ref.watch(localeProvider);
     final isRtl = locale.languageCode == 'ar';
     final w = MediaQuery.sizeOf(context).width;
-    final padH = w < 360 ? 16.0 : w < 420 ? 20.0 : 24.0;
-    final gap = w < 360 ? 24.0 : w < 420 ? 28.0 : 32.0;
+    final padH = w < 360
+        ? 16.0
+        : w < 420
+        ? 20.0
+        : 24.0;
+    final gap = w < 360
+        ? 24.0
+        : w < 420
+        ? 28.0
+        : 32.0;
     final smallGap = w < 360 ? 12.0 : 16.0;
 
     final times = prayerState.prayerTimes;
@@ -106,15 +115,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.fromLTRB(padH, padH, padH, gap),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _HomeHeader(isDark: isDark, isRtl: isRtl),
+              child: AdaptivePageContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _HomeHeader(isDark: isDark, isRtl: isRtl),
                   SizedBox(height: gap),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     child: _HomeGreeting(
-                      key: ValueKey('${greeting.period}-${greeting.hijriMonth}-${greeting.priority}'),
+                      key: ValueKey(
+                        '${greeting.period}-${greeting.hijriMonth}-${greeting.priority}',
+                      ),
                       text: greeting.title,
                       subtitle: greeting.subtitle,
                     ),
@@ -124,7 +136,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const PermissionStatusCard(),
                   SizedBox(height: gap),
 
-                  _buildSectionHeader('الصلاة القادمة', 'اعرف موعد الصلاة التالية'),
+                  _buildSectionHeader(
+                    'الصلاة القادمة',
+                    'اعرف موعد الصلاة التالية',
+                  ),
                   SizedBox(height: smallGap),
                   if (times != null)
                     RepaintBoundary(
@@ -146,7 +161,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   _buildSectionHeader('الوصول السريع'),
                   SizedBox(height: smallGap),
-                  _buildQuickActionsGrid(isDark),
+                  _buildQuickAccessPills(),
                   SizedBox(height: gap),
 
                   _buildSectionHeader('حديث اليوم'),
@@ -179,8 +194,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    ),
     );
   }
 
@@ -236,69 +252,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   // ═══════════════════════════════════════════════
-  // Quick Actions
+  // Quick Access — Capsule Pills
   // ═══════════════════════════════════════════════
 
-  Widget _buildQuickActionsGrid(bool isDark) {
-    final w = MediaQuery.sizeOf(context).width;
-    final cols = w < 360 ? 3 : 4;
-    final aspectRatio = w < 360 ? 0.82 : 0.85;
-    final iconBoxSize = w < 360 ? 36.0 : 44.0;
-    final iconSize = w < 360 ? 17.0 : 20.0;
-    final labelSize = w < 360 ? 9.0 : 11.0;
-    final spacing = w < 360 ? 8.0 : 12.0;
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: cols,
-        childAspectRatio: aspectRatio,
-        crossAxisSpacing: spacing,
-        mainAxisSpacing: spacing,
-      ),
-      itemCount: _quickActions.length,
-      itemBuilder: (context, index) {
-        final action = _quickActions[index];
-        return GestureDetector(
+  Widget _buildQuickAccessPills() {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 14,
+      alignment: WrapAlignment.start,
+      textDirection: TextDirection.rtl,
+      children: List.generate(_quickActions.length, (i) {
+        final action = _quickActions[i];
+        return QuickAccessPill(
+          icon: action.icon,
+          label: action.label,
+          animationIndex: i,
           onTap: () => context.push(action.route),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppTheme.bgCard.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppTheme.borderGold, width: 0.5),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: iconBoxSize,
-                  height: iconBoxSize,
-                  decoration: BoxDecoration(
-                    color: AppTheme.goldPrimary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(action.icon, color: AppTheme.goldPrimary, size: iconSize),
-                ),
-                const SizedBox(height: 6),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    action.label,
-                    style: GoogleFonts.notoKufiArabic(
-                      fontSize: labelSize,
-                      fontWeight: FontWeight.w500,
-                      color: AppTheme.textMuted,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
         );
-      },
+      }),
     );
   }
 
@@ -313,7 +284,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildDeferredHadith() {
     final dailyHadith = ref.watch(dailyHadithNotifierProvider);
-    return HadithCard(hadith: dailyHadith, onTap: () => context.push('/hadith'));
+    return HadithCard(
+      hadith: dailyHadith,
+      onTap: () => context.push('/hadith'),
+    );
   }
 
   Widget _buildDeferredQuranSection(bool isDark) {
@@ -321,15 +295,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return _buildQuranSection(khatmah, isDark);
   }
 
-
-
   // ═══════════════════════════════════════════════
   // Quran Section
   // ═══════════════════════════════════════════════
 
   Widget _buildQuranSection(KhatmahModel? khatmah, bool isDark) {
     final hasKhatmah = khatmah != null;
-    final surahName = hasKhatmah ? KhatmahModel.surahName(khatmah.currentSurah) : '';
+    final surahName = hasKhatmah
+        ? KhatmahModel.surahName(khatmah.currentSurah)
+        : '';
     final progress = hasKhatmah ? khatmah.progress : 0.0;
     final page = hasKhatmah ? khatmah.currentPage : 0;
     final w = MediaQuery.sizeOf(context).width;
@@ -348,13 +322,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 height: iconBox,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppTheme.goldPrimary.withValues(alpha: 0.2), AppTheme.goldPrimary.withValues(alpha: 0.05)],
+                    colors: [
+                      AppTheme.goldPrimary.withValues(alpha: 0.2),
+                      AppTheme.goldPrimary.withValues(alpha: 0.05),
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(Icons.auto_stories_rounded, color: AppTheme.goldPrimary, size: 22),
+                child: const Icon(
+                  Icons.auto_stories_rounded,
+                  color: AppTheme.goldPrimary,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -448,8 +429,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-
-
   // ═══════════════════════════════════════════════
   // Events Section
   // ═══════════════════════════════════════════════
@@ -537,13 +516,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildQuoteSection(bool isDark) {
     final w = MediaQuery.sizeOf(context).width;
     final pad = w < 360 ? 16.0 : 20.0;
-    final quoteSize = w < 360 ? 17.0 : w < 420 ? 19.0 : 20.0;
+    final quoteSize = w < 360
+        ? 17.0
+        : w < 420
+        ? 19.0
+        : 20.0;
     return GlassCard(
       radius: 28,
       padding: EdgeInsets.all(pad),
       child: Column(
         children: [
-          Icon(Icons.format_quote_rounded, size: 28, color: AppTheme.goldPrimary.withValues(alpha: 0.4)),
+          Icon(
+            Icons.format_quote_rounded,
+            size: 28,
+            color: AppTheme.goldPrimary.withValues(alpha: 0.4),
+          ),
           const SizedBox(height: 10),
           Text(
             'إِنَّمَا يُرِيدُ اللَّهُ لِيُذْهِبَ عَنكُمُ الرِّجْسَ أَهْلَ الْبَيْتِ وَيُطَهِّرَكُمْ تَطْهِيرًا',
@@ -583,27 +570,33 @@ class _HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
-    final logoSize = w < 360 ? 36.0 : 44.0;
-    final titleSize = w < 360 ? 18.0 : 22.0;
-    final btnSize = w < 360 ? 34.0 : 40.0;
+    final logoSize = w < 360 ? 36.0 : 42.0;
+    final titleSize = w < 360 ? 18.0 : 21.0;
+    final btnSize = w < 360 ? 36.0 : 40.0;
     return Row(
       children: [
-        VectorGraphic(
-          loader: AssetBytesLoader('assets/images/logo.svg.vec'),
-          width: logoSize,
-          height: logoSize,
-          fit: BoxFit.contain,
+        // RIGHT in RTL: Official Rafeeq emblem + App Name
+        Semantics(
+          label: 'شعار رفيق',
+          child: Image.asset(
+            'assets/images/logo.webp',
+            width: logoSize,
+            height: logoSize,
+            fit: BoxFit.contain,
+          ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Text(
           Ar.appName,
           style: GoogleFonts.notoKufiArabic(
             fontSize: titleSize,
             fontWeight: FontWeight.w700,
             color: isDark ? Colors.white : Colors.black87,
+            letterSpacing: 0.2,
           ),
         ),
         const Spacer(),
+        // LEFT in RTL: Notification and Settings actions
         GoldIconButton(
           icon: Icons.notifications_outlined,
           onTap: () => context.push('/settings/notifications'),
@@ -628,7 +621,11 @@ class _HomeGreeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
-    final titleSize = w < 360 ? 26.0 : w < 420 ? 30.0 : 32.0;
+    final titleSize = w < 360
+        ? 22.0
+        : w < 420
+        ? 26.0
+        : 28.0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -645,12 +642,215 @@ class _HomeGreeting extends StatelessWidget {
         Text(
           subtitle,
           style: GoogleFonts.notoKufiArabic(
-            fontSize: 14,
+            fontSize: w < 360 ? 12.5 : 13.5,
             fontWeight: FontWeight.w400,
-            color: AppTheme.goldPrimary.withValues(alpha: 0.7),
+            color: AppTheme.goldPrimary.withValues(alpha: 0.75),
           ),
         ),
       ],
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// QuickAccessPill — Reusable capsule shortcut button
+// Glass surface · Gold icon · Scale press · Staggered fade-in
+// ═══════════════════════════════════════════════════════════════
+
+class QuickAccessPill extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final int animationIndex;
+
+  const QuickAccessPill({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.animationIndex = 0,
+  });
+
+  @override
+  State<QuickAccessPill> createState() => _QuickAccessPillState();
+}
+
+class _QuickAccessPillState extends State<QuickAccessPill>
+    with SingleTickerProviderStateMixin {
+  // ── Press & Hover state ──────────────────────────
+  late final AnimationController _pressCtrl;
+  late final Animation<double> _scaleAnim;
+  bool _pressed = false;
+  bool _hovered = false;
+
+  // ── Staggered entrance ───────────────────────────
+  bool _visible = false;
+
+  // ── Capsule visual constants ─────────────────────
+  static const double _height = 48;
+  static const double _iconSize = 20;
+  static const double _iconCircleSize = 26;
+  static const double _fontSize = 13;
+  static const double _borderRadius = 999;
+  static const double _iconTextGap = 10;
+  static const EdgeInsets _padding = EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 0,
+  );
+
+  // Glass background — 7% default opacity, 12% hover, 18% pressed
+  static final Color _capsuleBg = AppTheme.bgSurface.withValues(alpha: 0.07);
+  static final Color _capsuleHoverBg = AppTheme.bgSurface.withValues(
+    alpha: 0.12,
+  );
+  static final Color _capsulePressedBg = AppTheme.bgSurface.withValues(
+    alpha: 0.18,
+  );
+
+  // Border — gold at 13% default opacity, 18% hover
+  static final Color _capsuleBorder = const Color(
+    0xFFD6B04A,
+  ).withValues(alpha: 0.13);
+  static final Color _capsuleHoverBorder = const Color(
+    0xFFD6B04A,
+  ).withValues(alpha: 0.18);
+
+  // Icon circle glass background — 8% gold opacity
+  static final Color _iconCircleBg = const Color(
+    0xFFD6B04A,
+  ).withValues(alpha: 0.08);
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Scale controller for press feedback
+    _pressCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 130),
+    );
+    _scaleAnim = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _pressCtrl, curve: Curves.easeOut));
+
+    // Staggered entrance: delay = index × 30 ms, max 330 ms
+    final delay = Duration(
+      milliseconds: (widget.animationIndex * 30).clamp(0, 330),
+    );
+    Future.delayed(delay, () {
+      if (mounted) setState(() => _visible = true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pressCtrl.dispose();
+    super.dispose();
+  }
+
+  // ── Gesture handlers ─────────────────────────────
+  void _down(TapDownDetails _) {
+    setState(() => _pressed = true);
+    _pressCtrl.forward();
+  }
+
+  void _up(TapUpDetails _) {
+    _pressCtrl.reverse().then((_) {
+      if (mounted) setState(() => _pressed = false);
+    });
+    widget.onTap();
+  }
+
+  void _cancel() {
+    _pressCtrl.reverse().then((_) {
+      if (mounted) setState(() => _pressed = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Background color based on interaction state
+    final effectiveBg = _pressed
+        ? _capsulePressedBg
+        : (_hovered ? _capsuleHoverBg : _capsuleBg);
+
+    // Border color based on interaction state
+    final effectiveBorder = _hovered ? _capsuleHoverBorder : _capsuleBorder;
+
+    return AnimatedOpacity(
+      opacity: _visible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOut,
+      child: AnimatedSlide(
+        offset: _visible ? Offset.zero : const Offset(0, 0.25),
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOut,
+        child: ScaleTransition(
+          scale: _scaleAnim,
+          child: MouseRegion(
+            onEnter: (_) => setState(() => _hovered = true),
+            onExit: (_) => setState(() => _hovered = false),
+            child: AnimatedScale(
+              scale: _hovered && !_pressed ? 1.015 : 1.0,
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeOut,
+              child: GestureDetector(
+                onTapDown: _down,
+                onTapUp: _up,
+                onTapCancel: _cancel,
+                child: Semantics(
+                  button: true,
+                  label: widget.label,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    height: _height,
+                    padding: _padding,
+                    decoration: BoxDecoration(
+                      color: effectiveBg,
+                      borderRadius: BorderRadius.circular(_borderRadius),
+                      border: Border.all(color: effectiveBorder, width: 0.7),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        // Tiny circular glass container for gold icon
+                        Container(
+                          width: _iconCircleSize,
+                          height: _iconCircleSize,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _iconCircleBg,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              widget.icon,
+                              size: _iconSize,
+                              color: const Color(0xFFD6B04A),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: _iconTextGap),
+                        Text(
+                          widget.label,
+                          style: GoogleFonts.notoKufiArabic(
+                            fontSize: _fontSize,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xFFF0F0F0),
+                            height: 1.0,
+                            letterSpacing: 0.1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

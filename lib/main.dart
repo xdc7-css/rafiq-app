@@ -47,6 +47,8 @@ void main() async {
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
       ]);
     } catch (e) {
       debugPrint('[Startup] Orientation failed: $e');

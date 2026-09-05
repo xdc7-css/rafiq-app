@@ -68,7 +68,7 @@ class GlassCard extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: const DecorationImage(
-                image: AssetImage('assets/images/whitebg.PNG'),
+                image: AssetImage('assets/images/whitebg.webp'),
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),

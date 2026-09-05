@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../models/settings_model.dart';
-import '../providers/settings_provider.dart';
 import '../theme/app_theme.dart';
 
 /// Floating glass navbar — logo, nav, theme toggle, notifications, profile.
@@ -30,8 +28,7 @@ class PremiumNavbar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.sizeOf(context).width;
     final isCompact = width < 900;
-    final settings = ref.watch(settingsNotifierProvider);
-    final isDark = settings.themeMode != ThemeModeOption.light;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -48,8 +45,8 @@ class PremiumNavbar extends ConsumerWidget {
                       AppTheme.bgSurface.withValues(alpha: 0.55),
                     ]
                   : [
-                      AppTheme.lightBgCard.withValues(alpha: 0.85),
-                      AppTheme.lightBgCard.withValues(alpha: 0.7),
+                      AppTheme.bgCard.withValues(alpha: 0.85),
+                      AppTheme.bgCard.withValues(alpha: 0.7),
                     ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -71,7 +68,7 @@ class PremiumNavbar extends ConsumerWidget {
               ),
               if (isDark)
                 BoxShadow(
-                  color: AppTheme.glowGold,
+                  color: AppTheme.shadowGold,
                   blurRadius: 32,
                   spreadRadius: -8,
                 ),
@@ -109,14 +106,8 @@ class PremiumNavbar extends ConsumerWidget {
                 icon: isDark
                     ? Icons.light_mode_rounded
                     : Icons.dark_mode_rounded,
-                tooltip: 'تبديل المظهر',
-                onTap: () {
-                  ref
-                      .read(settingsNotifierProvider.notifier)
-                      .updateThemeMode(
-                        isDark ? ThemeModeOption.light : ThemeModeOption.dark,
-                      );
-                },
+                tooltip: 'المظهر',
+                onTap: () {},
               ),
               const SizedBox(width: 6),
               _IconAction(
@@ -179,7 +170,7 @@ class _Logo extends StatelessWidget {
       height: 32,
       child: Center(
         child: Image.asset(
-          'assets/images/logo.png',
+          'assets/images/logo.webp',
           height: 32,
           width: isCompact ? 32 : null,
           fit: BoxFit.contain,
@@ -211,7 +202,6 @@ class _NavPillState extends State<_NavPill> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
@@ -245,7 +235,7 @@ class _NavPillState extends State<_NavPill> {
                 size: 16,
                 color: widget.selected
                     ? AppTheme.goldPrimary
-                    : (isDark ? AppTheme.textMuted : AppTheme.lightTextMuted),
+                    : AppTheme.textMuted,
               ),
               const SizedBox(width: 6),
               Text(
@@ -257,9 +247,7 @@ class _NavPillState extends State<_NavPill> {
                       : FontWeight.w500,
                   color: widget.selected
                       ? AppTheme.goldPrimary
-                      : (isDark
-                            ? AppTheme.textSecondary
-                            : AppTheme.lightTextSecondary),
+                      : AppTheme.textMuted,
                 ),
               ),
             ],
@@ -293,57 +281,71 @@ class _IconActionState extends State<_IconAction> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Tooltip(
-      message: widget.tooltip,
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _hovered = true),
-        onExit: (_) => setState(() => _hovered = false),
-        child: GestureDetector(
-          onTap: widget.onTap,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: _hovered
-                  ? AppTheme.goldPrimary.withValues(alpha: 0.1)
-                  : isDark
-                  ? AppTheme.bgSurface.withValues(alpha: 0.4)
-                  : AppTheme.lightBgCard.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isDark
-                    ? AppTheme.borderSubtle
-                    : AppTheme.goldPrimary.withValues(alpha: 0.1),
-              ),
-            ),
-            child: Stack(
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+
+    return Semantics(
+      button: true,
+      label: widget.tooltip,
+      child: Tooltip(
+        message: widget.tooltip,
+        child: MouseRegion(
+          onEnter: (_) {
+            if (!reduceMotion) setState(() => _hovered = true);
+          },
+          onExit: (_) {
+            if (!reduceMotion) setState(() => _hovered = false);
+          },
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: widget.onTap,
+            child: Container(
+              width: AppTheme.minTouchTarget,
+              height: AppTheme.minTouchTarget,
               alignment: Alignment.center,
-              children: [
-                Icon(
-                  widget.icon,
-                  size: 20,
-                  color: isDark
-                      ? AppTheme.textSecondary
-                      : AppTheme.lightTextSecondary,
-                ),
-                if (widget.badge)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.goldPrimary,
-                        boxShadow: [
-                          BoxShadow(color: AppTheme.glowGold, blurRadius: 6),
-                        ],
-                      ),
-                    ),
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: reduceMotion ? 0 : 180),
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: _hovered
+                      ? AppTheme.goldPrimary.withValues(alpha: 0.1)
+                      : isDark
+                      ? AppTheme.bgSurface.withValues(alpha: 0.4)
+                      : AppTheme.bgCard.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isDark
+                        ? AppTheme.borderSubtle
+                        : AppTheme.goldPrimary.withValues(alpha: 0.1),
                   ),
-              ],
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      widget.icon,
+                      size: 20,
+                      color: AppTheme.textMuted,
+                    ),
+                    if (widget.badge)
+                      PositionedDirectional(
+                        top: 8,
+                        end: 8,
+                        child: Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppTheme.goldPrimary,
+                            boxShadow: [
+                              BoxShadow(color: AppTheme.shadowGold, blurRadius: 6),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

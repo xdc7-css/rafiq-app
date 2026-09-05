@@ -41,8 +41,8 @@ class FloatingDockNav extends StatelessWidget {
                         AppTheme.bgSurface.withValues(alpha: 0.65),
                       ]
                     : [
-                        AppTheme.lightBgCard.withValues(alpha: 0.9),
-                        AppTheme.lightBgCard.withValues(alpha: 0.75),
+                        AppTheme.bgCard.withValues(alpha: 0.9),
+                        AppTheme.bgCard.withValues(alpha: 0.75),
                       ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -133,78 +133,108 @@ class _DockItemState extends State<_DockItem>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final mutedColor = isDark ? AppTheme.textMuted : AppTheme.lightTextMuted;
-    return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) {
-        _controller.reverse();
-        widget.onTap();
-      },
-      onTapCancel: () => _controller.reverse(),
-      child: ScaleTransition(
-        scale: _scale,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: widget.selected
-                ? AppTheme.goldPrimary.withValues(alpha: 0.12)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(18),
+    final mutedColor = AppTheme.textMuted;
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+
+    return Semantics(
+      button: true,
+      selected: widget.selected,
+      label: widget.label,
+      hint: widget.selected ? 'القسم المحدد حالياً' : 'الانتقال إلى قسم ${widget.label}',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) {
+          if (!reduceMotion) _controller.forward();
+        },
+        onTapUp: (_) {
+          if (!reduceMotion) _controller.reverse();
+          widget.onTap();
+        },
+        onTapCancel: () {
+          if (!reduceMotion) _controller.reverse();
+        },
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: AppTheme.minTouchTarget,
+            minHeight: AppTheme.minTouchTarget,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                alignment: Alignment.center,
+          child: ScaleTransition(
+            scale: reduceMotion ? const AlwaysStoppedAnimation(1.0) : _scale,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: reduceMotion ? 0 : 250),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: widget.selected
+                    ? AppTheme.goldPrimary.withValues(alpha: 0.12)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (widget.selected)
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(color: AppTheme.glowGold, blurRadius: 16),
-                        ],
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (widget.selected && !reduceMotion)
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(color: AppTheme.glowGold, blurRadius: 16),
+                            ],
+                          ),
+                        ),
+                      Icon(
+                        widget.icon,
+                        size: 24,
+                        color: widget.selected ? AppTheme.goldPrimary : mutedColor,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      textScaler: MediaQuery.textScalerOf(context).clamp(
+                        minScaleFactor: 0.85,
+                        maxScaleFactor: 1.15,
                       ),
                     ),
-                  Icon(
-                    widget.icon,
-                    size: 24,
-                    color: widget.selected ? AppTheme.goldPrimary : mutedColor,
+                    child: AnimatedDefaultTextStyle(
+                      duration: Duration(milliseconds: reduceMotion ? 0 : 200),
+                      style: GoogleFonts.notoKufiArabic(
+                        fontSize: 10,
+                        fontWeight: widget.selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        color: widget.selected ? AppTheme.goldPrimary : mutedColor,
+                      ),
+                      child: Text(
+                        widget.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: reduceMotion ? 0 : 250),
+                    margin: const EdgeInsets.only(top: 3),
+                    width: widget.selected ? 4 : 0,
+                    height: widget.selected ? 4 : 0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.goldPrimary,
+                      boxShadow: [
+                        BoxShadow(color: AppTheme.glowGold, blurRadius: 6),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 2),
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 200),
-                style: GoogleFonts.notoKufiArabic(
-                  fontSize: 10,
-                  fontWeight: widget.selected
-                      ? FontWeight.w700
-                      : FontWeight.w500,
-                  color: widget.selected ? AppTheme.goldPrimary : mutedColor,
-                ),
-                child: Text(widget.label),
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                margin: const EdgeInsets.only(top: 3),
-                width: widget.selected ? 4 : 0,
-                height: widget.selected ? 4 : 0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppTheme.goldPrimary,
-                  boxShadow: [
-                    BoxShadow(color: AppTheme.glowGold, blurRadius: 6),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

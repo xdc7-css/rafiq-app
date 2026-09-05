@@ -248,7 +248,7 @@ class _MercyRegisterScreenState extends ConsumerState<MercyRegisterScreen> {
                   // ── Full-width background artwork with fallback ──
                   Positioned.fill(
                     child: Image.asset(
-                      'assets/images/sjlrhma.png',
+                      'assets/images/sjlrhma.webp',
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                       filterQuality: FilterQuality.high,

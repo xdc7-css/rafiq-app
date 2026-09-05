@@ -52,11 +52,21 @@ class _DailyIslamicWidgetAppState extends ConsumerState<DailyIslamicWidgetApp>
       theme: AppTheme.darkTheme,
       routerConfig: router,
       builder: (context, child) {
+        final systemScaler = MediaQuery.textScalerOf(context);
+        final baseSystemScale = systemScaler.scale(1.0);
+        // Safely scale with appFontSize while preserving system accessibility enlargement
+        final effectiveScale = (baseSystemScale * appFontSize).clamp(0.85, 1.55);
+
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(appFontSize),
+            textScaler: TextScaler.linear(effectiveScale),
           ),
-          child: child!,
+          child: Directionality(
+            textDirection: (locale.languageCode == 'en')
+                ? TextDirection.ltr
+                : TextDirection.rtl,
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
       localizationsDelegates: const [

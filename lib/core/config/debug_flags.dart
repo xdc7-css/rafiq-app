@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
+
 class DebugFlags {
-  /// Temporarily disable non-critical startup API requests
-  /// (Shia books, remote book sync, optional content) so the app
-  /// and Quran screen load immediately during debugging.
-  static const bool disableNonCriticalStartupApis = true;
+  /// Disable non-critical startup API requests during local development.
+  /// Defaults to kDebugMode so release builds perform standard remote sync.
+  static const bool disableNonCriticalStartupApis = bool.fromEnvironment(
+    'DISABLE_NON_CRITICAL_APIS',
+    defaultValue: kDebugMode,
+  );
 }

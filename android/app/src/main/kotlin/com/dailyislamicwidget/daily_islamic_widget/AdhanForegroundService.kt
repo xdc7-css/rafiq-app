@@ -12,25 +12,31 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
-import android.media.MediaPlayer.OnErrorListener
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
 
+/**
+ * AdhanForegroundService — Foreground audio playback service for Adhan recitation.
+ *
+ * Hardened Architecture:
+ *   1. Immediately calls startForeground() in onStartCommand to satisfy Android 14+ strict timing.
+ *   2. Uses USAGE_ALARM and AudioFocus to ensure proper audio routing through alarm volume stream.
+ *   3. Resolves local bundled audio (raw/adhan_*.mp3) with automatic fallback to default Adhan.
+ *   4. Bounded WakeLock prevents sleeping during recitation and releases promptly on completion or stop.
+ *   5. Interactive notification with 'Stop' action to let user dismiss at any time.
+ */
 class AdhanForegroundService : Service() {
 
     companion object {
         private const val TAG = "AdhanForegroundService"
-        private const val NOTIFICATION_ID = 9001
-        private const val CHANNEL_ID = "adhan_foreground_service"
-        private const val CHANNEL_NAME = "أذان الصلاة"
-        private const val CHANNEL_DESC = "تشغيل صوت الأذان مع الإشعار"
 
         const val ACTION_PLAY_ADHAN = "com.dailyislamicwidget.action.PLAY_ADHAN"
         const val ACTION_STOP_ADHAN = "com.dailyislamicwidget.action.STOP_ADHAN"
         const val ACTION_PLAY_TEST = "com.dailyislamicwidget.action.PLAY_TEST"
+
         const val EXTRA_PRAYER_NAME = "prayer_name"
         const val EXTRA_PRAYER_INDEX = "prayer_index"
         const val EXTRA_VOLUME = "volume"
@@ -47,42 +53,32 @@ class AdhanForegroundService : Service() {
     @Volatile private var isForeground = false
     private var currentPrayerName: String = ""
     private var currentVolume: Float = 1.0f
-    private var currentSoundName: String = "adhan_maitham"
+    private var currentSoundName: String = AdhanAudioMapping.DEFAULT_KEY
     private var currentRawResId: Int = 0
 
     override fun onCreate() {
         super.onCreate()
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannels()
-        Log.i(TAG, "Service created")
+        AdhanNotificationHelper.ensureChannels(this)
+        Log.i(TAG, "AdhanForegroundService created")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.action ?: return START_NOT_STICKY
-        Log.i(TAG, "[VERIFICATION] onStartCommand: action=$action, flags=$flags, startId=$startId, api=${Build.VERSION.SDK_INT}")
+        Log.i(TAG, "[SERVICE] onStartCommand: action=$action, api=${Build.VERSION.SDK_INT}")
 
         when (action) {
             ACTION_PLAY_ADHAN -> {
                 stopPlayback()
-                currentPrayerName = intent.getStringExtra(EXTRA_PRAYER_NAME) ?: "صلاة"
+                currentPrayerName = intent.getStringExtra(EXTRA_PRAYER_NAME) ?: "الصلاة"
                 currentVolume = intent.getFloatExtra(EXTRA_VOLUME, 1.0f)
                 currentSoundName = intent.getStringExtra(EXTRA_SOUND_NAME) ?: AdhanAudioMapping.DEFAULT_KEY
                 currentRawResId = intent.getIntExtra(EXTRA_RAW_RES_ID, 0)
                 val prayerIndex = intent.getIntExtra(EXTRA_PRAYER_INDEX, -1)
 
-                Log.i(TAG, "[VERIFICATION] PLAY_ADHAN: prayer=$currentPrayerName, volume=$currentVolume, sound=$currentSoundName, rawResId=$currentRawResId, prayerIndex=$prayerIndex")
-                showForegroundNotification(currentPrayerName)
+                showForegroundNotification(currentPrayerName, isTest = false)
                 playAdhan(currentRawResId, currentVolume, currentPrayerName, prayerIndex)
-
-                // START_REDELIVER_INTENT: If the system kills this service during
-                // adhan playback (Doze, low memory, OEM process trimming), the
-                // service is restarted with the original intent so playback resumes.
-                // This is critical — adhan is a time-sensitive religious notification
-                // that must not be silently dropped.
-                // Note: stopSelf() in onPlaybackCompleted() prevents restart after
-                // normal completion.
-                Log.i(TAG, "[VERIFICATION] RESTART_POLICY: START_REDELIVER_INTENT (adhan playback)")
                 return START_REDELIVER_INTENT
             }
 
@@ -92,12 +88,8 @@ class AdhanForegroundService : Service() {
                 currentSoundName = intent.getStringExtra(EXTRA_SOUND_NAME) ?: AdhanAudioMapping.DEFAULT_KEY
                 currentRawResId = intent.getIntExtra(EXTRA_RAW_RES_ID, 0)
 
-                showForegroundNotification("اختبار الأذان")
+                showForegroundNotification("اختبار الأذان", isTest = true)
                 playAdhan(currentRawResId, currentVolume, "اختبار الأذان", -1)
-
-                // START_NOT_STICKY: Test playback is non-critical.
-                // If the system kills it, no recovery is needed.
-                Log.i(TAG, "[VERIFICATION] RESTART_POLICY: START_NOT_STICKY (test playback)")
                 return START_NOT_STICKY
             }
 
@@ -105,9 +97,6 @@ class AdhanForegroundService : Service() {
                 stopPlayback()
                 dismissForeground()
                 stopSelf()
-
-                // START_NOT_STICKY: Explicit stop must never auto-restart.
-                Log.i(TAG, "[VERIFICATION] RESTART_POLICY: START_NOT_STICKY (explicit stop)")
                 return START_NOT_STICKY
             }
         }
@@ -118,56 +107,56 @@ class AdhanForegroundService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.i(TAG, "Task removed, releasing resources")
+        Log.i(TAG, "Task removed, ensuring clean release")
         releaseResources()
         super.onTaskRemoved(rootIntent)
     }
 
     override fun onDestroy() {
-        Log.i(TAG, "Service destroyed")
+        Log.i(TAG, "Service destroying, releasing all resources")
         releaseResources()
         super.onDestroy()
     }
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
-
     private fun dismissForeground() {
         if (isForeground) {
             try {
-                stopForeground(STOP_FOREGROUND_REMOVE)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                } else {
+                    @Suppress("DEPRECATION")
+                    stopForeground(true)
+                }
             } catch (e: Exception) {
-                Log.e(TAG, "Error stopping foreground", e)
+                Log.e(TAG, "Error stopping foreground: ${e.message}")
             }
             isForeground = false
         }
     }
 
-    // ─── Playback ──────────────────────────────────────────────────────────────
-
     private fun playAdhan(rawResId: Int, volume: Float, prayerName: String, prayerIndex: Int) {
         if (isPlaying) {
-            Log.w(TAG, "Already playing, stopping previous playback first")
             stopPlayback()
         }
 
-        if (!requestAudioFocus()) {
-            Log.w(TAG, "[VERIFICATION] AUDIO_FOCUS_DENIED — playing anyway")
-        } else {
-            Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_GRANTED")
-        }
-
+        requestAudioFocus()
         acquireWakeLock()
 
         try {
-            val resolvedResId = if (rawResId != 0) {
+            var resolvedResId = if (rawResId != 0) {
                 rawResId
             } else {
-                Log.w(TAG, "[VERIFICATION] rawResId is 0, falling back to mapping lookup")
                 AdhanAudioMapping.resolveRawResourceId(applicationContext, currentSoundName)
             }
 
+            // Fallback to default audio if resolution failed
+            if (resolvedResId == 0) {
+                Log.w(TAG, "[AUDIO] Resource 0, falling back to default adhan sound")
+                resolvedResId = AdhanAudioMapping.resolveRawResourceId(applicationContext, AdhanAudioMapping.DEFAULT_KEY)
+            }
+
             val uri = Uri.parse("android.resource://$packageName/$resolvedResId")
-            Log.i(TAG, "[VERIFICATION] MEDIA_PLAYER_SETUP: uri=$uri, resId=$resolvedResId, volume=$volume")
+            Log.i(TAG, "[AUDIO] Preparing MediaPlayer with uri=$uri, volume=$volume")
 
             mediaPlayer = MediaPlayer().apply {
                 setAudioAttributes(
@@ -176,28 +165,26 @@ class AdhanForegroundService : Service() {
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build()
                 )
-                Log.i(TAG, "[VERIFICATION] AUDIO_ATTRIBUTES_APPLIED: contentType=CONTENT_TYPE_SONIFICATION, usage=USAGE_ALARM")
 
                 setDataSource(applicationContext, uri)
-                setVolume(volume.coerceIn(0.0f, 1.0f), volume.coerceIn(0.0f, 1.0f))
+                val safeVolume = volume.coerceIn(0.0f, 1.0f)
+                setVolume(safeVolume, safeVolume)
                 setLooping(false)
 
                 setOnPreparedListener { mp ->
-                    Log.i(TAG, "[VERIFICATION] MEDIA_PLAYER_PREPARED — starting playback for $prayerName")
                     this@AdhanForegroundService.isPlaying = true
                     mp.start()
-                    Log.i(TAG, "[VERIFICATION] PLAYBACK_STARTED for $prayerName (isPlaying=${mp.isPlaying})")
-                    updateNotificationPlaybackState(true)
+                    Log.i(TAG, "[AUDIO] Playback started for $prayerName")
                 }
 
                 setOnCompletionListener(OnCompletionListener {
-                    Log.i(TAG, "[VERIFICATION] PLAYBACK_COMPLETED for $prayerName")
+                    Log.i(TAG, "[AUDIO] Playback completed normally for $prayerName")
                     this@AdhanForegroundService.isPlaying = false
-                    onPlaybackCompleted(prayerIndex)
+                    onPlaybackCompleted(prayerName, prayerIndex)
                 })
 
                 setOnErrorListener { _, what, extra ->
-                    Log.e(TAG, "[VERIFICATION] MEDIA_PLAYER_ERROR: what=$what, extra=$extra for $prayerName")
+                    Log.e(TAG, "[AUDIO] MediaPlayer error: what=$what, extra=$extra for $prayerName")
                     this@AdhanForegroundService.isPlaying = false
                     releaseResources()
                     dismissForeground()
@@ -208,26 +195,22 @@ class AdhanForegroundService : Service() {
                 prepareAsync()
             }
 
-            Log.i(TAG, "[VERIFICATION] PREPARE_ASYNC called for $prayerName")
-
         } catch (e: Exception) {
-            Log.e(TAG, "[VERIFICATION] PLAY_ADHAN_FAILED for $prayerName: ${e.message}", e)
+            Log.e(TAG, "[AUDIO] Failed to play adhan for $prayerName: ${e.message}", e)
             isPlaying = false
-            showErrorNotification(prayerName)
             releaseResources()
             dismissForeground()
             stopSelf()
         }
     }
 
-    private fun onPlaybackCompleted(prayerIndex: Int) {
+    private fun onPlaybackCompleted(prayerName: String, prayerIndex: Int) {
         releaseResources()
         dismissForeground()
         stopSelf()
     }
 
     private fun stopPlayback() {
-        Log.i(TAG, "[VERIFICATION] STOP_PLAYBACK called (isPlaying=$isPlaying)")
         isPlaying = false
         try {
             mediaPlayer?.let { player ->
@@ -235,14 +218,12 @@ class AdhanForegroundService : Service() {
                     if (player.isPlaying) {
                         player.stop()
                     }
-                } catch (e: IllegalStateException) {
-                    Log.w(TAG, "MediaPlayer was not in a playable state")
-                }
+                } catch (_: Exception) {}
                 player.reset()
                 player.release()
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error stopping playback", e)
+            Log.e(TAG, "Error stopping playback: ${e.message}")
         } finally {
             mediaPlayer = null
         }
@@ -258,7 +239,7 @@ class AdhanForegroundService : Service() {
     // ─── Audio Focus ───────────────────────────────────────────────────────────
 
     private val audioFocusListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
-        Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_CHANGED: focusChange=$focusChange")
+        Log.i(TAG, "[AUDIO] Audio focus changed: $focusChange")
         when (focusChange) {
             AudioManager.AUDIOFOCUS_LOSS -> {
                 stopPlayback()
@@ -266,61 +247,44 @@ class AdhanForegroundService : Service() {
                 stopSelf()
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                mediaPlayer?.let {
-                    try {
-                        if (it.isPlaying) it.pause()
-                    } catch (e: IllegalStateException) { /* ignore */ }
-                }
+                try {
+                    if (mediaPlayer?.isPlaying == true) mediaPlayer?.pause()
+                } catch (_: Exception) {}
             }
             AudioManager.AUDIOFOCUS_GAIN -> {
-                mediaPlayer?.let {
-                    try {
-                        if (!it.isPlaying) it.start()
-                    } catch (e: IllegalStateException) { /* ignore */ }
-                }
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                mediaPlayer?.let {
-                    try {
-                        if (it.isPlaying) it.setVolume(0.2f, 0.2f)
-                    } catch (e: IllegalStateException) { /* ignore */ }
-                }
+                try {
+                    if (mediaPlayer?.isPlaying == false) mediaPlayer?.start()
+                } catch (_: Exception) {}
             }
         }
     }
 
     private fun requestAudioFocus(): Boolean {
         if (audioManager == null) return false
-
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
                     setAudioAttributes(
                         AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                             .setUsage(AudioAttributes.USAGE_ALARM)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                             .build()
                     )
                     setOnAudioFocusChangeListener(audioFocusListener)
-                    setAcceptsDelayedFocusGain(false)
                     build()
                 }
                 audioFocusRequest = focusRequest
-                val result = audioManager?.requestAudioFocus(focusRequest)
-                Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_REQUEST_API26: result=$result (GRANTED=${AudioManager.AUDIOFOCUS_REQUEST_GRANTED})")
-                result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+                audioManager?.requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             } else {
                 @Suppress("DEPRECATION")
-                val result = audioManager?.requestAudioFocus(
+                audioManager?.requestAudioFocus(
                     audioFocusListener,
                     AudioManager.STREAM_ALARM,
                     AudioManager.AUDIOFOCUS_GAIN
-                )
-                Log.i(TAG, "[VERIFICATION] AUDIO_FOCUS_REQUEST_LEGACY: result=$result (GRANTED=${AudioManager.AUDIOFOCUS_REQUEST_GRANTED})")
-                result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+                ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Audio focus request failed", e)
+            Log.w(TAG, "Audio focus request exception: ${e.message}")
             false
         }
     }
@@ -333,30 +297,27 @@ class AdhanForegroundService : Service() {
                 @Suppress("DEPRECATION")
                 audioManager?.abandonAudioFocus(audioFocusListener)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error abandoning audio focus", e)
-        } finally {
-            audioFocusRequest = null
-        }
+        } catch (_: Exception) {}
+        audioFocusRequest = null
     }
 
-    // ─── Wake Lock ────────────────────────────────────────────────────────────
+    // ─── Wake Lock ─────────────────────────────────────────────────────────────
 
     private fun acquireWakeLock() {
         try {
             val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-            wakeLock?.let {
-                if (it.isHeld) it.release()
-            }
+            wakeLock?.let { if (it.isHeld) it.release() }
+
             wakeLock = powerManager.newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK,
                 "$packageName:adhan_playback"
             ).apply {
-                acquire(10 * 60 * 1000L)
-                Log.i(TAG, "[VERIFICATION] SERVICE_WAKELOCK_ACQUIRED (tag=$packageName:adhan_playback, timeout=10min)")
+                setReferenceCounted(false)
+                acquire(10 * 60 * 1000L) // 10 minute safety limit
             }
+            Log.i(TAG, "[WAKELOCK] Acquired 10m bounded lock for audio playback")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to acquire wake lock", e)
+            Log.e(TAG, "Failed to acquire wake lock: ${e.message}")
         }
     }
 
@@ -365,120 +326,27 @@ class AdhanForegroundService : Service() {
             wakeLock?.let {
                 if (it.isHeld) {
                     it.release()
-                    Log.i(TAG, "[VERIFICATION] SERVICE_WAKELOCK_RELEASED")
-                } else {
-                    Log.w(TAG, "[VERIFICATION] SERVICE_WAKELOCK_NOT_HELD on release")
+                    Log.i(TAG, "[WAKELOCK] Released playback lock")
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error releasing wake lock", e)
+            Log.e(TAG, "Error releasing wake lock: ${e.message}")
         } finally {
             wakeLock = null
         }
     }
 
-    // ─── Notification Channels ─────────────────────────────────────────────────
+    // ─── Notification ──────────────────────────────────────────────────────────
 
-    private fun createNotificationChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val fgChannel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = CHANNEL_DESC
-                enableVibration(false)
-                setShowBadge(false)
-            }
-            notificationManager?.createNotificationChannel(fgChannel)
-
-            val errorChannel = NotificationChannel(
-                "adhan_error",
-                "أخطاء الأذان",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = "إشعارات أخطاء الأذان"
-                enableVibration(false)
-                setShowBadge(false)
-            }
-            notificationManager?.createNotificationChannel(errorChannel)
-
-            Log.i(TAG, "Notification channels created")
-        }
-    }
-
-    // ─── Notifications ─────────────────────────────────────────────────────────
-
-    private fun showForegroundNotification(prayerName: String) {
-        val openAppIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-
-        val openAppPendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            openAppIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    private fun showForegroundNotification(prayerName: String, isTest: Boolean) {
+        val notification = AdhanNotificationHelper.buildAdhanNotification(
+            context = this,
+            prayerName = prayerName,
+            isTest = isTest,
+            isLate = false
         )
-
-        val stopIntent = Intent(this, AdhanForegroundService::class.java).apply {
-            action = ACTION_STOP_ADHAN
-        }
-        val stopPendingIntent = PendingIntent.getService(
-            this,
-            NOTIFICATION_ID + 1,
-            stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(this, CHANNEL_ID)
-        } else {
-            @Suppress("DEPRECATION")
-            Notification.Builder(this)
-        }
-
-        val notification = builder
-            .setContentTitle("حان وقت صلاة $prayerName")
-            .setContentText("حيّ على الصلاة • حيّ على الفلاح")
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setContentIntent(openAppPendingIntent)
-            .setOngoing(true)
-            .setPriority(Notification.PRIORITY_LOW)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .setAutoCancel(false)
-            .addAction(
-                android.R.drawable.ic_media_pause,
-                "إيقاف الأذان",
-                stopPendingIntent
-            )
-            .build()
-
-        startForeground(NOTIFICATION_ID, notification)
+        startForeground(AdhanNotificationHelper.NOTIFICATION_ID, notification)
         isForeground = true
-        Log.i(TAG, "[VERIFICATION] FOREGROUND_NOTIFICATION_SHOWN for: $prayerName (notificationId=$NOTIFICATION_ID)")
+        Log.i(TAG, "[SERVICE] startForeground invoked with notification id=${AdhanNotificationHelper.NOTIFICATION_ID}")
     }
-
-    private fun updateNotificationPlaybackState(isPlaying: Boolean) {
-        // Reserved for future media-style notification with playback controls
-    }
-
-    private fun showErrorNotification(prayerName: String) {
-        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(this, "adhan_error")
-        } else {
-            @Suppress("DEPRECATION")
-            Notification.Builder(this)
-        }
-
-        val notification = builder
-            .setContentTitle("تعذر تشغيل الأذان")
-            .setContentText("حدث خطأ أثناء تشغيل صوت الأذان لصلاة $prayerName")
-            .setSmallIcon(android.R.drawable.ic_dialog_alert)
-            .setPriority(Notification.PRIORITY_LOW)
-            .build()
-
-        notificationManager?.notify(NOTIFICATION_ID + 1, notification)
-    }
-
 }

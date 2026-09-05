@@ -76,7 +76,7 @@ class MemorialCard extends ConsumerWidget {
                 child: Opacity(
                   opacity: 0.045,
                   child: Image.asset(
-                    'assets/images/whitebg.PNG',
+                    'assets/images/whitebg.webp',
                     fit: BoxFit.cover,
                   ),
                 ),

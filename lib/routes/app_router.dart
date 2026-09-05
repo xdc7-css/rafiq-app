@@ -11,6 +11,7 @@ import '../features/settings/presentation/screens/permissions_settings_screen.da
 import '../features/settings/presentation/screens/adhan_test_screen.dart';
 import '../features/settings/presentation/screens/adhan_reliability_screen.dart';
 import '../features/settings/presentation/screens/adhan_health_screen.dart';
+import '../features/prayer_times/screens/adhan_diagnostics_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/quran/premium_quran_home.dart';
 import '../features/hadith/hadith_screen.dart';
@@ -340,6 +341,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings/adhan-health',
         builder: (context, state) => const AdhanHealthScreen(),
+      ),
+      GoRoute(
+        path: '/settings/adhan-diagnostics',
+        builder: (context, state) => const AdhanDiagnosticsScreen(),
       ),
       // ── Status / Error Routes ──
       GoRoute(

@@ -96,7 +96,7 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
             children: [
               Positioned.fill(
                 child: Image.asset(
-                  'assets/images/whitebg.PNG',
+                  'assets/images/whitebg.webp',
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                 ),
@@ -164,9 +164,11 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
 
   Widget _buildMainContent(TasbeehAlZahraState state) {
     return Row(
+      textDirection: TextDirection.ltr,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildCompactCounter(state),
-        const SizedBox(width: 16),
+        const SizedBox(width: 14),
         Expanded(child: _buildCenterInfo(state)),
         const SizedBox(width: 8),
         _buildFingerprintButton(state),
@@ -182,52 +184,56 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
       builder: (_, __) {
         final b = _breatheController.value;
         final progress = state.target > 0 ? (state.count / state.target).clamp(0.0, 1.0) : 0.0;
-        return SizedBox(
-          width: size,
-          height: size,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: size, height: size,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppTheme.borderGold.withValues(alpha: 0.15), width: 0.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.goldPrimary.withValues(alpha: 0.08 + b * 0.06),
-                      blurRadius: 12 + b * 6,
-                    ),
+        return Semantics(
+          liveRegion: true,
+          label: 'العدد الحالي ${state.count} من ${state.target}',
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: size, height: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppTheme.borderGold.withValues(alpha: 0.15), width: 0.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.goldPrimary.withValues(alpha: 0.08 + b * 0.06),
+                        blurRadius: 12 + b * 6,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: size - 4,
+                  height: size - 4,
+                  child: CircularProgressIndicator(
+                    value: progress,
+                    strokeWidth: 3,
+                    color: AppTheme.goldPrimary,
+                    backgroundColor: AppTheme.goldPrimary.withValues(alpha: 0.08),
+                    strokeCap: StrokeCap.round,
+                  ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('${state.count}',
+                        style: GoogleFonts.inter(
+                            fontSize: size < 60 ? 18 : 22, fontWeight: FontWeight.w800,
+                            color: AppTheme.goldPrimary,
+                            height: 1)),
+                    Text('${state.target}',
+                        style: GoogleFonts.inter(
+                            fontSize: 9, fontWeight: FontWeight.w600,
+                            color: AppTheme.textMuted,
+                            height: 1)),
                   ],
                 ),
-              ),
-              SizedBox(
-                width: size - 4,
-                height: size - 4,
-                child: CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 3,
-                  color: AppTheme.goldPrimary,
-                  backgroundColor: AppTheme.goldPrimary.withValues(alpha: 0.08),
-                  strokeCap: StrokeCap.round,
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('${state.count}',
-                      style: GoogleFonts.inter(
-                          fontSize: size < 60 ? 18 : 22, fontWeight: FontWeight.w800,
-                          color: AppTheme.goldPrimary,
-                          height: 1)),
-                  Text('${state.target}',
-                      style: GoogleFonts.inter(
-                          fontSize: 9, fontWeight: FontWeight.w600,
-                          color: AppTheme.textMuted,
-                          height: 1)),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -237,146 +243,170 @@ class _TasbihHeroCardState extends ConsumerState<TasbihHeroCard>
   Widget _buildCenterInfo(TasbeehAlZahraState state) {
     final w = MediaQuery.sizeOf(context).width;
     final titleSize = w < 360 ? 14.0 : 17.0;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(state.nameArabic,
-            style: GoogleFonts.notoKufiArabic(
-                fontSize: titleSize, fontWeight: FontWeight.bold,
-                color: AppTheme.goldPrimary)),
-        const SizedBox(height: 2),
-        Row(
-          children: [
-            Text(state.stageName,
+    return Semantics(
+      liveRegion: true,
+      label: '${state.nameArabic}، ${state.count} من ${state.target}، التقدم الإجمالي ${state.totalCount} بالمئة',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(state.nameArabic,
+              style: GoogleFonts.notoKufiArabic(
+                  fontSize: titleSize, fontWeight: FontWeight.bold,
+                  color: AppTheme.goldPrimary)),
+          const SizedBox(height: 2),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                state.stageName,
                 style: GoogleFonts.notoKufiArabic(
-                    fontSize: 10, color: AppTheme.textMuted)),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-              decoration: BoxDecoration(
-                color: AppTheme.goldPrimary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(6),
+                    fontSize: 10, color: AppTheme.textMuted),
               ),
-              child:               Text('${state.totalCount.clamp(0, 100)}%',
-                  style: GoogleFonts.inter(
-                      fontSize: 9, fontWeight: FontWeight.w600, color: AppTheme.goldPrimary)),
-            ),
-          ],
-        ),
-        const SizedBox(height: 2),
-        Text('${state.totalCount} / 100',
-            style: GoogleFonts.inter(
-                fontSize: 10, color: AppTheme.textMuted)),
-      ],
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(
+                  color: AppTheme.goldPrimary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text('${state.totalCount.clamp(0, 100)}%',
+                    style: GoogleFonts.inter(
+                        fontSize: 9, fontWeight: FontWeight.w600, color: AppTheme.goldPrimary)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text('${state.totalCount} / 100',
+              style: GoogleFonts.inter(
+                  fontSize: 10, color: AppTheme.textMuted)),
+        ],
+      ),
     );
   }
 
   Widget _buildFingerprintButton(TasbeehAlZahraState state) {
     final w = MediaQuery.sizeOf(context).width;
-    final btnSize = w < 360 ? 46.0 : 56.0;
+    final btnSize = w < 360 ? 48.0 : 58.0;
     final iconSize = w < 360 ? 22.0 : 28.0;
-    final innerSize = w < 360 ? 42.0 : 52.0;
+    final innerSize = w < 360 ? 44.0 : 54.0;
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+
     if (state.isCompleted) {
-      return Container(
-        width: btnSize, height: btnSize,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: AppTheme.goldGradient,
-          boxShadow: [
-            BoxShadow(color: AppTheme.goldPrimary.withValues(alpha: 0.3), blurRadius: 12),
-          ],
+      return Semantics(
+        label: 'اكتملت تسبيحة الزهراء عليها السلام',
+        button: true,
+        hint: 'انقر للبدء من جديد',
+        child: Container(
+          width: btnSize, height: btnSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: AppTheme.goldGradient,
+            boxShadow: [
+              BoxShadow(color: AppTheme.goldPrimary.withValues(alpha: 0.3), blurRadius: 12),
+            ],
+          ),
+          child: Icon(Icons.check_circle_rounded, color: AppTheme.bgPrimary, size: iconSize),
         ),
-        child: Icon(Icons.check_circle_rounded, color: AppTheme.bgPrimary, size: iconSize),
       );
     }
-    return GestureDetector(
-      onTapDown: (_) {
-        _tapController.forward();
-        _handleTap();
-      },
-      onTapUp: (_) => _tapController.reverse(),
-      onTapCancel: () => _tapController.reverse(),
-      child: AnimatedBuilder(
-        animation: Listenable.merge([_tapController, _breatheController]),
-        builder: (_, __) {
-          final tap = _tapController.value;
-          final breathe = _breatheController.value;
-          final scale = 1.0 - tap * 0.15;
-          return SizedBox(
-            width: btnSize,
-            height: btnSize,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: btnSize + breathe * 6,
-                  height: btnSize + breathe * 6,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppTheme.goldPrimary.withValues(alpha: 0.12 - tap * 0.06),
-                      width: 0.5,
-                    ),
-                  ),
-                ),
-                Transform.scale(
-                  scale: scale,
-                    child: Container(
-                    width: innerSize, height: innerSize,
+    return Semantics(
+      label: 'تسبيح ${state.nameArabic}',
+      button: true,
+      hint: 'انقر للتسبيح، المتبقي ${state.target - state.count}',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) {
+          if (!reduceMotion) _tapController.forward();
+          _handleTap();
+        },
+        onTapUp: (_) {
+          if (!reduceMotion) _tapController.reverse();
+        },
+        onTapCancel: () {
+          if (!reduceMotion) _tapController.reverse();
+        },
+        child: AnimatedBuilder(
+          animation: Listenable.merge([_tapController, _breatheController]),
+          builder: (_, __) {
+            final tap = reduceMotion ? 0.0 : _tapController.value;
+            final breathe = reduceMotion ? 0.0 : _breatheController.value;
+            final scale = 1.0 - tap * 0.15;
+            return SizedBox(
+              width: btnSize + 8,
+              height: btnSize + 8,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: btnSize + breathe * 6,
+                    height: btnSize + breathe * 6,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: AppTheme.goldGradient,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.goldPrimary.withValues(alpha: 0.3 + breathe * 0.15 + tap * 0.2),
-                          blurRadius: 14 + breathe * 8,
-                          spreadRadius: tap * 2,
-                        ),
-                      ],
+                      border: Border.all(
+                        color: AppTheme.goldPrimary.withValues(alpha: 0.12 - tap * 0.06),
+                        width: 0.5,
+                      ),
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(innerSize / 2),
-                      child: BackdropFilter(
-                        filter: ui.ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.white.withValues(alpha: 0.12),
-                                Colors.white.withValues(alpha: 0.0),
-                              ],
-                              begin: Alignment.topLeft, end: Alignment.bottomRight,
-                            ),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.15 + tap * 0.1),
-                              width: 1.0,
-                            ),
+                  ),
+                  Transform.scale(
+                    scale: scale,
+                    child: Container(
+                      width: innerSize, height: innerSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: AppTheme.goldGradient,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.goldPrimary.withValues(alpha: 0.3 + breathe * 0.15 + tap * 0.2),
+                            blurRadius: 14 + breathe * 8,
+                            spreadRadius: tap * 2,
                           ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              if (tap > 0)
-                                Container(
-                                  width: innerSize, height: innerSize,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withValues(alpha: tap * 0.08),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(innerSize / 2),
+                        child: BackdropFilter(
+                          filter: ui.ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.12),
+                                  Colors.white.withValues(alpha: 0.0),
+                                ],
+                                begin: Alignment.topLeft, end: Alignment.bottomRight,
+                              ),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.15 + tap * 0.1),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                if (tap > 0)
+                                  Container(
+                                    width: innerSize, height: innerSize,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withValues(alpha: tap * 0.08),
+                                    ),
                                   ),
-                                ),
-                              const Icon(Icons.fingerprint, color: AppTheme.bgPrimary, size: 24),
-                            ],
+                                const Icon(Icons.fingerprint, color: AppTheme.bgPrimary, size: 24),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

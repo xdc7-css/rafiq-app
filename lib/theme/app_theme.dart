@@ -37,10 +37,10 @@ class AppTheme {
   static const Color surface = bgSurface; // Alias for default surface color
   static const Color surfaceLight = bgCard; // Alias for lighter surface/card background
 
-  // ─── Text ───
+  // ─── Text (WCAG AA Compliant on Navy Background) ───
   static const Color textPrimary = Color(0xFFFFFFFF);
-  static Color get textMuted => textPrimary.withValues(alpha: 0.72);
-  static Color get textDisabled => textPrimary.withValues(alpha: 0.45);
+  static Color get textMuted => textPrimary.withValues(alpha: 0.80);
+  static Color get textDisabled => textPrimary.withValues(alpha: 0.60);
 
   // ─── Borders ───
   static Color get borderGold => goldPrimary.withValues(alpha: 0.20);
@@ -57,8 +57,13 @@ class AppTheme {
       ];
 
   // ═══════════════════════════════════════════════
-  // Design System — 8-Point Grid & Consistent Radii
+  // Design System — 8-Point Grid & Accessibility
   // ═══════════════════════════════════════════════
+
+  // ─── Accessibility & Adaptive Layout Tokens ───
+  static const double minTouchTarget = 48.0;
+  static const double maxContentWidthTablet = 760.0;
+  static const double maxContentWidthDesktop = 960.0;
 
   // ─── Spacing Scale (8pt grid) ───
   static const double sp4 = 4;

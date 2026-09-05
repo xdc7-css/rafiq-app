@@ -39,26 +39,26 @@ class PremiumHeroSection extends ConsumerWidget {
         final w = constraints.maxWidth;
         final isCompact = w < 360;
 
-        final prayerNameSize = isCompact ? 30.0 : 38.0;
-        final timeSize = isCompact ? 15.0 : 17.0;
-        final infoSize = isCompact ? 10.0 : 12.0;
-        final sentenceSize = isCompact ? 9.0 : 11.0;
+        final prayerNameSize = isCompact ? 24.0 : 30.0;
+        final timeSize = isCompact ? 13.5 : 15.5;
+        final infoSize = isCompact ? 9.5 : 11.0;
+        final sentenceSize = isCompact ? 9.0 : 10.5;
 
-        final sp2 = isCompact ? 8.0 : 12.0;
-        final sp3 = isCompact ? 6.0 : 8.0;
-        final sp4 = isCompact ? 4.0 : 6.0;
-        final sp5 = isCompact ? 8.0 : 12.0;
-        final sp6 = isCompact ? 6.0 : 8.0;
+        final sp2 = isCompact ? 4.0 : 6.0;
+        final sp3 = isCompact ? 4.0 : 6.0;
+        final sp4 = isCompact ? 2.0 : 4.0;
+        final sp5 = isCompact ? 6.0 : 8.0;
+        final sp6 = isCompact ? 4.0 : 5.0;
 
         return AspectRatio(
-          aspectRatio: 1.4,
+          aspectRatio: isCompact ? 1.30 : 1.38,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(28),
             child: Stack(
               fit: StackFit.expand,
               children: [
                 Image.asset(
-                  'assets/images/TIMEERBG.PNG',
+                  'assets/images/TIMEERBG.webp',
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                 ),
@@ -112,12 +112,12 @@ class PremiumHeroSection extends ConsumerWidget {
                 Positioned(
                   top: 0,
                   bottom: 0,
-                  right: 24,
+                  right: isCompact ? 18 : 24,
                   child: SizedBox(
-                    width: (w - 48) * 0.48,
+                    width: (w - (isCompact ? 36 : 48)) * (isCompact ? 0.54 : 0.48),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        vertical: isCompact ? 16 : 20,
+                        vertical: isCompact ? 12 : 16,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -147,9 +147,9 @@ class PremiumHeroSection extends ConsumerWidget {
                             ),
                             style: GoogleFonts.spaceMono(
                               fontSize: timeSize,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                               color: AppTheme.goldPrimary,
-                              letterSpacing: 0.6,
+                              letterSpacing: 0.5,
                             ),
                           ),
                           SizedBox(height: sp3),
@@ -208,9 +208,11 @@ class PremiumHeroSection extends ConsumerWidget {
                             style: GoogleFonts.notoKufiArabic(
                               fontSize: sentenceSize,
                               fontWeight: FontWeight.w400,
-                              color: Colors.white.withValues(alpha: 0.50),
-                              height: 1.3,
+                              color: Colors.white.withValues(alpha: 0.55),
+                              height: 1.2,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -281,13 +283,13 @@ class PremiumHeroSection extends ConsumerWidget {
   String _getCountdownSentence(String prayer) {
     switch (prayer) {
       case 'Fajr':
-        return 'يتبقى على أذان صلاة الفجر بعد';
+        return 'الوقت المتبقي حتى أذان الفجر';
       case 'Dhuhr':
-        return 'يتبقى على أذان صلاة الظهر بعد';
+        return 'الوقت المتبقي حتى أذان الظهر';
       case 'Maghrib':
-        return 'يتبقى على أذان صلاة المغرب بعد';
+        return 'الوقت المتبقي حتى أذان المغرب';
       default:
-        return 'يتبقى على أذان صلاة الفجر بعد';
+        return 'الوقت المتبقي حتى أذان الصلاة';
     }
   }
 }
@@ -348,14 +350,14 @@ class _PremiumCountdownPanelState extends State<_PremiumCountdownPanel> {
     final minutes = _remaining.inMinutes.remainder(60);
     final seconds = _remaining.inSeconds.remainder(60);
 
-    final numberSize = widget.isCompact ? 18.0 : 22.0;
-    final labelSize = widget.isCompact ? 7.0 : 8.0;
+    final numberSize = widget.isCompact ? 15.0 : 18.0;
+    final labelSize = widget.isCompact ? 7.5 : 8.5;
     final containerPadding = widget.isCompact
-        ? const EdgeInsets.symmetric(horizontal: 8, vertical: 10)
-        : const EdgeInsets.symmetric(horizontal: 10, vertical: 12);
+        ? const EdgeInsets.symmetric(horizontal: 6, vertical: 6)
+        : const EdgeInsets.symmetric(horizontal: 8, vertical: 8);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(22),
+      borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
         child: Container(
@@ -363,7 +365,7 @@ class _PremiumCountdownPanelState extends State<_PremiumCountdownPanel> {
           padding: containerPadding,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: AppTheme.goldPrimary.withValues(alpha: 0.22),
               width: 0.7,
@@ -387,7 +389,7 @@ class _PremiumCountdownPanelState extends State<_PremiumCountdownPanel> {
                   labelSize: labelSize,
                   numerals: widget.numerals,
                 ),
-                const _CountdownSeparator(),
+                _CountdownSeparator(isCompact: widget.isCompact),
                 _CountdownUnit(
                   value: minutes,
                   label: 'دقائق',
@@ -395,7 +397,7 @@ class _PremiumCountdownPanelState extends State<_PremiumCountdownPanel> {
                   labelSize: labelSize,
                   numerals: widget.numerals,
                 ),
-                const _CountdownSeparator(),
+                _CountdownSeparator(isCompact: widget.isCompact),
                 _CountdownUnit(
                   value: seconds,
                   label: 'ثوانٍ',
@@ -486,16 +488,17 @@ class _CountdownUnit extends StatelessWidget {
 // ── Countdown Separator ──
 
 class _CountdownSeparator extends StatelessWidget {
-  const _CountdownSeparator();
+  final bool isCompact;
+  const _CountdownSeparator({this.isCompact = false});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.symmetric(horizontal: isCompact ? 2 : 4),
       child: Text(
         ':',
         style: GoogleFonts.spaceMono(
-          fontSize: 16,
+          fontSize: isCompact ? 13.0 : 15.0,
           fontWeight: FontWeight.w700,
           color: AppTheme.goldPrimary.withValues(alpha: 0.45),
           height: 1,

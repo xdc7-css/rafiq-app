@@ -47,12 +47,12 @@ class AppStartupService {
   static void _fireAndForgetPrecache(BuildContext context) {
     try {
       precacheImage(
-        const AssetImage('assets/images/TIMEERBG.PNG'),
+        const AssetImage('assets/images/TIMEERBG.webp'),
         context,
         onError: (e, st) => debugPrint('[Startup] TIMEERBG.PNG failed: $e'),
       );
       precacheImage(
-        const AssetImage('assets/images/whitebg.PNG'),
+        const AssetImage('assets/images/whitebg.webp'),
         context,
         onError: (e, st) => debugPrint('[Startup] whitebg.PNG failed: $e'),
       );

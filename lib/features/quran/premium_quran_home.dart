@@ -21,7 +21,7 @@ class PremiumQuranHomePage extends ConsumerStatefulWidget {
 }
 
 class _PremiumQuranHomePageState extends ConsumerState<PremiumQuranHomePage> {
-  static const _fahrasBg = AssetImage('assets/images/fahrasbcakground.png');
+  static const _fahrasBg = AssetImage('assets/images/fahrasbcakground.webp');
 
   ReadingProgress? _lastRead;
   bool _loadingLastRead = true;
@@ -526,8 +526,8 @@ class _PremiumQuranHomePageState extends ConsumerState<PremiumQuranHomePage> {
     const imagePaths = [
       null,
       null,
-      'assets/images/asaratmrgiabg.png',
-      'assets/images/mutabaaktmabg.png',
+      'assets/images/asaratmrgiabg.webp',
+      'assets/images/mutabaaktmabg.webp',
     ];
 
     return LayoutBuilder(

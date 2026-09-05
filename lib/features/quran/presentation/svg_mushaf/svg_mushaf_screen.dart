@@ -44,7 +44,7 @@ class _SvgMushafScreenState extends ConsumerState<SvgMushafScreen>
   bool _isSubmittingFatiha = false;
 
   static const _bgImage =
-      AssetImage('assets/quran/quranbackgroung/quraanbg.png');
+      AssetImage('assets/quran/quranbackgroung/quraanbg.webp');
   bool _bgPrecached = false;
 
   bool _platformInfoLogged = false;

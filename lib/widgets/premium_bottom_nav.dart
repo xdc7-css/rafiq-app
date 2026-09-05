@@ -78,7 +78,7 @@ class PremiumBottomNav extends StatelessWidget {
                             entry: _items[index],
                             isSelected: isSelected,
                             iconSize: screenW < 360 ? 22.0 : 24.0,
-                            labelSize: screenW < 360 ? 9.5 : 10.5,
+                            labelSize: screenW < 360 ? 11.0 : 12.0,
                             duration: _animDuration,
                             curve: _animCurve,
                             onTap: () {

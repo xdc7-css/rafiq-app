@@ -138,7 +138,6 @@ flutter:
     - assets/data/other/
     - assets/data/aqwal/
     - assets/icons/
-    - assets/audio/
     - assets/quran/quranbackgroung/
     - assets/decorations/
     - shorebird.yaml

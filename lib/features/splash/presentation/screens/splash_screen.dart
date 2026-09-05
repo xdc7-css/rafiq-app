@@ -121,7 +121,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     if (!_imagePrecached) {
       _imagePrecached = true;
       precacheImage(
-        const AssetImage('assets/images/Splash Screen.png'),
+        const AssetImage('assets/images/Splash Screen.webp'),
         context,
       );
     }
@@ -131,7 +131,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Image.asset(
-        'assets/images/Splash Screen.png',
+        'assets/images/Splash Screen.webp',
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
