@@ -33,7 +33,7 @@ dependencies:
   connectivity_plus: ^6.0.3
 
   # Notifications
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^20.1.0
   timezone: ^0.10.1
 
   # Location & Qibla
